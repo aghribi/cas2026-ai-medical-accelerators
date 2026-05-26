@@ -1,0 +1,9 @@
+project:
+  type: default
+  output-dir: _site
+
+execute:
+  echo: true
+  eval: false
+  warning: false
+  freeze: false

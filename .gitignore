@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+.venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+*.nbconvert.ipynb
+
+# Quarto build output
+/_site/
+/.quarto/
+docs/
+
+# Data (large files — tracked via Git LFS or generated locally)
+data/*.npz
+data/*.csv
+data/*.h5
+!data/.gitkeep
+
+# macOS
+.DS_Store
