@@ -45,8 +45,8 @@ def ann(ax_, label, lx, ly, px, py, rad=0.0):
     )
 
 # Dendrites and soma: labels above the image (ly < 0)
-ann(ax, 'Dendrites\n(inputs)',     220,  -68,  310, 270, rad= 0.15)
-ann(ax, 'Cell body\n(soma)',       475,  -68,  475, 330, rad= 0.0)
+ann(ax, 'Dendrites\n(inputs)',     190,  -68,  190, 360, rad= 0.0)
+ann(ax, 'Cell body\n(soma)',       403,  -68,  403, 340, rad= 0.0)
 
 # Synaptic terminals: label to the RIGHT of the image (lx > W)
 ann(ax, 'Synaptic\nterminals\n(output)', W + 115, H // 2, 1150, 330, rad=-0.20)
