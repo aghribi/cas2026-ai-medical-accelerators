@@ -340,6 +340,8 @@ As accelerator physicists, we think in terms of Hamiltonians, phase spaces, and 
 
 ## AI arrives at accelerators
 
+::: {style="font-size: 0.62em;"}
+
 | Year | Facility | AI approach | Impact |
 |------|----------|-------------|--------|
 | 1993 | CERN LEP | Neural network orbit correction | First ML system in live operation |
@@ -351,6 +353,8 @@ As accelerator physicists, we think in terms of Hamiltonians, phase spaces, and 
 | 2022 | ESRF, SNS | Reinforcement learning for orbit/tune | Autonomous closed-loop beam control |
 | 2024 | KIT KARA | Anomaly detection + AI energy management | **−30% energy footprint** on real storage ring |
 | 2026 | 19 institutions | TwinRISE digital twin programme | Production digital twins for proton therapy |
+
+:::
 
 ::: {.slide-ref}
 Edelen et al., *IEEE TNS* 63 (2016) · Duris et al., *PRL* 124 (2020) · Kaiser et al., *PRAB* 27 (2024) · Ghribi et al., *EPN* 56 (2025)
@@ -1050,10 +1054,6 @@ Real-time control needs **millisecond response** — not minutes.
 2. Train a neural network on those pairs
 3. Call the NN instead of the simulator at runtime
 
-::: {.key-result style="margin-top: 0.6em;"}
-Typical speedup: **10³–10⁵×** · error **< 1%** in domain
-:::
-
 :::
 
 ::: {.col-right}
@@ -1090,6 +1090,10 @@ fig
 :::
 
 ::: {.clearfix}
+:::
+
+::: {.key-result style="margin-top: 0.5em;"}
+Typical speedup: **10³–10⁵×** · error **< 1%** in domain
 :::
 
 ---
@@ -1271,7 +1275,7 @@ All code is open and runnable on Colab.
 
 ## References & Further Reading
 
-::: {.col-left style="font-size: 0.68em;"}
+::: {.col-left style="font-size: 0.58em;"}
 
 **Key papers**
 
