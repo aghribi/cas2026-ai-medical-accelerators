@@ -62,6 +62,24 @@ $code-bg:               rgba(34, 211, 238, 0.06);
   font-size: 0.72em;
 }
 
+// Remove reveal.js default top-margin on pre/cell so code aligns with
+// the first element of the right column (highlight-box or Plotly figure)
+.reveal .col-left > .cell,
+.reveal .col-right > .cell,
+.reveal .col-left > pre,
+.reveal .col-right > pre {
+  margin-top: 0 !important;
+}
+.reveal .col-left .cell:first-child pre,
+.reveal .col-right .cell:first-child pre {
+  margin-top: 0 !important;
+}
+// Same fix for :::: {.columns} layout
+.reveal .column > .cell:first-child,
+.reveal .column > pre:first-child {
+  margin-top: 0 !important;
+}
+
 .reveal code {
   background: rgba(34, 211, 238, 0.07);
   border-radius: 3px;
