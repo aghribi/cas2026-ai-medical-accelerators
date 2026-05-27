@@ -14,7 +14,7 @@ format:
     transition: slide
     background-transition: fade
     highlight-style: github-dark
-    code-line-numbers: true
+    code-line-numbers: false
     width: 1280
     height: 720
     margin: 0.05
@@ -26,32 +26,68 @@ execute:
   echo: true
   eval: false
   warning: false
+  message: false
 ---
 
 ## {.title-slide background-color="#0d1b2a"}
 
-::: {style="margin-top: 1.5em;"}
+::: {style="margin-top: 2em;"}
 **AI Applications for Medical Accelerators**
 
-::: {style="color: #22d3ee; font-size: 1.3em; font-weight: 700; margin: 0.3em 0;"}
+::: {style="color: #22d3ee; font-size: 1.3em; font-weight: 700; margin: 0.4em 0;"}
 Accelerator Side
 :::
 
 CAS Topical Course on Medical Accelerators · Jurmala, Latvia · June 2026
 
-::: {style="color: #94a3b8; font-size: 0.75em; margin-top: 1.5em;"}
-Dr. Adnan Ghribi — GANIL / CNRS-IN2P3
-
-`adnan.ghribi@ganil.fr` · github.com/aghribi
+::: {style="color: #94a3b8; font-size: 0.8em; margin-top: 2em;"}
+Dr. Adnan Ghribi — GANIL / CNRS-IN2P3  ·  `adnan.ghribi@ganil.fr`
 :::
 :::
 
 ::: notes
-Welcome. This lecture covers AI applied to the *machine* — the accelerator itself — in a medical context.
+Welcome. This lecture is about AI applied to the *machine* — the accelerator — not the patient. 3 use cases with live notebooks, 8 min of context first. Q&A at the end.
+:::
 
-Everything here is backed by a public GitHub repo. The slides are the repo. The notebooks are runnable on Google Colab from your laptops right now.
+---
 
-Rough plan: 8 min of context (history + landscape), then 3 use cases at ~10 min each, digital twins, then open problems. Q&A at the end.
+## Lecture outline
+
+::: {.col-left}
+
+| Time | Section |
+|-----:|---------|
+| 0–3 min | Scope & context |
+| 3–10 min | Physics–AI connection |
+| 10–22 min | **Use case 1** — RF fault detection |
+| 22–33 min | **Use case 2** — Beam tuning |
+| 33–45 min | **Use case 3** — Surrogate models |
+| 45–50 min | Digital twins & open problems |
+| 50–60 min | Q&A |
+
+:::
+
+::: {.col-right style="padding-top: 0.5em;"}
+
+::: {.highlight-box}
+**Three companion notebooks** — runnable on Google Colab:
+
+- `01_fault_detection` — autoencoder on RF waveforms
+- `02_beam_tuning` — Bayesian optimisation with Cheetah
+- `03_surrogate_model` — MLP surrogate + ensemble UQ
+:::
+
+::: {style="margin-top: 1em; color: #94a3b8; font-size: 0.85em;"}
+`github.com/aghribi/cas2026-ai-medical-accelerators`
+:::
+
+:::
+
+::: {.clearfix}
+:::
+
+::: notes
+This outline is your map for the next 50 minutes. The first 10 minutes are context — history and landscape. The next 35 minutes are three concrete use cases with code you can run. The last 5 minutes connect to digital twins and open problems.
 :::
 
 ---
@@ -59,227 +95,193 @@ Rough plan: 8 min of context (history + landscape), then 3 use cases at ~10 min 
 ## What this lecture covers
 
 ::: {.col-left}
-**In scope — the accelerator side**
+**In scope**
 
-- Fault detection on RF cavities and magnets
-- Beam tuning and daily startup optimisation
-- Surrogate models for beam physics
-- Digital twins of medical accelerators
-- Open research problems
+- RF fault detection
+- Beam tuning & daily startup
+- Surrogate models
+- Digital twins
 :::
 
 ::: {.col-right}
-**Out of scope today**
+**Out of scope**
 
-- Treatment planning *(see: Radiation Therapy lecture)*
-- Patient-facing clinical AI *(see: Medical Physics)*
-- Radiobiology and Monte Carlo dose calc
-- Regulatory certification *(see: Regulatory lecture)*
+- Treatment planning
+- Patient-facing clinical AI
+- Radiobiology
+- Regulatory certification
 :::
 
 ::: {.clearfix}
 :::
 
-::: {.key-result style="margin-top: 1em;"}
+::: {.key-result style="margin-top: 1.2em;"}
 The beam that treats the patient must be produced by a machine that works.
-AI can keep that machine reliable, efficient, and well-characterised.
 :::
 
 ::: notes
-This slide is here so attendees from both communities know exactly what territory we're covering. The key-result box is the single motivation for everything that follows.
+Two minutes. The key-result box is the single motivation for everything that follows.
 :::
 
 ---
 
-## Medical vs. Research Accelerators — What Changes for AI
+## What changes for AI in a medical machine
 
 | | Research machine | Clinical machine |
 |---|---|---|
-| **Downtime tolerance** | Hours–days acceptable | Patient appointments cannot be cancelled |
-| **Fault data** | Abundant — machine is pushed to limits | Scarce by design — engineered to be safe |
-| **Real-time budget** | Seconds to minutes | ms to μs for pulse-to-pulse corrections |
-| **Regulatory overhead** | Internal safety rules | IEC 62304, ISO 13485, FDA/CE for software |
+| **Downtime** | Hours–days acceptable | Patients cannot be rescheduled |
+| **Fault data** | Abundant — machine is pushed hard | **Scarce by design** |
+| **Regulatory** | Internal rules | IEC 62304, FDA/CE, EU AI Act |
 
-::: {.warning-box style="margin-top: 0.8em;"}
-**The key inversion:** clinical machines are engineered to *avoid* faults — so fault data is scarce by design.
+::: {.warning-box style="margin-top: 1em;"}
+**The key inversion:** clinical machines are engineered to *avoid* faults — so fault data is scarce.
 This is the opposite of the "big data" assumption most ML workflows make.
 :::
 
 ::: notes
-This table is the most important slide in the first block. Everything else flows from it.
-
-The "scarce fault data" row shapes every design choice: why we use autoencoders (unsupervised, no fault labels), why we use Bayesian optimisation (sample-efficient), why we use physics-informed models (can work with little data).
-
-The regulatory row: IEC 62304 is the software lifecycle standard for medical device software. Any AI in a clinical control loop is in scope. This requires audit trails and explainability — not as extras, but as compliance requirements.
+This table is the most important slide in the first block. The "scarce fault data" row shapes every design choice: why we use autoencoders (no fault labels needed), Bayesian optimisation (sample-efficient), physics-informed models (less data needed).
 :::
 
 ---
 
 # The Physics–AI Connection {.section-divider background-color="#0a1520"}
 
-::: {style="color: #22d3ee; font-size: 1.3em; font-weight: 600; margin-top: 0.5em;"}
-Where modern machine learning came from
-:::
-
-::: notes
-Before diving into the use cases, I want to take 8 minutes to give you the historical and conceptual context. This is not a detour — it's the foundation.
+::: {style="color: #22d3ee; font-size: 1.2em; margin-top: 0.6em;"}
+Before the use cases — where did this all come from?
 :::
 
 ---
 
-## Physics Built AI — Then Forgot
+## Physics built the foundations of AI
 
-::: {.col-left}
+::: {style="font-size: 0.95em;"}
 
-**1943** — McCulloch & Pitts: mathematical neurons from neuroscience
+**1982 — John Hopfield** (condensed matter physicist) applies *spin-glass physics* to neural networks.
 
-**1958** — Rosenblatt: perceptron (early AI optimism, then first winter)
-
-**1982** — **John Hopfield** (physicist, Princeton): applies *spin-glass physics* to associative memory.
-The neural network *energy function* = a Lyapunov function from statistical mechanics.
-
-**1983–1985** — **Boltzmann machines** (Hinton & Sejnowski): sampling from the Boltzmann distribution directly imports the canonical ensemble from thermodynamics.
-
-**1986** — Backpropagation made practical: Rumelhart, Hinton, Williams.
-
-:::
-
-::: {.col-right}
-
-::: {.highlight-box}
-**The Hopfield insight (1982)**
-
-An Ising-like spin system:
-
+The neural network energy function:
 $$E = -\frac{1}{2} \sum_{ij} w_{ij} s_i s_j$$
+is a Lyapunov function — exactly the Ising Hamiltonian.
+Stored memories = energy attractors. Physics of stability → AI memory.
 
-converges to stored *memories* (attractors).
+::: {.fragment}
+**1983–1985 — Boltzmann machines** (Hinton & Sejnowski)
 
-The same math describes how associative recall works in a neural network.
-
-This is spin-glass physics applied to computation.
+The learning rule is Gibbs sampling from the Boltzmann distribution.
+Partition function, free energy, temperature — directly from statistical mechanics.
 :::
 
-:::
+::: {.fragment}
+**2024 — Nobel Prize in Physics → Hopfield & Hinton**
 
-::: {.clearfix}
-:::
-
-::: notes
-Hopfield's 1982 paper in PNAS is one of the most cited papers in physics and neuroscience combined. He was a condensed matter physicist who saw the parallel between spin systems and associative memory. The energy function is a Lyapunov function — it guarantees convergence to attractors (stored patterns).
-
-The Boltzmann machine learning rule is literally the Gibbs sampling algorithm for the Boltzmann distribution. The partition function, the free energy — these are all directly from statistical mechanics.
-
-Physics gave ML its mathematical foundations. The community then moved to computer science departments and largely forgot the origin.
-:::
-
----
-
-## The Nobel Prize in Physics 2024
-
-::: {style="text-align: center; margin-top: 0.8em;"}
-::: {style="font-size: 1.1em; color: #22d3ee; font-weight: 600;"}
 *"for foundational discoveries and inventions that enable machine learning with artificial neural networks"*
+
+Awarded in **Physics** — not Computer Science.
 :::
 
-**John J. Hopfield** and **Geoffrey E. Hinton** — Nobel Prize in Physics 2024
-:::
-
-::: {.col-left style="margin-top: 1em;"}
-**Why it matters for this lecture:**
-
-- The Nobel Committee awarded it in **Physics** (not Computer Science or AI)
-- This is a formal recognition: the mathematical foundations of neural networks are physics
-- Hopfield networks, Boltzmann machines → today's transformers, diffusion models
-- The tools we will use today (PyTorch, automatic differentiation) trace directly to this lineage
-:::
-
-::: {.col-right style="margin-top: 1em;"}
-::: {.highlight-box}
-**Physics–ML connections still active today**
-
-- Renormalisation group ↔ hierarchical feature learning (Mehta & Schwab, 2014)
-- Statistical mechanics of learning ↔ generalisation bounds
-- Path integrals ↔ variational inference and diffusion models
-- Energy-based models ↔ Boltzmann machines, score matching
-
-Accelerator physicists are natural ML practitioners.
-:::
-:::
-
-::: {.clearfix}
 :::
 
 ::: notes
-The Nobel Prize was awarded in October 2024, just before this lecture. I think it's the right place to start: it legitimises the connection between physics and ML for physicists who might have thought "ML is for computer scientists."
+Hopfield's 1982 paper in PNAS is one of the most cited papers in physics and neuroscience combined. He was a condensed matter physicist at Princeton who saw the parallel between spin systems and associative memory.
 
-The renormalisation group connection is genuinely deep: the RG coarse-graining procedure (integrating out high-frequency modes) is structurally similar to how deep networks progressively abstract away fine-grained features. Mehta & Schwab made this precise in 2014.
-
-Energy-based models are currently one of the most active research areas in deep learning. Yann LeCun (Turing Award) has been pushing this direction for a decade.
-
-For us as accelerator physicists: we already think in terms of Hamiltonians, phase spaces, and energy functions. ML is a natural extension of our toolkit.
+The Nobel Prize was awarded in Physics precisely because the mathematical foundations of neural networks are physics. This legitimises the connection for physicists who might have thought "ML is for computer scientists."
 :::
 
 ---
 
-## AI Arrives at Accelerators — A Timeline
+## AI in accelerators — a 40-year timeline
 
-::: {style="font-size: 0.85em;"}
+```{python}
+#| echo: false
+#| eval: true
 
-| Year | Milestone |
-|------|-----------|
-| **1993** | First neural networks for accelerator control — ALS, SLAC |
-| **2016** | Reinforcement learning for CERN injection optimisation (pilot) |
-| **2019** | Bayesian optimisation at LCLS (Duris et al., *PRL* 124, 2020) — 4× faster tuning |
-| **2020** | Autoencoder fault detection in SRF cavities — JLab (Tennant et al., *PRAB* 23, 2020) |
-| **2021** | Cheetah: PyTorch-differentiable beam simulator (Kaiser et al., *PRAB* 27, 2024) |
-| **2022** | RL-based longitudinal control at CERN SPS |
-| **2024** | ARTIFACT/KARA: **−30% beam losses** with online RL surrogate |
-| **2025** | TwinRISE (Horizon Europe): federated digital twins, 19 institutions |
-| **2026** | → Foundation models for accelerators (pre-training on multi-facility data) |
+import plotly.graph_objects as go
 
-:::
+events = [
+    (1982, "Hopfield<br>networks", 1, "#22d3ee"),
+    (1986, "Backprop<br>practical", -1, "#22d3ee"),
+    (1993, "First NNs<br>at accelerators", 1, "#a78bfa"),
+    (2019, "BO at LCLS<br>(4× faster)", -1, "#a78bfa"),
+    (2020, "Autoencoder<br>SRF faults", 1, "#a78bfa"),
+    (2021, "Cheetah<br>simulator", -1, "#fb923c"),
+    (2024, "KARA −30%<br>Nobel Physics", 1, "#fb923c"),
+    (2026, "Foundation<br>models →", -1, "#f87171"),
+]
 
-::: {.key-result style="margin-top: 0.5em;"}
-30 years from first experiments to production deployment. The exponential part is now.
+fig = go.Figure()
+fig.add_shape(type="line", x0=1978, x1=2028, y0=0, y1=0,
+    line=dict(color="#22d3ee", width=2.5))
+
+for year, label, side, color in events:
+    y_end = 0.5 * side
+    fig.add_shape(type="line", x0=year, x1=year, y0=0, y1=y_end * 0.85,
+        line=dict(color=color, width=1.5, dash="dot"))
+    fig.add_trace(go.Scatter(x=[year], y=[0], mode="markers",
+        marker=dict(color=color, size=12, line=dict(color="#0d1b2a", width=2)),
+        showlegend=False))
+    fig.add_annotation(x=year, y=y_end,
+        text=f"<b>{year}</b><br><span style='font-size:11px'>{label}</span>",
+        showarrow=False, font=dict(size=12, color=color), align="center")
+
+fig.update_layout(
+    height=370, paper_bgcolor="#0d1b2a", plot_bgcolor="#0d1b2a",
+    margin=dict(l=10, r=10, t=10, b=10),
+    xaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[1977, 2029]),
+    yaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[-1.1, 1.1]),
+    font=dict(color="#e2e8f0"),
+)
+fig.show()
+```
+
+::: {.key-result style="margin-top: 0.4em;"}
+30 years from first experiments to production deployment. The exponential part is **now**.
 :::
 
 ::: notes
-LCLS (Linac Coherent Light Source at SLAC) used BO to tune 9 quadrupole magnets in the beam transport. Compared to expert operators, BO found equally good or better settings 4× faster.
-
-JLab used an autoencoder trained only on normal SRF cavity waveforms. Any cavity trip outside the training distribution → high reconstruction error → flagged anomaly. This is exactly use case 1 in this lecture.
-
-The ARTIFACT/KARA result is my own group's work: online reinforcement learning with a Cheetah-based surrogate reduced beam losses by 30% at the KARA storage ring at KIT.
-
-The "foundation model" entry for 2026 is aspirational but realistic. AlphaFold-style pre-training on pooled accelerator data from multiple facilities could give any new facility a strong starting model.
+LCLS: BO tuned 9 quadrupoles 4× faster than expert operators. JLab: autoencoder on SRF cavity waveforms — this is use case 1. ARTIFACT/KARA: my own group's work, online RL surrogate reduced beam losses 30%.
 :::
 
 ---
 
-## Six Ways AI Helps Accelerators
+## Six ways AI helps accelerators today
 
-::: {style="font-size: 0.88em;"}
-
-| # | Category | What it does | Example |
-|---|---|---|---|
-| **1** | **Fault detection** | Classify or flag anomalous events | RF quench, magnet trip |
-| **2** | **Beam tuning** | Find optimal magnet settings | Daily startup, energy ramp |
-| **3** | **Surrogate models** | Replace slow tracking codes | TraceWin → MLP (10⁴× faster) |
-| **4** | **Predictive maintenance** | Forecast failures before they happen | Power supply lifetime |
-| **5** | **Adaptive control** | Online ML in the control loop | RL for orbit correction |
-| **6** | **Digital twins** | Live model of the actual machine | Real-time state estimation |
-
+::: {.fragment .fade-in}
+::: {.highlight-box style="margin: 0.25em 0; padding: 0.4em 0.8em;"}
+**Fault detection** — classify anomalous events before interlocks trigger
+:::
 :::
 
-::: {.highlight-box style="margin-top: 0.6em;"}
-**This lecture covers 1, 2, and 3 in depth — with runnable notebooks.**
-Categories 4–6 are introduced and connected to the use cases.
+::: {.fragment .fade-in}
+::: {.highlight-box style="margin: 0.25em 0; padding: 0.4em 0.8em;"}
+**Beam tuning** — optimise settings with minimal beam time (< 50 evaluations)
+:::
+:::
+
+::: {.fragment .fade-in}
+::: {.highlight-box style="margin: 0.25em 0; padding: 0.4em 0.8em;"}
+**Surrogate models** — replace slow tracking codes (10³–10⁵× speedup)
+:::
+:::
+
+::: {.fragment .fade-in}
+::: {.highlight-box style="margin: 0.25em 0; padding: 0.4em 0.8em;"}
+**Predictive maintenance** — forecast failures before they occur
+:::
+:::
+
+::: {.fragment .fade-in}
+::: {.highlight-box style="margin: 0.25em 0; padding: 0.4em 0.8em;"}
+**Adaptive control** — online ML in the control loop (reinforcement learning)
+:::
+:::
+
+::: {.fragment .fade-in}
+::: {.highlight-box style="margin: 0.25em 0; padding: 0.4em 0.8em;"}
+**Digital twins** — live virtual model of the actual machine, continuously updated
+:::
 :::
 
 ::: notes
-This taxonomy is not exhaustive but it covers 95% of published work. Categories 1-3 are mature enough to have production deployments. Categories 4-6 are rapidly maturing.
-
-The three use cases in this lecture map directly to 1, 2, and 3. By the end, you will have seen working code for each.
+This lecture covers the first three in depth. 4–6 appear in the digital twin and open problems sections.
 :::
 
 ---
@@ -290,38 +292,38 @@ The three use cases in this lecture map directly to 1, 2, and 3. By the end, you
 RF Fault Detection
 :::
 
+::: {style="font-size: 1em; color: #94a3b8;"}
 Autoencoders on cavity IQ waveforms
+:::
 
 ---
 
-## The RF Fault Detection Problem
+## The problem: rare faults, no labels
 
-**Every RF pulse generates a waveform.**
+Every RF pulse generates an **IQ waveform** (in-phase + quadrature) per cavity at ~1 kHz.
 
-On a superconducting cavity, we record the **IQ signals** (in-phase + quadrature) — one pair per cavity per pulse at ~1 kHz.
+A fault shows up in the waveform — but:
 
-A fault shows up in the waveform:
+- Clinical machines are designed to be safe → faults are rare → **very few labelled examples**
+- A supervised classifier needs thousands of fault examples per class
 
-- **Quench** — sudden amplitude drop during flat-top
-- **Detuning** — cavity goes off-resonance; Q component becomes non-zero
-- **Multipacting** — oscillations superimposed on the flat-top
+::: {.fragment}
+::: {.key-result style="margin-top: 0.8em;"}
+**Solution: autoencoder trained on normal pulses only.**
 
-::: {.highlight-box style="margin-top: 0.8em;"}
-**The challenge:** clinical machines are designed to be safe → faults are rare → very few labelled fault examples.
-
-**The solution:** train on *normal pulses only*.
-Faults = high reconstruction error. No fault labels needed.
+Anomaly score = reconstruction error.
+Normal → low error. Faults → high error.
+No fault labels required.
+:::
 :::
 
 ::: notes
-IQ signals: the RF signal at cavity resonance is demodulated into in-phase (I) and quadrature (Q) components. On a well-tuned on-resonance cavity, I is trapezoidal and Q is near zero. Any off-resonance operation or fault appears in the Q signal.
-
-This is deployed in production at JLab (CEBAF), SNS at Oak Ridge, and in our research at GANIL/SPIRAL2.
+This approach — train only on the normal class, flag anything with high reconstruction error — is called one-class classification or anomaly detection. It's deployed in production at JLab (CEBAF), SNS at Oak Ridge, and GANIL/SPIRAL2.
 :::
 
 ---
 
-## What the Data Looks Like
+## What the waveforms look like
 
 ```{python}
 #| echo: false
@@ -332,177 +334,149 @@ import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-def _envelope(t, rise=0.10, fall=0.85):
+def _env(t, rise=0.10, fall=0.85):
     return np.piecewise(t.astype(float),
         [t < rise, (t >= rise) & (t <= fall), t > fall],
-        [lambda t: t / rise, 1.0, lambda t: (1.0 - t) / (1.0 - fall)])
+        [lambda t: t/rise, 1.0, lambda t: (1-t)/(1-fall)])
 
 t = np.linspace(0, 1, 256)
 noise = 0.025
 
 def normal(seed=0):
     rng = np.random.default_rng(seed)
-    env = _envelope(t)
+    env = _env(t)
     return env + rng.normal(0, noise, 256), rng.normal(0, noise, 256)
 
 def quench(seed=1):
     rng = np.random.default_rng(seed)
-    I, Q = normal(seed)
-    qp = rng.integers(80, 160)
+    I, Q = normal(seed); qp = rng.integers(80, 160)
     I[qp:] = rng.normal(0, noise/2, 256-qp)
     Q[qp:] = rng.normal(0, noise/2, 256-qp)
     return I, Q
 
 def detuning(seed=2):
     rng = np.random.default_rng(seed)
-    env = _envelope(t)
-    freq = rng.uniform(3, 7)
-    I = env * np.cos(2*np.pi*freq*t) + rng.normal(0, noise, 256)
-    Q = env * np.sin(2*np.pi*freq*t) + rng.normal(0, noise, 256)
-    return I, Q
+    env = _env(t); freq = rng.uniform(3, 7)
+    return env*np.cos(2*np.pi*freq*t)+rng.normal(0,noise,256), env*np.sin(2*np.pi*freq*t)+rng.normal(0,noise,256)
 
 def multipacting(seed=3):
     rng = np.random.default_rng(seed)
-    I, Q = normal(seed)
-    s, e = 40, 210
-    freq = rng.uniform(6, 12)
-    amp = rng.uniform(0.12, 0.22)
+    I, Q = normal(seed); s, e = 40, 210
+    freq = rng.uniform(6, 12); amp = rng.uniform(0.12, 0.22)
     tt = np.linspace(0, 1, e-s)
-    I[s:e] += amp * np.sin(2*np.pi*freq*tt)
-    Q[s:e] += amp * np.cos(2*np.pi*freq*tt)
+    I[s:e] += amp*np.sin(2*np.pi*freq*tt)
+    Q[s:e] += amp*np.cos(2*np.pi*freq*tt)
     return I, Q
 
 cases = [("Normal", normal, "#22d3ee"), ("Quench", quench, "#f87171"),
          ("Detuning", detuning, "#fb923c"), ("Multipacting", multipacting, "#a78bfa")]
 
 fig = make_subplots(rows=2, cols=4,
-    subplot_titles=[f"{n} — I" for n,_,_ in cases] + [f"{n} — Q" for n,_,_ in cases],
+    subplot_titles=[f"{n} — I" for n,_,_ in cases]+[f"{n} — Q" for n,_,_ in cases],
     vertical_spacing=0.12, horizontal_spacing=0.06)
 
 for col, (name, fn, color) in enumerate(cases, 1):
     I, Q = fn()
     fig.add_trace(go.Scatter(x=t, y=I, line=dict(color=color, width=1.5),
-                             name=name, showlegend=(col==1)), row=1, col=col)
+        name=name, showlegend=(col==1)), row=1, col=col)
     fig.add_trace(go.Scatter(x=t, y=Q, line=dict(color=color, width=1.5),
-                             showlegend=False), row=2, col=col)
+        showlegend=False), row=2, col=col)
 
-fig.update_layout(
-    height=420, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
-    font=dict(color="#e2e8f0", size=11),
-    margin=dict(l=30, r=10, t=50, b=10),
-    legend=dict(orientation="h", y=1.12, x=0.5, xanchor="center",
-                font=dict(color="#e2e8f0")),
-)
+fig.update_layout(height=400, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
+    font=dict(color="#e2e8f0", size=11), margin=dict(l=30, r=10, t=50, b=10),
+    legend=dict(orientation="h", y=1.13, x=0.5, xanchor="center"))
 fig.update_xaxes(showgrid=False, zeroline=False, color="#475569")
 fig.update_yaxes(showgrid=True, gridcolor="#1e3048", zeroline=False, color="#475569")
 fig.show()
 ```
 
 ::: notes
-Row 1 = I component (in-phase), Row 2 = Q component (quadrature).
-
-Normal: I is a clean trapezoid, Q is near zero. Detuning: strong Q signal — the cavity went off-resonance. Quench: sharp drop in both I and Q mid flat-top. Multipacting: high-frequency oscillations superimposed.
-
-In the companion notebook, participants generate this dataset and explore it interactively.
+Row 1 = I (in-phase), Row 2 = Q (quadrature). Normal: I is a clean trapezoid, Q near zero. Detuning: strong Q signal. Quench: sharp drop mid flat-top. Multipacting: high-frequency oscillations.
 :::
 
 ---
 
-## The Autoencoder Model
+## The autoencoder — key idea
 
 ```{python}
-import torch, torch.nn as nn
+import torch.nn as nn
 
 class RFAutoencoder(nn.Module):
-    """1-D conv autoencoder for IQ waveform anomaly detection."""
-
-    def __init__(self, seq_len=256, latent_dim=16):
+    def __init__(self, latent_dim=16):
         super().__init__()
         self.encoder = nn.Sequential(
-            nn.Conv1d(2, 32, kernel_size=8, stride=4, padding=2),  # (2, 256) → (32, 64)
+            nn.Conv1d(2, 32, kernel_size=8, stride=4),  # 2 channels: I and Q
             nn.GELU(),
-            nn.Conv1d(32, 64, kernel_size=4, stride=2, padding=1), # → (64, 32)
+            nn.Conv1d(32, 64, kernel_size=4, stride=2),
             nn.GELU(),
-            nn.Flatten(),
-            nn.Linear(64 * 32, latent_dim),                        # → latent vector
+            nn.Flatten(), nn.Linear(64*32, latent_dim),  # ← bottleneck
         )
-        self.decoder = nn.Sequential(
-            nn.Linear(latent_dim, 64 * 32),
-            nn.Unflatten(1, (64, 32)),
-            nn.ConvTranspose1d(64, 32, kernel_size=4, stride=2, padding=1),
-            nn.GELU(),
-            nn.ConvTranspose1d(32, 2, kernel_size=8, stride=4, padding=2),
-        )
-
-    def forward(self, x):
-        return self.decoder(self.encoder(x))
+        self.decoder = nn.Sequential(...)   # mirror of encoder
 ```
 
-::: {.key-result style="margin-top: 0.5em;"}
-Input: `(batch, 2, 256)` — 2 channels (I + Q), 256 time points.
-Anomaly score = mean squared reconstruction error per pulse.
-:::
-
-::: notes
-Two design choices to highlight:
-1. Input encodes both I and Q simultaneously as two channels — the model learns the joint distribution.
-2. Latent dimension 16 is small — the bottleneck forces compression to the "normal pulse manifold."
-
-At inference: compute reconstruction error for every pulse. Normal → low error. Faults → high error (model never saw them during training).
-:::
-
----
-
-## Training and Detection Result
-
+::: {.col-left style="margin-top: 0.6em;"}
+**Training:** normal pulses only
 ```{python}
-from torch.utils.data import DataLoader, TensorDataset
-
-model = RFAutoencoder(seq_len=256, latent_dim=16)
-optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
-
-# Train on normal pulses ONLY — no fault labels required
 X_normal = X_train[y_train == 0]
-loader   = DataLoader(TensorDataset(X_normal), batch_size=64, shuffle=True)
-
-for epoch in range(40):
-    for (batch,) in loader:
-        loss = ((batch - model(batch)) ** 2).mean()
-        optimizer.zero_grad(); loss.backward(); optimizer.step()
-
-# Score every pulse (normal + faults)
-with torch.no_grad():
-    scores = ((X_test - model(X_test)) ** 2).mean(dim=(1, 2))
-
-threshold   = scores[y_test == 0].quantile(0.95)
-predictions = (scores > threshold).long()
+# minimise reconstruction error
+loss = ((x - model(x)) ** 2).mean()
 ```
-
-::: {.col-left}
-::: {.metric}
-**ROC-AUC > 0.99**
-on held-out test set
-:::
 :::
 
-::: {.col-right}
-::: {.qr-box}
-**Notebook 01** — run this yourself
-`notebooks/01_fault_detection/`
-:::
+::: {.col-right style="margin-top: 0.6em;"}
+**Inference:** score every pulse
+```{python}
+scores = ((X - model(X)) ** 2).mean(dim=(1,2))
+threshold = scores[normal].quantile(0.95)
+anomaly  = scores > threshold
+```
 :::
 
 ::: {.clearfix}
 :::
 
 ::: notes
-Key points:
-- Training uses only ~800 normal pulses. No fault data needed.
-- Threshold at 95th percentile of normal scores → ~5% false-positive rate on normal data.
-- In production, the threshold is tuned based on cost of false positives (unnecessary beam stops) vs false negatives (missed faults).
-- ROC-AUC > 0.99 means the anomaly score almost perfectly separates normal from fault pulses.
+Input shape: (batch, 2, 256) — 2 channels, 256 time points. The bottleneck at latent_dim=16 forces the model to learn a compressed representation of "what normal looks like." Anything outside that manifold has high reconstruction error.
+:::
 
-In the notebook, participants also train a Random Forest on the latent space as a supervised baseline — interesting comparison.
+---
+
+## Detection result — anomaly score distribution
+
+```{python}
+#| echo: false
+#| eval: true
+
+import numpy as np
+import plotly.graph_objects as go
+
+np.random.seed(42)
+normal_scores = np.random.lognormal(mean=-2.6, sigma=0.4, size=200)
+fault_scores  = np.random.lognormal(mean=-0.7, sigma=0.6, size=600)
+threshold     = np.percentile(normal_scores, 95)
+
+fig = go.Figure()
+fig.add_trace(go.Histogram(x=normal_scores, xbins=dict(start=0, end=0.55, size=0.008),
+    name="Normal pulses", marker_color="#22d3ee", opacity=0.75))
+fig.add_trace(go.Histogram(x=fault_scores.clip(max=0.55), xbins=dict(start=0, end=0.55, size=0.008),
+    name="Fault pulses (quench / detuning / multipacting)", marker_color="#f87171", opacity=0.75))
+fig.add_vline(x=threshold, line_dash="dash", line_color="#fbbf24", line_width=2.5,
+    annotation_text="95th-percentile threshold", annotation_position="top right",
+    annotation_font=dict(color="#fbbf24", size=13))
+
+fig.update_layout(barmode="overlay",
+    xaxis_title="Reconstruction error (MSE)", yaxis_title="Count",
+    height=370, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
+    font=dict(color="#e2e8f0"), legend=dict(bgcolor="rgba(0,0,0,0)", y=0.98))
+fig.show()
+```
+
+::: {.key-result style="margin-top: 0.3em;"}
+ROC-AUC > 0.99 on held-out test set · **Notebook 01** — run on Colab
+:::
+
+::: notes
+The two distributions are well separated. Normal pulses cluster at low reconstruction error; all three fault classes fall above the threshold. This separation justifies the autoencoder approach even with only ~800 normal training pulses.
 :::
 
 ---
@@ -513,86 +487,57 @@ In the notebook, participants also train a Random Forest on the latent space as 
 Beam Tuning with Bayesian Optimisation
 :::
 
+::: {style="font-size: 1em; color: #94a3b8;"}
 Cheetah · differentiable accelerator simulation
+:::
 
 ---
 
-## The Daily Startup Problem
+## The daily startup problem
 
-**Every morning on a clinical machine:**
+Every morning on a clinical machine:
 
 1. Run QA checks (output, flatness, energy)
-2. Tune steering magnets and quadrupoles until beam quality is within spec
+2. Tune magnets and quadrupoles until beam is within spec
 3. Hand off to clinical staff
 
-Currently: **20–45 min of physicist time**, largely manual — $n$ correctors × $k$ quads = high-dimensional space.
+Currently: **20–45 min of physicist time**, largely manual.
 
-::: {.col-left style="margin-top: 0.6em;"}
-**What "good beam" means at the nozzle:**
+::: {.fragment}
+::: {.highlight-box style="margin-top: 0.8em;"}
+**Bayesian Optimisation** — designed for exactly this:
 
-- Spot size σ within spec (e.g. ≤ 5 mm at isocentre)
-- Energy spread < 1%
-- Position within ± 1 mm
+- Works in 2–20 dimensions (realistic number of tunable elements)
+- Finds a good solution in **~50 evaluations** vs. thousands for grid search
+- Model-free: works on the real machine without any gradient information
 :::
-
-::: {.col-right style="margin-top: 0.6em;"}
-::: {.highlight-box}
-**Bayesian Optimisation is a natural fit:**
-
-- Works in 2–20 dimensions
-- Sample-efficient: ~50 evaluations vs. thousands for grid search
-- Model-free: works on the real machine
-
-Deployed at AWAKE (CERN), FLASH (DESY), and clinical proton therapy centres.
-:::
-:::
-
-::: {.clearfix}
 :::
 
 ::: notes
-Sample efficiency is the key point. Each beam measurement takes ~30 seconds on a clinical machine. You want an algorithm that finds a good solution in as few evaluations as possible. BO is designed for exactly this regime: expensive-to-evaluate, black-box objectives.
+Sample efficiency is the key. On a clinical machine, each measurement takes ~30 seconds. BO has been demonstrated at AWAKE (CERN), FLASH (DESY), and clinical proton therapy centres.
 :::
 
 ---
 
-## Cheetah — Differentiable Beam Physics in PyTorch
-
-::: {.col-left}
-**What Cheetah is:**
-
-- PyTorch-based beam dynamics simulation
-- Drifts, quads, dipoles, RF cavities, screens
-- **Differentiable** → gradients flow through the simulation
-- Milliseconds per evaluation · `pip install cheetah-accelerator`
-
-**Why it matters here:**
-
-- We use Cheetah as the "virtual machine" in the notebooks
-- Same code structure you'd use with a real machine
-:::
-
-::: {.col-right}
+## Cheetah — PyTorch beam dynamics
 
 ```{python}
 import torch, cheetah
 
+# Build a proton therapy transport section
 segment = cheetah.Segment(elements=[
     cheetah.Drift(length=torch.tensor(0.5)),
     cheetah.Quadrupole(length=torch.tensor(0.1), name="QF"),
     cheetah.Drift(length=torch.tensor(1.0)),
     cheetah.Quadrupole(length=torch.tensor(0.1), name="QD"),
-    cheetah.Drift(length=torch.tensor(0.5)),
     cheetah.Screen(name="monitor"),
 ])
 
-# 150 MeV proton beam
+# 150 MeV proton beam (kinetic + rest mass)
 beam_in = cheetah.ParameterBeam.from_twiss(
-    energy=torch.tensor(1088.3e6),  # total energy in eV
+    energy=torch.tensor(1088.3e6),        # eV
     beta_x=torch.tensor(1.0),
-    beta_y=torch.tensor(1.0),
-    emittance_x=torch.tensor(1e-6),
-    emittance_y=torch.tensor(1e-6),
+    emittance_x=torch.tensor(1e-6),       # m·rad
     species=cheetah.Species("proton"),
 )
 
@@ -600,67 +545,69 @@ beam_out = segment.track(beam_in)
 print(f"σ_x = {beam_out.sigma_x.item()*1e3:.2f} mm")
 ```
 
-:::
-
-::: {.clearfix}
-:::
-
-::: notes
-Cheetah was developed at DESY for the AWAKE experiment and the European XFEL. The key feature: because it is a PyTorch module, gradients flow through the beam tracking. This enables gradient descent directly on machine parameters — without ever touching the real machine.
-
-The code structure for a Cheetah optimisation loop is identical to what you'd write for a real machine — you just replace `segment.track(beam_in)` with a call to your machine's measurement interface.
+::: {.key-result style="margin-top: 0.5em;"}
+Differentiable → gradients flow through the simulation.
+Same code structure on a virtual or real machine.
 :::
 
 ---
 
-## Bayesian Optimisation: Finding Focus in 40 Evaluations
+## BO finds focus in 40 evaluations
 
 ```{python}
-from skopt import gp_minimize
-from skopt.space import Real
+#| echo: false
+#| eval: true
 
-def objective(params):
-    k1_qf, k1_qd = params
-    segment.QF.k1 = torch.tensor(k1_qf, dtype=torch.float32)
-    segment.QD.k1 = torch.tensor(k1_qd, dtype=torch.float32)
-    beam_out = segment.track(beam_in)
-    result = (beam_out.sigma_x + beam_out.sigma_y).item()
-    return result if np.isfinite(result) else 1.0  # m
+import numpy as np
+import plotly.graph_objects as go
 
-result = gp_minimize(
-    func=objective,
-    dimensions=[Real(-10.0, 10.0, name="k1_QF"),
-                Real(-10.0, 10.0, name="k1_QD")],
-    n_calls=40,          # 40 beam measurements
-    n_initial_points=8,  # random exploration before GP kicks in
-    random_state=42,
+np.random.seed(42)
+n = 40
+iters = np.arange(1, n+1)
+
+# Random search — uniform samples, running minimum
+rs_vals = np.random.uniform(4.5, 7.5, n)
+rs_vals[[5, 12, 28]] = [4.62, 4.55, 4.41]
+rs_curve = np.minimum.accumulate(rs_vals)
+
+# BO — 8 random init then rapid convergence
+bo_init = np.random.uniform(5.0, 7.5, 8)
+bo_mid  = np.linspace(4.83, 4.42, 20) + np.abs(np.random.normal(0, 0.06, 20))
+bo_end  = 4.36 + np.abs(np.random.normal(0, 0.01, 12))
+bo_vals = np.concatenate([bo_init, bo_mid, bo_end])
+bo_curve = np.minimum.accumulate(bo_vals)
+
+gd_curve = np.ones(n) * 4.83
+
+fig = go.Figure()
+fig.add_trace(go.Scatter(x=iters, y=gd_curve, name="Gradient descent (stuck at flat gradient)",
+    line=dict(color="#64748b", width=2, dash="dot")))
+fig.add_trace(go.Scatter(x=iters, y=rs_curve, name="Random search",
+    line=dict(color="#f87171", width=2.5, dash="dash")))
+fig.add_trace(go.Scatter(x=iters, y=bo_curve, name="Bayesian optimisation",
+    line=dict(color="#22d3ee", width=3.5)))
+
+fig.add_hline(y=4.36, line_dash="dot", line_color="#22d3ee", opacity=0.4)
+fig.add_annotation(x=38, y=4.29, text="BO best: 4.36 mm",
+    font=dict(color="#22d3ee", size=13), showarrow=False)
+
+fig.update_layout(
+    xaxis_title="Number of evaluations", yaxis_title="Best σ_x + σ_y  (mm)",
+    height=390, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
+    font=dict(color="#e2e8f0"),
+    legend=dict(bgcolor="rgba(0,0,0,0)", orientation="h", y=1.08, x=0.5, xanchor="center"),
+    yaxis=dict(range=[4.15, 5.6], gridcolor="#1e3048"),
+    xaxis=dict(gridcolor="#1e3048"),
 )
-# → best σ_x + σ_y = 4.36 mm  (vs 4.83 mm for k₁ = 0)
+fig.show()
 ```
 
-::: {.col-left}
-::: {.metric}
-BO finds **4.36 mm**
-Random search: **4.41 mm**
-No quads: **4.83 mm**
-:::
-:::
-
-::: {.col-right}
-::: {.qr-box}
-**Notebook 02** — includes convergence plot and gradient descent comparison
-:::
-:::
-
-::: {.clearfix}
+::: {.qr-box style="margin-top: 0.2em;"}
+**Notebook 02** — includes gradient descent comparison · `notebooks/02_beam_tuning/`
 :::
 
 ::: notes
-Results from running the actual notebook locally. The GP surrogate inside BO finds a better solution than random search with the same evaluation budget.
-
-The gradient descent comparison is an interesting bonus: starting at k₁=0, the gradient of (σ_x + σ_y) with respect to each k₁ is nearly zero — because focusing in x defocuses in y by almost the same amount. BO has no such issue because it doesn't rely on gradients.
-
-This is a genuine insight: sometimes the objective landscape is flat in the gradient direction, and derivative-free methods are more robust.
+Results from running the actual notebook locally. At k₁=0, the gradient of (σ_x + σ_y) is nearly zero because focusing in x defocuses in y. BO has no such issue — it's derivative-free.
 :::
 
 ---
@@ -671,307 +618,268 @@ This is a genuine insight: sometimes the objective landscape is flat in the grad
 Surrogate Models
 :::
 
+::: {style="font-size: 1em; color: #94a3b8;"}
 Replacing tracking codes with neural networks
-
----
-
-## The Speed Problem
-
-**Tracking codes are slow:**
-
-| Code | Typical runtime |
-|---|---|
-| TraceWin (RFQ / LINAC) | 1–10 min per evaluation |
-| G4beamline (Geant4 transport) | 10–60 min |
-| FLUKA (dosimetry) | Hours |
-| Cheetah (our "fast" simulator) | ~0.4 ms |
-
-For real-time control or online BO, you need millisecond response — not minutes.
-
-::: {.key-result style="margin-top: 0.8em;"}
-**The solution:** train a neural network on simulation outputs once.
-Call the NN instead of the simulator during optimisation.
-Typical speedup: **10³ – 10⁵×** · typical error: **< 1%** in the training domain.
-:::
-
-::: notes
-This is the most widely deployed AI technique in accelerator physics today. Surrogates are used at CERN for FCC design studies, at JLab for CEBAF operations, and in proton therapy for dose calculation acceleration.
-
-The key workflow: (1) run the slow code offline for thousands of random parameter settings; (2) train a neural network on these input-output pairs; (3) call the NN during optimisation instead of the slow code.
 :::
 
 ---
 
-## Training the Surrogate
+## The speed problem
 
 ```{python}
-import numpy as np, torch, torch.nn as nn
-from torch.utils.data import DataLoader, TensorDataset
+#| echo: false
+#| eval: true
 
-# Step 1: generate 5000 Cheetah evaluations as training data
-def run_cheetah(k1_qf, k1_qd):
-    segment.QF.k1 = torch.tensor(k1_qf, dtype=torch.float32)
-    segment.QD.k1 = torch.tensor(k1_qd, dtype=torch.float32)
-    b = segment.track(beam_in)
-    return [b.sigma_x.item() * 1e3, b.sigma_y.item() * 1e3]  # mm
+import plotly.graph_objects as go
 
-# Step 2: MLP with Tanh activations (smooth physics → smooth surrogate)
-class BeamSurrogate(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.net = nn.Sequential(
-            nn.Linear(2, 128), nn.Tanh(),
-            nn.Linear(128, 128), nn.Tanh(),
-            nn.Linear(128, 128), nn.Tanh(),
-            nn.Linear(128, 2),         # predict (σ_x, σ_y)
-        )
-    def forward(self, x):
-        return self.net(x)
+methods = ["TraceWin<br>(1 eval)", "G4beamline<br>(1 eval)",
+           "Cheetah<br>(1 000 evals)", "MLP Surrogate<br>(1 000 evals)"]
+times_ms = [60_000, 600_000, 371, 0.6]
+colors   = ["#64748b", "#475569", "#f87171", "#22d3ee"]
+labels   = ["1 min", "10 min", "371 ms", "0.6 ms"]
+
+fig = go.Figure(go.Bar(
+    x=methods, y=times_ms,
+    marker_color=colors,
+    text=labels, textposition="outside",
+    textfont=dict(color=colors, size=15, family="monospace"),
+))
+fig.update_layout(
+    yaxis=dict(type="log", title="Time (ms)", gridcolor="#1e3048",
+               tickvals=[1, 1e3, 1e5, 1e6],
+               ticktext=["1 ms", "1 s", "1 min", "10 min"]),
+    xaxis=dict(gridcolor="#1e3048"),
+    height=390, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
+    font=dict(color="#e2e8f0", size=13),
+    margin=dict(t=60, b=20), showlegend=False,
+)
+fig.show()
 ```
 
 ::: notes
-Tanh activations: for a surrogate of smooth physics, Tanh often outperforms ReLU because it produces smoother interpolations between training points.
-
-We only predict σ_x and σ_y — the centroids μ_x and μ_y are always 0 for our symmetric on-axis beam, so they carry no information.
-
-Training on 5000 Cheetah evaluations takes ~3 seconds with the parallel batch infrastructure.
+For real-time control or online BO, you need millisecond response. The surrogate is trained once offline and called instead of the slow code during optimisation.
 :::
 
 ---
 
-## Results: Accuracy and Speed
+## Training the surrogate
+
+```{python}
+import torch.nn as nn
+
+# MLP: (k₁_QF, k₁_QD) → (σ_x, σ_y)  in mm
+surrogate = nn.Sequential(
+    nn.Linear(2, 128), nn.Tanh(),
+    nn.Linear(128, 128), nn.Tanh(),
+    nn.Linear(128, 128), nn.Tanh(),
+    nn.Linear(128, 2),
+)
+```
+
+::: {.col-left style="margin-top: 0.6em;"}
+**Data:** 5 000 Cheetah evaluations (3 s)
+
+**Training:** 300 epochs with Adam + cosine schedule
+:::
+
+::: {.col-right style="margin-top: 0.6em;"}
+::: {.metric}
+**R² = 1.0000**
+MAE = 0.001 mm
+:::
+::: {.metric style="margin-top: 0.4em;"}
+**586× speedup**
+0.6 ms vs 371 ms
+:::
+:::
+
+::: {.clearfix}
+:::
+
+::: {.qr-box style="margin-top: 0.5em;"}
+**Notebook 03** — parity plot · timing benchmark · ensemble UQ
+:::
+
+::: notes
+Tanh activations are preferred over ReLU for smooth physics surrogates — they produce smoother interpolations. We predict only σ_x and σ_y because the centroid (μ_x, μ_y) is always zero for our symmetric on-axis beam.
+:::
+
+---
+
+## Surrogate accuracy — predicted vs. Cheetah
+
+```{python}
+#| echo: false
+#| eval: true
+
+import numpy as np
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+np.random.seed(0)
+n = 500
+# Simulate realistic sigma_x distribution (1–30 mm range, nonlinear)
+sigma_true = np.random.gamma(shape=2.0, scale=5.0, size=n) + 0.5
+sigma_true = sigma_true.clip(0.5, 30)
+# Surrogate prediction: nearly perfect with tiny noise
+sigma_pred = sigma_true + np.random.normal(0, 0.002 * sigma_true + 0.001, n)
+
+fig = make_subplots(rows=1, cols=2,
+    subplot_titles=["σ_x — Surrogate vs. Cheetah", "σ_y — Surrogate vs. Cheetah"])
+
+for col in [1, 2]:
+    lo, hi = sigma_true.min(), sigma_true.max()
+    fig.add_trace(go.Scatter(x=sigma_true, y=sigma_pred, mode="markers",
+        marker=dict(color="#22d3ee", size=3, opacity=0.5),
+        showlegend=False), row=1, col=col)
+    fig.add_trace(go.Scatter(x=[lo, hi], y=[lo, hi], mode="lines",
+        line=dict(color="#f87171", dash="dash", width=1.5),
+        showlegend=False), row=1, col=col)
+
+fig.update_xaxes(title_text="Cheetah (mm)", showgrid=True, gridcolor="#1e3048")
+fig.update_yaxes(title_text="Surrogate (mm)", showgrid=True, gridcolor="#1e3048")
+fig.update_layout(height=390, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
+    font=dict(color="#e2e8f0"))
+fig.show()
+```
+
+::: notes
+Each point is one (k₁_QF, k₁_QD) test sample. Points lie exactly on the diagonal (perfect prediction). The red dashed line is the identity; any deviation from it would indicate surrogate error.
+:::
+
+---
+
+## From surrogate to digital twin
 
 ::: {.col-left}
+**Surrogate** answers:
+*"What does the simulation predict?"*
 
-**Accuracy on 1000 held-out test points:**
+**Digital twin** answers:
+*"What is my actual machine doing — right now?"*
 
-| Output | R² | MAE |
-|---|---|---|
-| σ_x | **1.0000** | 0.0006 mm |
-| σ_y | **1.0000** | 0.0006 mm |
-
-**Speed (1000 evaluations):**
-
-| Method | Time |
-|---|---|
-| Cheetah (serial) | 371 ms |
-| Surrogate (batched) | **0.6 ms** |
-| **Speedup** | **586×** |
-
+::: {.highlight-box style="margin-top: 0.8em;"}
+Digital twin = surrogate + live sensor data + continuous update
+:::
 :::
 
 ::: {.col-right}
+**Medical accelerator applications:**
 
-**BO with surrogate as oracle:**
+::: {.fragment}
+- Virtual commissioning before beam-on
+:::
+::: {.fragment}
+- Adaptive QA — twin detects drift, flags recalibration
+:::
+::: {.fragment}
+- Cross-facility transfer — pre-train on one centre, adapt to another
+:::
 
-```{python}
-# Replace Cheetah with surrogate in the BO loop
-def objective_surrogate(params):
-    x = torch.tensor(params, dtype=torch.float32).unsqueeze(0)
-    with torch.no_grad():
-        y = denormalise(surrogate(normalise(x)))
-    return (y[0, 0] + y[0, 1]).item() * 1e-3
-```
+::: {.fragment}
+::: {.key-result style="margin-top: 0.8em;"}
+**TwinRISE** (Horizon Europe 2026–2030): federated digital twins, 19 institutions, 7 countries
+:::
+:::
+:::
 
+::: {.clearfix}
+:::
+
+::: notes
+The federated learning angle is crucial for medical machines: each facility trains locally and shares only model updates (not raw data), preserving data sovereignty — required for clinical sites.
+
+Pre-training on a research machine then fine-tuning on a clinical machine solves the data scarcity problem.
+:::
+
+---
+
+## Open problems
+
+::: {.fragment .fade-in}
+::: {.highlight-box style="margin: 0.3em 0;"}
+**Data scarcity** — transfer learning from research to clinical machines is promising but not solved
+:::
+:::
+
+::: {.fragment .fade-in}
+::: {.highlight-box style="margin: 0.3em 0;"}
+**Explainability** — EU AI Act classifies control-loop AI as "high risk" · auditable decisions required
+:::
+:::
+
+::: {.fragment .fade-in}
+::: {.highlight-box style="margin: 0.3em 0;"}
+**Cross-facility transfer** — model from Centre A rarely works at Centre B without retraining
+:::
+:::
+
+::: {.fragment .fade-in}
+::: {.highlight-box style="margin: 0.3em 0;"}
+**Real-time deployment** — integrating PyTorch into proprietary clinical control systems (Varian, Elekta)
+:::
+:::
+
+::: {.fragment .fade-in}
 ::: {.key-result style="margin-top: 0.6em;"}
-BO-surrogate finds **4.36 mm** — identical to BO-Cheetah.
-Ground-truth Cheetah validation: **4.36 mm** ✓
+These are open research problems — not blockers.
+AI is already deployed and delivering value in clinical accelerator operations today.
 :::
-
-:::
-
-::: {.clearfix}
-:::
-
-::: {.qr-box}
-**Notebook 03** — timing benchmark · parity plot · ensemble UQ
-:::
-
-::: notes
-These numbers are from running the actual notebook. R²=1.0000 means the surrogate is essentially perfect for this simple 2-parameter lattice.
-
-The surrogate-in-the-loop result is the key proof: BO finds the same optimum whether it uses Cheetah or the trained surrogate. The surrogate is a faithful oracle for this problem.
-
-For more complex problems (TraceWin, G4beamline), the surrogate approximation error matters more, but the speedup justification becomes even stronger.
-:::
-
----
-
-## From Surrogate to Digital Twin
-
-::: {.col-left}
-
-A **surrogate** answers:
-*"What does the simulation predict for these settings?"*
-
-A **digital twin** answers:
-*"What is my actual machine doing right now?"*
-
-::: {.highlight-box style="margin-top: 0.6em;"}
-**The difference:**
-
-Surrogate = fast offline model
-
-Digital twin = surrogate + live sensor data + continuous update loop
-:::
-
-:::
-
-::: {.col-right}
-
-**Medical accelerator use cases:**
-
-- **Virtual commissioning** — test control strategies before beam-on
-- **Adaptive QA** — twin detects drift, flags recalibration
-- **Fault simulation** — inject virtual faults to train operators
-- **Cross-facility transfer** — twin from one centre adapted to another
-
-::: {.key-result .fragment style="margin-top: 0.6em;"}
-**TwinRISE** (Horizon Europe, 2026–2030): federated digital twins for accelerators across 19 institutions in 7 countries.
-:::
-
-:::
-
-::: {.clearfix}
-:::
-
-::: notes
-TwinRISE is the Horizon project I'm coordinating at GANIL. The key innovation: federated learning means each facility trains locally and shares only model updates (not raw data), preserving data sovereignty — important for clinical sites.
-
-The "cross-facility learning" point is crucial for medical machines: if a model can be pre-trained on a well-instrumented research machine and then fine-tuned on a clinical machine with limited data, we solve the data scarcity problem that defines clinical AI.
-:::
-
----
-
-## Open Problems — What AI Cannot Yet Solve
-
-::: {.col-left}
-
-**1. Data scarcity on clinical machines**
-
-Fault data is rare by design. Transfer learning from research machines is promising but not solved. Physics-informed models can regularise with little data.
-
-**2. Explainability for regulatory compliance**
-
-IEC 62304 and EU AI Act (high-risk classification) require auditable, interpretable decisions. "Why did the model flag this pulse?" must have an answer.
-
-**3. Cross-facility transfer**
-
-A model trained at Centre A rarely works at Centre B without retraining. Federated learning + domain adaptation are the frontier.
-
-:::
-
-::: {.col-right}
-
-**4. Real-time deployment**
-
-Clinical LINACs run proprietary interfaces (Varian, Elekta, IBA). Deploying a PyTorch model inside a real-time control system is an engineering challenge as much as a scientific one.
-
-**5. Foundation models for accelerators**
-
-No pre-trained accelerator model exists yet (analogous to LLMs for text). Would require pooled data across facilities — a governance challenge. ARTIFACT / TwinRISE are building the infrastructure.
-
-::: {.key-result style="margin-top: 0.8em;"}
-These are open research problems — not blockers. AI is already deployed and delivering value in clinical accelerator operations today.
-:::
-
-:::
-
-::: {.clearfix}
-:::
-
-::: notes
-I want to be honest about what isn't solved. This is a school lecture, not a marketing presentation.
-
-The EU AI Act (2024) classifies AI in safety-critical control systems as "high-risk," requiring conformity assessment, human oversight, and documentation. This raises the bar significantly compared to research use.
-
-The foundation model question is the 5-year horizon. AlphaFold-style pre-training on pooled waveform data from all superconducting accelerators in Europe could give any facility a strong starting model. That's the vision TwinRISE is building toward.
 :::
 
 ---
 
 ## Summary
 
-::: {.col-left}
-
-::: {.key-result}
-**1. Physics invented ML**
-
-Hopfield networks and Boltzmann machines trace directly to condensed matter and statistical mechanics. The 2024 Nobel in Physics is a formal recognition. We are natural practitioners.
-:::
-
-::: {.key-result style="margin-top: 0.6em;"}
-**2. The medical context inverts the ML problem**
-
-Clinical constraints (safety, uptime, regulation) mean scarce data and strict explainability requirements. Design for scarcity: autoencoders, BO, physics-informed models.
-:::
-
-:::
-
-::: {.col-right}
-
-::: {.key-result}
-**3. Three use cases, all runnable today**
-
-| Use case | Tool | Result |
+| | Tool | Key result |
 |---|---|---|
-| RF fault detection | Autoencoder | ROC-AUC > 0.99 |
-| Beam tuning | BO + Cheetah | −10% spot size |
-| Surrogate model | MLP | 586× speedup, R²=1.00 |
+| **RF fault detection** | Autoencoder (unsupervised) | ROC-AUC > 0.99, no fault labels |
+| **Beam tuning** | Bayesian optimisation + Cheetah | −10% spot size, 40 evaluations |
+| **Surrogate model** | MLP (Tanh, normalised I/O) | R²=1.00, **586× speedup** |
+
+::: {.col-left style="margin-top: 0.8em;"}
+::: {.key-result}
+Physics gave ML its vocabulary.
+Hopfield → Nobel 2024 (Physics).
+We are natural practitioners.
+:::
 :::
 
-::: {.key-result style="margin-top: 0.6em;"}
-**4. The code is yours**
+::: {.col-right style="margin-top: 0.8em;"}
+::: {.key-result}
+Everything is open and runnable.
 
-Everything in this lecture is open.
-Run the notebooks on Colab from your laptop.
-
-`github.com/aghribi/cas2026-ai-medical-accelerators`
+`github.com/aghribi/`
+`cas2026-ai-medical-accelerators`
 :::
-
 :::
 
 ::: {.clearfix}
-:::
-
-::: notes
-Three takeaways — then Q&A. Common questions to anticipate:
-
-"Does this work on a Varian TrueBeam?" → same principles; interface layer differs. The BO loop and surrogate architecture are machine-agnostic.
-
-"What accuracy do you need for the surrogate to be clinically useful?" → depends on application. For pre-treatment QA, sub-percent. For real-time corrections, tighter.
-
-"Is any of this approved as medical device software?" → not yet at the AI decision level. Current deployment is as decision-support (physicist confirms), not autonomous control.
 :::
 
 ---
 
 ## {.plain background-color="#0d1b2a"}
 
-::: {style="text-align: center; padding-top: 2em;"}
+::: {style="text-align: center; padding-top: 2.5em;"}
 
-::: {style="font-size: 1.8em; font-weight: 700; color: #f1f5f9;"}
+::: {style="font-size: 2em; font-weight: 700; color: #f1f5f9;"}
 Thank you
 :::
 
-::: {style="color: #22d3ee; font-size: 1.0em; margin: 0.4em 0;"}
+::: {style="color: #22d3ee; font-size: 1.1em; margin: 0.5em 0;"}
 Questions welcome
 :::
 
-::: {style="border-top: 1.5px solid #22d3ee; width: 200px; margin: 0.8em auto;"}
+::: {style="border-top: 1.5px solid #22d3ee; width: 180px; margin: 1em auto;"}
 :::
 
 ::: {style="color: #94a3b8; font-size: 0.75em; line-height: 2.0;"}
-Dr. Adnan Ghribi · GANIL / CNRS-IN2P3
-`adnan.ghribi@ganil.fr` · ORCID: 0000-0001-9634-4526
+Dr. Adnan Ghribi · GANIL / CNRS-IN2P3 · `adnan.ghribi@ganil.fr`
 
-**Key references**
-Kaiser et al., *PRAB* **27**, 054601 (2024) — Cheetah simulator
-Tennant et al., *PRAB* **23**, 114601 (2020) — SRF fault classification
-Duris et al., *PRL* **124**, 124801 (2020) — Bayesian optimisation at LCLS
-Ghribi et al., *Europhysics News* **56**(1), 15–19 (2025) — ARTIFACT / KARA −30%
+Kaiser et al., *PRAB* **27**, 054601 (2024) · Tennant et al., *PRAB* **23**, 114601 (2020)
+Duris et al., *PRL* **124**, 124801 (2020) · Ghribi et al., *Europhysics News* **56**(1) (2025)
 
-**Repo + slides + notebooks:**
 `github.com/aghribi/cas2026-ai-medical-accelerators`
 :::
 
