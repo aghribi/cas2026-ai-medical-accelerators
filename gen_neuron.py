@@ -45,7 +45,7 @@ def ann(ax_, label, lx, ly, px, py, rad=0.0):
     )
 
 # Dendrites and soma: labels above the image (ly < 0)
-ann(ax, 'Dendrites\n(inputs)',     160,  -68,  160, 340, rad= 0.0)
+ann(ax, 'Dendrites\n(inputs)',     220,  -68,  310, 270, rad= 0.15)
 ann(ax, 'Cell body\n(soma)',       475,  -68,  475, 330, rad= 0.0)
 
 # Synaptic terminals: label to the RIGHT of the image (lx > W)
@@ -150,7 +150,7 @@ ax.add_patch(Circle((9.15, sig_y), 0.62,
                     facecolor=DARK, edgecolor=CYAN2, lw=2, zorder=4))
 ax.text(9.15, sig_y, 'y', color=CYAN2, fontsize=18, ha='center', va='center',
         fontweight='bold', zorder=5)
-ax.text(9.15, sig_y - 1.45, 'Binary output\n(0 or 1)',
+ax.text(9.15, sig_y - 1.95, 'Binary output\n(0 or 1)',
         color=GRAY, fontsize=12, ha='center', linespacing=1.35)
 
 ax.set_title('McCulloch–Pitts artificial neuron (1943)',

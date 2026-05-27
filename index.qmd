@@ -188,7 +188,7 @@ McCulloch & Pitts (1943). A logical calculus of the ideas immanent in nervous ac
 
 ---
 
-## The perceptron — where it all began (1957)
+## The perceptron — first learning algorithm (1957)
 
 ::: {.col-left}
 
