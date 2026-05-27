@@ -6,7 +6,6 @@ from matplotlib.patches import Circle, Ellipse, FancyBboxPatch
 import numpy as np
 
 BG    = '#0d1b2a'
-PANEL = '#111f30'
 CYAN  = '#22d3ee'
 CYAN2 = '#67e8f9'
 WHITE = '#e2e8f0'
@@ -17,67 +16,59 @@ DARK  = '#1e3a5f'
 bio_img = mpimg.imread('assets/biological_neuron1.png')
 H, W = bio_img.shape[:2]   # 720 × 1280
 
-fig = plt.figure(figsize=(16, 7.0), facecolor=BG)
-ax_bio = fig.add_axes([0.01, 0.04, 0.47, 0.92])
-ax_art = fig.add_axes([0.51, 0.04, 0.48, 0.92])
-
-for ax in [ax_bio, ax_art]:
-    ax.set_facecolor(BG)
-    ax.axis('off')
-
-# ── LEFT: annotated biological neuron photo ───────────────────────────────────
-ax = ax_bio
+# ── Figure 1: annotated biological neuron ────────────────────────────────────
+fig1, ax = plt.subplots(figsize=(10, 5.8), facecolor=BG)
+ax.set_facecolor(BG)
+ax.axis('off')
 ax.imshow(bio_img, zorder=1, aspect='auto')
 
-# expand axis so labels can float above/below the image
-PAD_T = 140   # pixels above
-PAD_B = 150   # pixels below
+PAD_T = 125
+PAD_B = 145
 ax.set_xlim(-20, W + 20)
-ax.set_ylim(H + PAD_B, -PAD_T)   # y inverted: row 0 = top
+ax.set_ylim(H + PAD_B, -PAD_T)
 
-def ann(label, lx, ly, ax_, ay_, rad=0.0, below=False):
-    """lx,ly  = label centre (px, may be outside image bounds)
-       ax_,ay_ = arrow target (px, inside image)"""
-    ax.annotate(
+def ann(ax_, label, lx, ly, px, py, rad=0.0):
+    ax_.annotate(
         label,
-        xy=(ax_, ay_), xytext=(lx, ly),
-        color=WHITE, fontsize=8.5, ha='center', va='center',
+        xy=(px, py), xytext=(lx, ly),
+        color=WHITE, fontsize=10.5, ha='center', va='center',
         fontweight='bold',
         bbox=dict(boxstyle='round,pad=0.28', facecolor=BG,
-                  edgecolor=CYAN, alpha=0.92, lw=1.3),
-        arrowprops=dict(
-            arrowstyle='->', color=CYAN, lw=1.4, mutation_scale=10,
-            connectionstyle=f'arc3,rad={rad}'
-        ),
+                  edgecolor=CYAN, alpha=0.93, lw=1.4),
+        arrowprops=dict(arrowstyle='->', color=CYAN, lw=1.5,
+                        mutation_scale=11,
+                        connectionstyle=f'arc3,rad={rad}'),
         zorder=5
     )
 
-# Anatomy positions (1280×720 image, y=0 top):
-#   Dendrites/inputs:  x≈160, y≈360
-#   Soma (pink):       x≈470, y≈340
-#   Axon midpoint:     x≈820, y≈370
-#   Terminals:         x≈1150, y≈330
-#   Synaptic weights:  between inputs and soma, x≈320, y≈480
+# anatomy approx positions (1280×720, y=0 top):
+#   dendrites/inputs  ~(160, 340)
+#   soma (pink)       ~(470, 330)
+#   axon midpoint     ~(820, 380)
+#   terminals         ~(1150, 330)
+#   synaptic weights  ~(300, 480)
+ann(ax, 'Dendrites\n(inputs)',            160,  -68,  160,  340, rad= 0.0)
+ann(ax, 'Cell body\n(soma)',              475,  -68,  475,  330, rad= 0.0)
+ann(ax, 'Synaptic\nterminals\n(output)', 1150,  -80, 1150,  330, rad= 0.0)
+ann(ax, 'Axon',                           820, H+82,  820,  390, rad= 0.0)
+ann(ax, 'Synaptic\nweights  $w_i$',       320, H+82,  300,  480, rad=-0.15)
 
-# Labels ABOVE image (ly < 0)
-ann('Dendrites\n(inputs)',         160,  -70,   160,  340, rad= 0.0)
-ann('Cell body\n(soma)',           475,  -70,   475,  330, rad= 0.0)
-ann('Synaptic\nterminals\n(output)', 1150, -80,  1150, 330, rad= 0.0)
-
-# Labels BELOW image (ly > H)
-ann('Axon',                        820,  H+80,  820,  390, rad= 0.0)
-ann('Synaptic\nweights $w_i$',     320,  H+80,  300,  480, rad=-0.15)
-
-# Firing rule caption below labels
-ax.text(W / 2, H + PAD_B - 18,
+ax.text(W / 2, H + PAD_B - 16,
         r'fires when  $\sum w_i x_i \geq \theta$',
-        color=CYAN, fontsize=10, ha='center', va='bottom', style='italic')
+        color=CYAN, fontsize=11, ha='center', va='bottom', style='italic')
 
-ax.set_title('Biological neuron', color=WHITE, fontsize=13,
+ax.set_title('Biological neuron', color=WHITE, fontsize=12,
              fontweight='bold', pad=4)
 
-# ── RIGHT: McCulloch–Pitts artificial neuron ──────────────────────────────────
-ax = ax_art
+fig1.savefig('assets/bio_neuron_annotated.png',
+             dpi=150, bbox_inches='tight', facecolor=BG, edgecolor='none')
+plt.close(fig1)
+print("Saved bio_neuron_annotated.png")
+
+# ── Figure 2: McCulloch–Pitts artificial neuron ──────────────────────────────
+fig2, ax = plt.subplots(figsize=(10, 4.2), facecolor=BG)
+ax.set_facecolor(BG)
+ax.axis('off')
 ax.set_xlim(0, 10)
 ax.set_ylim(0, 10)
 
@@ -131,9 +122,9 @@ ax.text(9.55, sig_y - 1.1, '0 or 1', color=GRAY, fontsize=8.5, ha='center')
 ax.text(9.55, sig_y - 1.55, 'Binary\noutput', color=GRAY, fontsize=8, ha='center')
 
 ax.set_title('McCulloch–Pitts artificial neuron (1943)',
-             color=WHITE, fontsize=13, fontweight='bold', pad=6)
+             color=WHITE, fontsize=12, fontweight='bold', pad=6)
 
-plt.savefig('assets/mcculloch_pitts_neuron.png',
-            dpi=150, bbox_inches='tight', facecolor=BG, edgecolor='none')
-plt.close()
-print("Saved.")
+fig2.savefig('assets/mp_artificial_neuron.png',
+             dpi=150, bbox_inches='tight', facecolor=BG, edgecolor='none')
+plt.close(fig2)
+print("Saved mp_artificial_neuron.png")
