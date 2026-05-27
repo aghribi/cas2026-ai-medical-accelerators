@@ -152,16 +152,14 @@ From the perceptron to the Nobel Prize in Physics
 
 ::: {.col-left}
 
-::: {style="display:flex; gap:0.7em; align-items:flex-start; margin-bottom:0.5em;"}
-<img src="assets/rosenblatt_journal.png" style="border-radius:6px; border:1px solid #22d3ee; width:105px; flex-shrink:0;">
-<img src="assets/bio_neuron.png" style="border-radius:6px; border:1px solid rgba(34,211,238,0.3); width:calc(100% - 115px);">
-:::
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Rosenblatt_with_perceptron.jpg/160px-Rosenblatt_with_perceptron.jpg" style="float:right; margin: 0 0 0.4em 0.8em; border-radius:6px; border:1px solid #22d3ee; width:120px;">
 
 **Frank Rosenblatt, 1957** — the Perceptron:
 
 $$y = \text{sign}\!\left(\sum_i w_i x_i - \theta\right)$$
 
-Inspired by McCulloch-Pitts neurons (1943) and Hebbian learning. One neuron, one decision boundary.
+A single neuron that learns from examples by adjusting weights.
+Inspired by McCulloch-Pitts neurons (1943) and Hebbian learning.
 
 :::
 
@@ -175,7 +173,9 @@ $$w_i \leftarrow w_i + \eta \cdot (y - \hat{y}) \cdot x_i$$
 Every modern network still follows this principle.
 :::
 
-<img src="assets/artificial_neuron.png" style="width:100%; margin-top:0.5em; border-radius:6px; border:1px solid rgba(34,211,238,0.3);">
+::: {.key-result style="margin-top: 0.8em;"}
+Rosenblatt's Mark 1 Perceptron (1958) was a physical hardware device — it made the front page of the New York Times.
+:::
 
 :::
 
@@ -216,7 +216,9 @@ Second spring — then a second winter in the 1990s.
 The current era of deep learning begins.
 :::
 
-<img src="assets/dl_timeline.png" style="width:100%; margin-top:0.6em; border-radius:6px; border:1px solid rgba(34,211,238,0.2);">
+::: {.key-result style="margin-top: 0.8em;"}
+From a single neuron in 1957 to GPT-4 in 2023 — the same mathematical idea, scaled and stacked.
+:::
 
 :::
 
@@ -298,8 +300,6 @@ $$E = -\frac{1}{2} \sum_{ij} w_{ij} s_i s_j$$
 
 **Geoffrey Hinton** extended this with the Boltzmann distribution $P(s) \propto e^{-E/T}$ — giving neural networks a thermodynamic learning rule.
 
-<img src="assets/hopfield_to_rbm.png" style="width:100%; margin-top:0.5em; border-radius:6px; border:1px solid rgba(34,211,238,0.2);">
-
 :::
 
 ::: {.col-right}
@@ -340,32 +340,20 @@ As accelerator physicists, we think in terms of Hamiltonians, phase spaces, and 
 
 ## AI arrives at accelerators
 
-::: {.col-left style="font-size: 0.6em;"}
+::: {style="font-size: 0.62em;"}
 
 | Year | Facility | AI approach | Impact |
 |------|----------|-------------|--------|
-| 1993 | CERN LEP | Neural network orbit correction | First ML in live operation |
-| 2016 | Community | Edelen survey — 50+ ML papers | Revival of interest across labs |
-| 2018 | SLAC LCLS | Bayesian optimisation in production | −10% beam loss, ~50 evaluations |
-| 2019 | JLab CEBAF | Autoencoder on SRF IQ waveforms | Fault detection — no labels needed |
-| 2021 | SLAC LCLS-II | Cheetah differentiable simulator | 10³–10⁵× faster than tracking codes |
-| 2022 | ESRF, SNS | RL for orbit/tune correction | Autonomous closed-loop control |
-| 2024 | KIT KARA | AI energy management | **−30% energy footprint** |
-| 2026 | 19 institutions | TwinRISE digital twin programme | Production twins for proton therapy |
+| 1993 | CERN LEP | Neural network orbit correction | First ML system in live operation |
+| 2006–2012 | SLAC, DESY | SVMs, shallow networks — exploratory | Proof-of-concept studies, no production |
+| 2016 | Community | Edelen survey — 50+ ML papers reviewed | Revival of interest across labs |
+| 2018 | SLAC LCLS | Bayesian optimisation (BO) in production | −10% beam loss, ~50 machine evaluations |
+| 2019 | JLab CEBAF | Autoencoder on SRF IQ waveforms | Cavity fault detection — no fault labels needed |
+| 2021 | SLAC LCLS-II | Cheetah differentiable beam simulator | 10³–10⁵× faster than tracking codes |
+| 2022 | ESRF, SNS | Reinforcement learning for orbit/tune | Autonomous closed-loop beam control |
+| 2024 | KIT KARA | Anomaly detection + AI energy management | **−30% energy footprint** on real storage ring |
+| 2026 | 19 institutions | TwinRISE digital twin programme | Production digital twins for proton therapy |
 
-:::
-
-::: {.col-right}
-
-<img src="assets/publication_trend.png" style="width:100%; border-radius:6px; border:1px solid rgba(34,211,238,0.2);">
-
-::: {style="font-size:0.65em; color:#94a3b8; margin-top:0.3em; text-align:center;"}
-Publications on AI for particle accelerators — exponential rise since 2021
-:::
-
-:::
-
-::: {.clearfix}
 :::
 
 ::: {.slide-ref}
@@ -429,176 +417,6 @@ This living review covers all ML applications in accelerator physics — updated
 ::: notes
 This lecture covers the first three in depth with runnable code.
 :::
-
-# ML Foundations {.section-divider background-color="#0a1520"}
-
-::: {style="color: #22d3ee; font-size: 1.6em; font-weight: 800; margin-top: 0.5em;"}
-From raw signals to trained model
-:::
-
-::: {style="font-size: 1em; color: #94a3b8;"}
-Data · Features · Method selection · Pipeline
-:::
-
----
-
-## Data — the foundation of every ML system
-
-::: {.col-left}
-
-Raw signals from real machines are **noisy, unbalanced, and incomplete**.
-
-::: {.highlight-box style="margin: 0.4em 0; padding: 0.4em 0.7em;"}
-**Cleaning** — remove corrupted pulses, outliers, sensor dropouts
-:::
-
-::: {.highlight-box style="margin: 0.4em 0; padding: 0.4em 0.7em;"}
-**Synchronisation** — align timestamps across subsystems
-:::
-
-::: {.highlight-box style="margin: 0.4em 0; padding: 0.4em 0.7em;"}
-**Normalisation** — zero-mean / unit-variance; prevents gradient dominance
-:::
-
-::: {.highlight-box style="margin: 0.4em 0; padding: 0.4em 0.7em;"}
-**Class balance** — SRF faults are < 0.1% of pulses; naive training ignores them
-:::
-
-::: {.key-result style="margin-top: 0.5em;"}
-A model is only as good as the data it was trained on.
-:::
-
-:::
-
-::: {.col-right}
-
-<img src="assets/beam_images_raw.png" style="width:100%; border-radius:6px; border:1px solid rgba(34,211,238,0.2);">
-
-::: {style="font-size:0.6em; color:#94a3b8; text-align:center; margin-bottom:0.4em;"}
-Beam profile at two positions — raw pixel-level photon maps
-:::
-
-<img src="assets/srf_fault_counts.png" style="width:100%; border-radius:6px; border:1px solid rgba(34,211,238,0.2); margin-top:0.2em;">
-
-::: {style="font-size:0.6em; color:#94a3b8; text-align:center;"}
-SRF fault type distribution — severe class imbalance is the norm
-:::
-
-:::
-
-::: {.clearfix}
-:::
-
----
-
-## Feature engineering — what the model actually sees
-
-::: {.col-left}
-
-Raw data is often too high-dimensional for direct input:
-
-- **1 024-point IQ waveform** → 3 scalar features (amplitude, phase, asymmetry)
-- **512 × 512 beam image** → Gaussian fit: σ_x, σ_y, centroid (x, y)
-- **Cavity signals** → FFT coefficients capturing specific frequency modes
-
-::: {.highlight-box style="margin: 0.5em 0; padding: 0.4em 0.7em;"}
-**Manual features**: interpretable, fast, need domain expertise
-:::
-
-::: {.highlight-box style="margin: 0.4em 0; padding: 0.4em 0.7em;"}
-**Learned features**: CNNs / autoencoders — data-driven, may outperform hand-crafted
-:::
-
-::: {.key-result style="margin-top: 0.5em;"}
-Good features = simpler models + better generalisation.
-:::
-
-:::
-
-::: {.col-right}
-
-<img src="assets/feature_pipeline.png" style="width:100%; border-radius:6px; border:1px solid rgba(34,211,238,0.2);">
-
-::: {style="font-size:0.6em; color:#94a3b8; text-align:center; margin-bottom:0.4em;"}
-Feature Pipeline → Training Pipeline → Inference Pipeline share a Feature Store
-:::
-
-<img src="assets/feature_heatmap.png" style="width:100%; border-radius:6px; border:1px solid rgba(34,211,238,0.2); margin-top:0.3em;">
-
-::: {style="font-size:0.6em; color:#94a3b8; text-align:center;"}
-Standard deviation of cavity signals across cryomodules — large variability motivates per-module normalisation
-:::
-
-:::
-
-::: {.clearfix}
-:::
-
----
-
-## Choosing the right method
-
-::: {.col-left style="font-size:0.8em;"}
-
-| Question | Points towards |
-|----------|---------------|
-| Do I have labels? | Supervised classification / regression |
-| No labels, only normal data | Anomaly detection (autoencoder, VAE) |
-| < 100 machine evaluations | Bayesian optimisation |
-| Need sub-ms inference | Neural network surrogate |
-| Online closed-loop control | Reinforcement learning |
-| Need interpretability | Linear model, decision tree |
-| Large dataset, high-dim input | Deep learning (CNN, Transformer) |
-
-::: {.key-result style="margin-top: 0.5em;"}
-No single method wins everywhere — match the tool to the constraint.
-:::
-
-:::
-
-::: {.col-right}
-
-<img src="assets/bo_acquisition_compare.png" style="width:100%; border-radius:6px; border:1px solid rgba(34,211,238,0.2);">
-
-::: {style="font-size:0.62em; color:#94a3b8; text-align:center; margin-top:0.3em;"}
-Same problem, same algorithm — different acquisition parameter β changes exploration/exploitation balance entirely. Method choice matters at every level.
-:::
-
-:::
-
-::: {.clearfix}
-:::
-
----
-
-## The ML pipeline — from data to inference
-
-<img src="assets/ml_pipeline_full.png" style="width:100%; border-radius:6px; border:1px solid rgba(34,211,238,0.2); margin-bottom:0.5em;">
-
-::: {style="display:flex; gap:0.6em; margin-top:0.3em; font-size:0.7em;"}
-
-::: {.highlight-box style="flex:1; padding:0.4em 0.6em;"}
-**UC1 · Fault detection**
-IQ waveforms → normalise → autoencoder → reconstruction error → anomaly score
-:::
-
-::: {.highlight-box style="flex:1; padding:0.4em 0.6em;"}
-**UC2 · Beam tuning**
-Quad settings → Cheetah sim → BO acquisition → propose next setting → evaluate
-:::
-
-::: {.highlight-box style="flex:1; padding:0.4em 0.6em;"}
-**UC3 · Surrogate model**
-5 000 Cheetah samples → normalise → MLP training → sub-ms inference
-:::
-
-:::
-
-::: notes
-The pipeline diagram is from an EU research project but the structure is universal: data acquisition → feature engineering → model selection → training → validation → deployment → monitoring. Each use case in this lecture follows exactly this sequence.
-:::
-
----
 
 # Use Case 1 {.section-divider background-color="#0a1520"}
 
