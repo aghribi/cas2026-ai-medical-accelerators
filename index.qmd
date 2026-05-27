@@ -29,6 +29,13 @@ execute:
   message: false
 ---
 
+```{python}
+#| echo: false
+#| eval: true
+import plotly.io as pio
+pio.renderers.default = 'notebook'
+```
+
 ## {.title-slide background-color="#0d1b2a"}
 
 ::: {style="margin-top: 2em;"}
@@ -46,7 +53,7 @@ Dr. Adnan Ghribi — GANIL / CNRS-IN2P3  ·  `adnan.ghribi@ganil.fr`
 :::
 
 ::: notes
-Welcome. This lecture is about AI applied to the *machine* — the accelerator — not the patient. 3 use cases with live notebooks, 8 min of context first. Q&A at the end.
+Welcome. This lecture covers AI applied to the machine — the accelerator — not the patient. 3 use cases with live notebooks, 10 min of context first. Q&A at the end.
 :::
 
 ---
@@ -58,27 +65,29 @@ Welcome. This lecture is about AI applied to the *machine* — the accelerator �
 | Time | Section |
 |-----:|---------|
 | 0–3 min | Scope & context |
-| 3–10 min | Physics–AI connection |
-| 10–22 min | **Use case 1** — RF fault detection |
-| 22–33 min | **Use case 2** — Beam tuning |
-| 33–45 min | **Use case 3** — Surrogate models |
-| 45–50 min | Digital twins & open problems |
+| 3–12 min | A brief history of AI |
+| 12–24 min | **Use case 1** — RF fault detection |
+| 24–35 min | **Use case 2** — Beam tuning |
+| 35–47 min | **Use case 3** — Surrogate models |
+| 47–50 min | Digital twins & open problems |
 | 50–60 min | Q&A |
 
 :::
 
-::: {.col-right style="padding-top: 0.5em;"}
+::: {.col-right style="padding-top: 0.3em;"}
 
 ::: {.highlight-box}
-**Three companion notebooks** — runnable on Google Colab:
+**Three companion notebooks** — open on Colab now:
 
 - `01_fault_detection` — autoencoder on RF waveforms
 - `02_beam_tuning` — Bayesian optimisation with Cheetah
 - `03_surrogate_model` — MLP surrogate + ensemble UQ
 :::
 
-::: {style="margin-top: 1em; color: #94a3b8; font-size: 0.85em;"}
+::: {style="margin-top: 0.8em; font-size: 0.85em; color: #94a3b8;"}
 `github.com/aghribi/cas2026-ai-medical-accelerators`
+
+AccML living review: `aghribi.github.io/acc-ml-living-review`
 :::
 
 :::
@@ -87,7 +96,7 @@ Welcome. This lecture is about AI applied to the *machine* — the accelerator �
 :::
 
 ::: notes
-This outline is your map for the next 50 minutes. The first 10 minutes are context — history and landscape. The next 35 minutes are three concrete use cases with code you can run. The last 5 minutes connect to digital twins and open problems.
+Three live notebooks. The code you will see on the slides is the code in those notebooks. Everything is runnable on Google Colab from your phone right now — no installation needed.
 :::
 
 ---
@@ -95,16 +104,16 @@ This outline is your map for the next 50 minutes. The first 10 minutes are conte
 ## What this lecture covers
 
 ::: {.col-left}
-**In scope**
+**In scope — the accelerator side**
 
 - RF fault detection
 - Beam tuning & daily startup
-- Surrogate models
+- Surrogate models for beam physics
 - Digital twins
 :::
 
 ::: {.col-right}
-**Out of scope**
+**Out of scope today**
 
 - Treatment planning
 - Patient-facing clinical AI
@@ -115,12 +124,9 @@ This outline is your map for the next 50 minutes. The first 10 minutes are conte
 ::: {.clearfix}
 :::
 
-::: {.key-result style="margin-top: 1.2em;"}
+::: {.key-result style="margin-top: 1em;"}
 The beam that treats the patient must be produced by a machine that works.
-:::
-
-::: notes
-Two minutes. The key-result box is the single motivation for everything that follows.
+AI can keep that machine reliable, efficient, and well-characterised.
 :::
 
 ---
@@ -135,60 +141,75 @@ Two minutes. The key-result box is the single motivation for everything that fol
 
 ::: {.warning-box style="margin-top: 1em;"}
 **The key inversion:** clinical machines are engineered to *avoid* faults — so fault data is scarce.
-This is the opposite of the "big data" assumption most ML workflows make.
-:::
-
-::: notes
-This table is the most important slide in the first block. The "scarce fault data" row shapes every design choice: why we use autoencoders (no fault labels needed), Bayesian optimisation (sample-efficient), physics-informed models (less data needed).
+Unsupervised, sample-efficient, and physics-informed approaches are not just preferences — they are requirements.
 :::
 
 ---
 
-# The Physics–AI Connection {.section-divider background-color="#0a1520"}
+# A Brief History of AI {.section-divider background-color="#0a1520"}
 
 ::: {style="color: #22d3ee; font-size: 1.2em; margin-top: 0.6em;"}
-Before the use cases — where did this all come from?
+From the perceptron to the Nobel Prize in Physics
 :::
 
 ---
 
-## Physics built the foundations of AI
+## The perceptron — where it all began (1957)
 
-::: {style="font-size: 0.95em;"}
+::: {.col-left}
 
-**1982 — John Hopfield** (condensed matter physicist) applies *spin-glass physics* to neural networks.
+**Frank Rosenblatt, 1957** — the Perceptron:
 
-The neural network energy function:
-$$E = -\frac{1}{2} \sum_{ij} w_{ij} s_i s_j$$
-is a Lyapunov function — exactly the Ising Hamiltonian.
-Stored memories = energy attractors. Physics of stability → AI memory.
+$$y = \text{sign}\!\left(\sum_i w_i x_i - \theta\right)$$
+
+A single neuron that learns from examples by adjusting weights $w_i$.
+
+Inspired by McCulloch-Pitts neurons (1943) and Hebbian learning.
 
 ::: {.fragment}
-**1983–1985 — Boltzmann machines** (Hinton & Sejnowski)
-
-The learning rule is Gibbs sampling from the Boltzmann distribution.
-Partition function, free energy, temperature — directly from statistical mechanics.
+**1969 — Minsky & Papert:** the perceptron cannot solve XOR.
+Neural networks enter a decade-long winter.
 :::
 
 ::: {.fragment}
-**2024 — Nobel Prize in Physics → Hopfield & Hinton**
-
-*"for foundational discoveries and inventions that enable machine learning with artificial neural networks"*
-
-Awarded in **Physics** — not Computer Science.
+**1986 — Rumelhart, Hinton, Williams:** backpropagation.
+Multi-layer networks can learn any function.
 :::
 
+:::
+
+::: {.col-right}
+
+::: {.highlight-box}
+**The perceptron learning rule:**
+
+If the prediction is wrong, update:
+$$w_i \leftarrow w_i + \eta \cdot (y - \hat{y}) \cdot x_i$$
+
+This is the origin of gradient-based learning.
+Every modern neural network still follows this principle.
+:::
+
+::: {.fragment style="margin-top: 1em;"}
+::: {.key-result}
+From a single neuron in 1957 to GPT-4 in 2023 — the same mathematical idea, scaled and stacked.
+:::
+:::
+
+:::
+
+::: {.clearfix}
 :::
 
 ::: notes
-Hopfield's 1982 paper in PNAS is one of the most cited papers in physics and neuroscience combined. He was a condensed matter physicist at Princeton who saw the parallel between spin systems and associative memory.
+Rosenblatt built the Mark 1 Perceptron at Cornell in 1958 — a physical hardware device that learned to recognise patterns from photographs. It made the front page of the New York Times.
 
-The Nobel Prize was awarded in Physics precisely because the mathematical foundations of neural networks are physics. This legitimises the connection for physicists who might have thought "ML is for computer scientists."
+The Minsky-Papert result was a setback, but in retrospect the issue was simply that one layer isn't enough. Two layers can solve XOR. Backpropagation made multi-layer training tractable.
 :::
 
 ---
 
-## AI in accelerators — a 40-year timeline
+## A history of AI — key milestones
 
 ```{python}
 #| echo: false
@@ -197,47 +218,158 @@ The Nobel Prize was awarded in Physics precisely because the mathematical founda
 import plotly.graph_objects as go
 
 events = [
-    (1982, "Hopfield<br>networks", 1, "#22d3ee"),
-    (1986, "Backprop<br>practical", -1, "#22d3ee"),
-    (1993, "First NNs<br>at accelerators", 1, "#a78bfa"),
-    (2019, "BO at LCLS<br>(4× faster)", -1, "#a78bfa"),
-    (2020, "Autoencoder<br>SRF faults", 1, "#a78bfa"),
-    (2021, "Cheetah<br>simulator", -1, "#fb923c"),
-    (2024, "KARA −30%<br>Nobel Physics", 1, "#fb923c"),
-    (2026, "Foundation<br>models →", -1, "#f87171"),
+    (1943, "McCulloch-Pitts<br>neuron", 1, "#475569"),
+    (1957, "Rosenblatt<br>Perceptron", -1, "#22d3ee"),
+    (1969, "Minsky-Papert<br>(XOR limit)", 1, "#f87171"),
+    (1982, "Hopfield<br>networks", -1, "#22d3ee"),
+    (1986, "Backprop<br>(Rumelhart)", 1, "#22d3ee"),
+    (1998, "LeNet<br>(LeCun)", -1, "#a78bfa"),
+    (2006, "Deep belief<br>nets (Hinton)", 1, "#a78bfa"),
+    (2012, "AlexNet<br>(ImageNet)", -1, "#fb923c"),
+    (2017, "Transformers<br>(Attention)", 1, "#fb923c"),
+    (2022, "ChatGPT", -1, "#f87171"),
+    (2024, "Nobel Prize<br>Physics", 1, "#fbbf24"),
 ]
 
 fig = go.Figure()
-fig.add_shape(type="line", x0=1978, x1=2028, y0=0, y1=0,
+fig.add_shape(type="line", x0=1938, x1=2026, y0=0, y1=0,
     line=dict(color="#22d3ee", width=2.5))
 
 for year, label, side, color in events:
-    y_end = 0.5 * side
-    fig.add_shape(type="line", x0=year, x1=year, y0=0, y1=y_end * 0.85,
+    y_end = 0.52 * side
+    fig.add_shape(type="line", x0=year, x1=year, y0=0, y1=y_end * 0.82,
         line=dict(color=color, width=1.5, dash="dot"))
     fig.add_trace(go.Scatter(x=[year], y=[0], mode="markers",
-        marker=dict(color=color, size=12, line=dict(color="#0d1b2a", width=2)),
-        showlegend=False))
+        marker=dict(color=color, size=11, line=dict(color="#0d1b2a", width=2)),
+        showlegend=False, hovertext=f"{year}: {label}"))
     fig.add_annotation(x=year, y=y_end,
-        text=f"<b>{year}</b><br><span style='font-size:11px'>{label}</span>",
-        showarrow=False, font=dict(size=12, color=color), align="center")
+        text=f"<b>{year}</b><br><span style='font-size:10px'>{label}</span>",
+        showarrow=False, font=dict(size=11, color=color), align="center")
 
 fig.update_layout(
-    height=370, paper_bgcolor="#0d1b2a", plot_bgcolor="#0d1b2a",
+    height=460, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#0d1b2a",
     margin=dict(l=10, r=10, t=10, b=10),
-    xaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[1977, 2029]),
-    yaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[-1.1, 1.1]),
+    xaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[1936, 2027]),
+    yaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[-0.9, 0.9]),
     font=dict(color="#e2e8f0"),
 )
-fig.show()
+fig
 ```
 
-::: {.key-result style="margin-top: 0.4em;"}
-30 years from first experiments to production deployment. The exponential part is **now**.
+::: {.key-result style="margin-top: 0.3em;"}
+Physics gave AI its mathematical foundations at every major inflection point.
 :::
 
 ::: notes
-LCLS: BO tuned 9 quadrupoles 4× faster than expert operators. JLab: autoencoder on SRF cavity waveforms — this is use case 1. ARTIFACT/KARA: my own group's work, online RL surrogate reduced beam losses 30%.
+The yellow dot at 2024 is the Nobel Prize in Physics awarded to Hopfield and Hinton — formally recognising that the foundations of modern AI are physics.
+
+Note the two "winters" (after 1969 and after the late 1980s) — periods when funding and interest collapsed because the field overpromised. The current period since AlexNet in 2012 has been the longest sustained growth in AI history.
+:::
+
+---
+
+## Physics at the core of AI
+
+::: {.col-left}
+
+**John Hopfield, 1982** — stores memories as energy minima of the Ising Hamiltonian:
+
+$$E = -\frac{1}{2} \sum_{ij} w_{ij} s_i s_j$$
+
+**Geoffrey Hinton** extended this with the Boltzmann distribution $P(s) \propto e^{-E/T}$ — giving neural networks a thermodynamic learning rule.
+
+:::
+
+::: {.col-right}
+
+::: {.highlight-box}
+**Nobel Prize in Physics 2024**
+
+*"for foundational discoveries and inventions that enable machine learning with artificial neural networks"*
+
+— **John J. Hopfield** & **Geoffrey E. Hinton**
+
+Awarded in **Physics**, not Computer Science.
+:::
+
+::: {.fragment style="margin-top: 0.8em; font-size: 0.88em;"}
+Physics concepts still active in modern ML:
+
+- Renormalisation group ↔ deep hierarchies
+- Path integrals ↔ diffusion models
+:::
+
+:::
+
+::: {.clearfix}
+:::
+
+::: notes
+The Nobel Committee's citation is explicit: Hopfield's use of statistical mechanics to build associative memory, and Hinton's extension to probabilistic models using the Boltzmann distribution, are the foundations.
+
+As accelerator physicists, we think in terms of Hamiltonians, phase spaces, and energy minimisation every day. ML is a natural extension of our toolkit.
+:::
+
+---
+
+## AI arrives at accelerators
+
+```{python}
+#| echo: false
+#| eval: true
+
+import plotly.graph_objects as go
+
+events = [
+    (1993, "First NNs in<br>accelerator control<br>(SLAC/ALS)", 1, "#475569"),
+    (2016, "RL for CERN<br>injection (pilot)", -1, "#a78bfa"),
+    (2019, "BO at LCLS<br>4× faster tuning", 1, "#22d3ee"),
+    (2020, "Autoencoder<br>SRF faults (JLab)", -1, "#22d3ee"),
+    (2021, "Cheetah: PyTorch<br>beam dynamics", 1, "#fb923c"),
+    (2024, "ARTIFACT/KARA<br>−30% beam losses", -1, "#fbbf24"),
+    (2026, "TwinRISE:<br>19 institutions", 1, "#f87171"),
+]
+
+fig = go.Figure()
+fig.add_shape(type="line", x0=1989, x1=2028, y0=0, y1=0,
+    line=dict(color="#22d3ee", width=2.5))
+
+for year, label, side, color in events:
+    y_end = 0.52 * side
+    fig.add_shape(type="line", x0=year, x1=year, y0=0, y1=y_end * 0.82,
+        line=dict(color=color, width=1.5, dash="dot"))
+    fig.add_trace(go.Scatter(x=[year], y=[0], mode="markers",
+        marker=dict(color=color, size=11, line=dict(color="#0d1b2a", width=2)),
+        showlegend=False))
+    fig.add_annotation(x=year, y=y_end,
+        text=f"<b>{year}</b><br><span style='font-size:10px'>{label}</span>",
+        showarrow=False, font=dict(size=11, color=color), align="center")
+
+fig.update_layout(
+    height=460, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#0d1b2a",
+    margin=dict(l=10, r=10, t=10, b=10),
+    xaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[1987, 2029]),
+    yaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[-0.9, 0.9]),
+    font=dict(color="#e2e8f0"),
+)
+fig
+```
+
+::: {.key-result style="margin-top: 0.3em;"}
+30 years from first experiments to production deployment. The exponential part is **now**.
+:::
+
+---
+
+## AccML Living Review — the state of the art
+
+<iframe src="https://aghribi.github.io/acc-ml-living-review"
+        width="100%" height="560px" frameborder="0"
+        style="border-radius: 6px; border: 1px solid #22d3ee;">
+</iframe>
+
+::: notes
+This living review covers all ML applications in accelerator physics — updated continuously. It is the map of what has been done and what is open. Bookmark it.
 :::
 
 ---
@@ -249,31 +381,26 @@ LCLS: BO tuned 9 quadrupoles 4× faster than expert operators. JLab: autoencoder
 **Fault detection** — classify anomalous events before interlocks trigger
 :::
 :::
-
 ::: {.fragment .fade-in}
 ::: {.highlight-box style="margin: 0.25em 0; padding: 0.4em 0.8em;"}
-**Beam tuning** — optimise settings with minimal beam time (< 50 evaluations)
+**Beam tuning** — find optimal settings with minimal beam time (< 50 evaluations)
 :::
 :::
-
 ::: {.fragment .fade-in}
 ::: {.highlight-box style="margin: 0.25em 0; padding: 0.4em 0.8em;"}
 **Surrogate models** — replace slow tracking codes (10³–10⁵× speedup)
 :::
 :::
-
 ::: {.fragment .fade-in}
 ::: {.highlight-box style="margin: 0.25em 0; padding: 0.4em 0.8em;"}
 **Predictive maintenance** — forecast failures before they occur
 :::
 :::
-
 ::: {.fragment .fade-in}
 ::: {.highlight-box style="margin: 0.25em 0; padding: 0.4em 0.8em;"}
-**Adaptive control** — online ML in the control loop (reinforcement learning)
+**Adaptive control** — online reinforcement learning in the control loop
 :::
 :::
-
 ::: {.fragment .fade-in}
 ::: {.highlight-box style="margin: 0.25em 0; padding: 0.4em 0.8em;"}
 **Digital twins** — live virtual model of the actual machine, continuously updated
@@ -281,7 +408,7 @@ LCLS: BO tuned 9 quadrupoles 4× faster than expert operators. JLab: autoencoder
 :::
 
 ::: notes
-This lecture covers the first three in depth. 4–6 appear in the digital twin and open problems sections.
+This lecture covers the first three in depth with runnable code.
 :::
 
 ---
@@ -293,32 +420,110 @@ RF Fault Detection
 :::
 
 ::: {style="font-size: 1em; color: #94a3b8;"}
-Autoencoders on cavity IQ waveforms
+Autoencoders on cavity IQ waveforms · Notebook 01
+:::
+
+---
+
+## Anomaly detection — method landscape
+
+```{python}
+#| echo: false
+#| eval: true
+
+import plotly.graph_objects as go
+
+# x: training data volume needed (0=minimal → 2=large dataset)
+# y: suitability for rare-event / SRF fault detection (1=poor → 5=excellent)
+methods = [
+    ("Threshold rules",  0.00, 1.1, 20, "#475569", "bottom right"),
+    ("PCA anomaly",      0.30, 2.0, 22, "#64748b", "top right"),
+    ("KDE / GMM",        0.55, 2.3, 20, "#64748b", "bottom right"),
+    ("Isolation Forest", 0.70, 2.9, 26, "#94a3b8", "top left"),
+    ("One-class SVM",    0.90, 2.5, 24, "#94a3b8", "bottom right"),
+    ("LSTM-AE",          1.60, 3.9, 26, "#a78bfa", "bottom right"),
+    ("VAE",              1.80, 4.6, 30, "#a78bfa", "top right"),
+    ("Autoencoder ★",   1.20, 4.3, 42, "#22d3ee", "top left"),
+]
+
+fig = go.Figure()
+for name, x, y, size, color, pos in methods:
+    is_pick = "★" in name
+    fig.add_trace(go.Scatter(
+        x=[x], y=[y], mode="markers+text",
+        marker=dict(size=size, color=color,
+            line=dict(color="#e2e8f0" if is_pick else "#0d1b2a",
+                      width=2.5 if is_pick else 1.5)),
+        text=[f"<b>{name}</b>" if is_pick else name],
+        textposition=pos,
+        textfont=dict(size=12 if is_pick else 10, color=color),
+        showlegend=False,
+    ))
+
+fig.update_layout(
+    height=490, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
+    font=dict(color="#e2e8f0", size=11),
+    xaxis=dict(title="Training data volume required",
+               range=[-0.3, 2.5],
+               tickvals=[0, 1, 2],
+               ticktext=["Minimal<br>(unsupervised)", "Moderate<br>(normal data only)", "Large<br>(fault labels)"],
+               showgrid=True, gridcolor="#1e3048", zeroline=False),
+    yaxis=dict(title="Suitability for rare-event detection",
+               range=[0.6, 5.4],
+               tickvals=[1, 2, 3, 4, 5],
+               ticktext=["Poor", "Fair", "Moderate", "Good", "Excellent"],
+               showgrid=True, gridcolor="#1e3048", zeroline=False),
+    margin=dict(l=90, r=30, t=20, b=70),
+)
+fig
+```
+
+::: {.key-result style="margin-top: 0.3em;"}
+**This lecture:** Autoencoder — unsupervised, works on normal-only data, scales to 1 kHz waveform streams.
 :::
 
 ---
 
 ## The problem: rare faults, no labels
 
-Every RF pulse generates an **IQ waveform** (in-phase + quadrature) per cavity at ~1 kHz.
+::: {.col-left}
 
-A fault shows up in the waveform — but:
+Every RF pulse → one **IQ waveform** per cavity at ~1 kHz.
 
-- Clinical machines are designed to be safe → faults are rare → **very few labelled examples**
+A fault shows up in the waveform, but:
+
+- Clinical machines are designed to be safe → faults are **rare**
 - A supervised classifier needs thousands of fault examples per class
 
 ::: {.fragment}
 ::: {.key-result style="margin-top: 0.8em;"}
-**Solution: autoencoder trained on normal pulses only.**
+**Solution:** autoencoder trained on normal pulses only.
 
 Anomaly score = reconstruction error.
-Normal → low error. Faults → high error.
-No fault labels required.
+Train on normal. Flag the unusual.
 :::
 :::
 
-::: notes
-This approach — train only on the normal class, flag anything with high reconstruction error — is called one-class classification or anomaly detection. It's deployed in production at JLab (CEBAF), SNS at Oak Ridge, and GANIL/SPIRAL2.
+:::
+
+::: {.col-right}
+
+**Four fault classes in a superconducting cavity:**
+
+- **Normal** — clean trapezoidal I, Q ≈ 0
+- **Quench** — sudden drop mid flat-top
+- **Detuning** — cavity off-resonance, large Q signal
+- **Multipacting** — oscillations on the flat-top
+
+::: {.fragment style="margin-top: 0.8em;"}
+::: {.highlight-box}
+No fault labels required for training.
+:::
+:::
+
+:::
+
+::: {.clearfix}
 :::
 
 ---
@@ -328,7 +533,6 @@ This approach — train only on the normal class, flag anything with high recons
 ```{python}
 #| echo: false
 #| eval: true
-#| fig-align: center
 
 import numpy as np
 import plotly.graph_objects as go
@@ -357,7 +561,8 @@ def quench(seed=1):
 def detuning(seed=2):
     rng = np.random.default_rng(seed)
     env = _env(t); freq = rng.uniform(3, 7)
-    return env*np.cos(2*np.pi*freq*t)+rng.normal(0,noise,256), env*np.sin(2*np.pi*freq*t)+rng.normal(0,noise,256)
+    return (env*np.cos(2*np.pi*freq*t)+rng.normal(0,noise,256),
+            env*np.sin(2*np.pi*freq*t)+rng.normal(0,noise,256))
 
 def multipacting(seed=3):
     rng = np.random.default_rng(seed)
@@ -382,66 +587,87 @@ for col, (name, fn, color) in enumerate(cases, 1):
     fig.add_trace(go.Scatter(x=t, y=Q, line=dict(color=color, width=1.5),
         showlegend=False), row=2, col=col)
 
-fig.update_layout(height=400, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
+fig.update_layout(height=440, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
     font=dict(color="#e2e8f0", size=11), margin=dict(l=30, r=10, t=50, b=10),
     legend=dict(orientation="h", y=1.13, x=0.5, xanchor="center"))
 fig.update_xaxes(showgrid=False, zeroline=False, color="#475569")
 fig.update_yaxes(showgrid=True, gridcolor="#1e3048", zeroline=False, color="#475569")
-fig.show()
+fig
 ```
 
 ::: notes
-Row 1 = I (in-phase), Row 2 = Q (quadrature). Normal: I is a clean trapezoid, Q near zero. Detuning: strong Q signal. Quench: sharp drop mid flat-top. Multipacting: high-frequency oscillations.
+Row 1 = I (in-phase), Row 2 = Q (quadrature). Normal: clean trapezoid, Q near zero. Detuning: strong Q. Quench: sharp drop. Multipacting: oscillations.
 :::
 
 ---
 
-## The autoencoder — key idea
+## The autoencoder — architecture
+
+::: {.col-left}
 
 ```{python}
-import torch.nn as nn
-
 class RFAutoencoder(nn.Module):
     def __init__(self, latent_dim=16):
         super().__init__()
         self.encoder = nn.Sequential(
-            nn.Conv1d(2, 32, kernel_size=8, stride=4),  # 2 channels: I and Q
+            nn.Conv1d(2, 32, kernel_size=8, stride=4),
             nn.GELU(),
             nn.Conv1d(32, 64, kernel_size=4, stride=2),
             nn.GELU(),
-            nn.Flatten(), nn.Linear(64*32, latent_dim),  # ← bottleneck
+            nn.Flatten(),
+            nn.Linear(64 * 32, latent_dim),  # bottleneck
         )
-        self.decoder = nn.Sequential(...)   # mirror of encoder
+        self.decoder = nn.Sequential(...)    # mirror
 ```
 
-::: {.col-left style="margin-top: 0.6em;"}
-**Training:** normal pulses only
-```{python}
-X_normal = X_train[y_train == 0]
-# minimise reconstruction error
-loss = ((x - model(x)) ** 2).mean()
-```
+Input `(batch, 2, 256)` — I and Q as 2 channels
+
 :::
 
-::: {.col-right style="margin-top: 0.6em;"}
-**Inference:** score every pulse
-```{python}
-scores = ((X - model(X)) ** 2).mean(dim=(1,2))
-threshold = scores[normal].quantile(0.95)
-anomaly  = scores > threshold
-```
+::: {.col-right style="padding-top: 1em;"}
+
+::: {.highlight-box}
+**Why 1D convolutions?**
+
+The waveform is a time series — Conv1d captures local temporal features (rise, drop, oscillations) efficiently.
+:::
+
+::: {.key-result style="margin-top: 0.8em;"}
+**Anomaly score** = reconstruction error
+
+Normal → low · Faults → high
+:::
+
 :::
 
 ::: {.clearfix}
 :::
 
-::: notes
-Input shape: (batch, 2, 256) — 2 channels, 256 time points. The bottleneck at latent_dim=16 forces the model to learn a compressed representation of "what normal looks like." Anything outside that manifold has high reconstruction error.
-:::
-
 ---
 
-## Detection result — anomaly score distribution
+## Training and result
+
+::: {.col-left}
+
+```{python}
+# Train on NORMAL pulses only
+X_normal = X_train[y_train == 0]
+for epoch in range(40):
+    for (batch,) in loader:
+        loss = ((batch - model(batch))**2).mean()
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+# Score every pulse at inference
+with torch.no_grad():
+    scores = ((X - model(X))**2).mean(dim=(1,2))
+threshold = scores[normal_mask].quantile(0.95)
+```
+
+:::
+
+::: {.col-right}
 
 ```{python}
 #| echo: false
@@ -451,33 +677,44 @@ import numpy as np
 import plotly.graph_objects as go
 
 np.random.seed(42)
-normal_scores = np.random.lognormal(mean=-2.6, sigma=0.4, size=200)
-fault_scores  = np.random.lognormal(mean=-0.7, sigma=0.6, size=600)
-threshold     = np.percentile(normal_scores, 95)
+normal_s = np.random.lognormal(-2.6, 0.4, 200)
+fault_s  = np.random.lognormal(-0.7, 0.6, 600)
+thresh   = np.percentile(normal_s, 95)
 
 fig = go.Figure()
-fig.add_trace(go.Histogram(x=normal_scores, xbins=dict(start=0, end=0.55, size=0.008),
-    name="Normal pulses", marker_color="#22d3ee", opacity=0.75))
-fig.add_trace(go.Histogram(x=fault_scores.clip(max=0.55), xbins=dict(start=0, end=0.55, size=0.008),
-    name="Fault pulses (quench / detuning / multipacting)", marker_color="#f87171", opacity=0.75))
-fig.add_vline(x=threshold, line_dash="dash", line_color="#fbbf24", line_width=2.5,
-    annotation_text="95th-percentile threshold", annotation_position="top right",
-    annotation_font=dict(color="#fbbf24", size=13))
-
-fig.update_layout(barmode="overlay",
-    xaxis_title="Reconstruction error (MSE)", yaxis_title="Count",
-    height=370, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
-    font=dict(color="#e2e8f0"), legend=dict(bgcolor="rgba(0,0,0,0)", y=0.98))
-fig.show()
+fig.add_trace(go.Histogram(x=normal_s, xbins=dict(start=0, end=0.55, size=0.009),
+    name="Normal", marker_color="#22d3ee", opacity=0.75))
+fig.add_trace(go.Histogram(x=fault_s.clip(max=0.55), xbins=dict(start=0, end=0.55, size=0.009),
+    name="Faults", marker_color="#f87171", opacity=0.75))
+fig.add_vline(x=thresh, line_dash="dash", line_color="#fbbf24", line_width=2.5,
+    annotation_text="threshold (95th pct)", annotation_position="top right",
+    annotation_font=dict(color="#fbbf24", size=12))
+fig.update_layout(barmode="overlay", height=360, autosize=True,
+    xaxis_title="Reconstruction error", yaxis_title="Count",
+    paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
+    font=dict(color="#e2e8f0", size=11),
+    legend=dict(bgcolor="rgba(0,0,0,0)"),
+    margin=dict(l=40, r=10, t=10, b=40))
+fig
 ```
 
-::: {.key-result style="margin-top: 0.3em;"}
-ROC-AUC > 0.99 on held-out test set · **Notebook 01** — run on Colab
+::: {.metric style="margin-top: 0.4em;"}
+**ROC-AUC > 0.99**
 :::
 
-::: notes
-The two distributions are well separated. Normal pulses cluster at low reconstruction error; all three fault classes fall above the threshold. This separation justifies the autoencoder approach even with only ~800 normal training pulses.
 :::
+
+::: {.clearfix}
+:::
+
+---
+
+## Notebook 01 — live preview
+
+<iframe src="https://nbviewer.org/github/aghribi/cas2026-ai-medical-accelerators/blob/main/notebooks/01_fault_detection/notebook.ipynb"
+        width="100%" height="530px" frameborder="0"
+        style="border-radius:6px; border:1px solid #22d3ee; background:#0d1b2a;">
+</iframe>
 
 ---
 
@@ -488,43 +725,119 @@ Beam Tuning with Bayesian Optimisation
 :::
 
 ::: {style="font-size: 1em; color: #94a3b8;"}
-Cheetah · differentiable accelerator simulation
+Cheetah · differentiable accelerator simulation · Notebook 02
+:::
+
+---
+
+## Optimisation — method landscape
+
+```{python}
+#| echo: false
+#| eval: true
+
+import plotly.graph_objects as go
+import numpy as np
+
+# x: log10(typical evaluations to converge) — lower = better
+# y: works on real machine without gradient (1=no → 5=yes)
+methods = [
+    ("Grid Search",       4.3, 4.6, 22, "#475569", "top left"),
+    ("RL / MOGA",         3.7, 5.0, 26, "#a78bfa", "top right"),
+    ("Random Search",     2.5, 4.5, 24, "#94a3b8", "bottom right"),
+    ("CMA-ES",            2.7, 4.7, 22, "#64748b", "top right"),
+    ("Nelder-Mead",       2.3, 3.7, 22, "#94a3b8", "bottom left"),
+    ("Gradient descent",  1.8, 1.4, 24, "#fb923c", "bottom right"),
+    ("Bayesian Opt. ★",  1.6, 5.0, 42, "#22d3ee", "top right"),
+]
+
+fig = go.Figure()
+for name, logx, y, size, color, pos in methods:
+    is_pick = "★" in name
+    fig.add_trace(go.Scatter(
+        x=[logx], y=[y], mode="markers+text",
+        marker=dict(size=size, color=color,
+            line=dict(color="#e2e8f0" if is_pick else "#0d1b2a",
+                      width=2.5 if is_pick else 1.5)),
+        text=[f"<b>{name}</b>" if is_pick else name],
+        textposition=pos,
+        textfont=dict(size=12 if is_pick else 10, color=color),
+        showlegend=False,
+    ))
+
+fig.add_annotation(x=1.6, y=4.35, text="← best quadrant",
+    showarrow=False, font=dict(size=10, color="#fbbf24"), xanchor="left")
+
+fig.update_layout(
+    height=490, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
+    font=dict(color="#e2e8f0", size=11),
+    xaxis=dict(title="Evaluations to converge  (← fewer = better)",
+               range=[1.0, 5.0],
+               tickvals=[1, 2, 3, 4, 5],
+               ticktext=["10", "100", "1 000", "10 000", "100 000"],
+               showgrid=True, gridcolor="#1e3048", zeroline=False,
+               autorange="reversed"),
+    yaxis=dict(title="Real machine compatible (no gradient required)",
+               range=[0.8, 5.5],
+               tickvals=[1, 3, 5],
+               ticktext=["No<br>(needs gradient)", "Partial", "Yes<br>(model-free)"],
+               showgrid=True, gridcolor="#1e3048", zeroline=False),
+    margin=dict(l=110, r=30, t=20, b=80),
+)
+fig
+```
+
+::: {.key-result style="margin-top: 0.3em;"}
+**This lecture:** Bayesian Optimisation — converges in ~50 evaluations, model-free, works directly on the machine.
 :::
 
 ---
 
 ## The daily startup problem
 
+::: {.col-left}
+
 Every morning on a clinical machine:
 
 1. Run QA checks (output, flatness, energy)
-2. Tune magnets and quadrupoles until beam is within spec
+2. Tune magnets until beam is within spec
 3. Hand off to clinical staff
 
 Currently: **20–45 min of physicist time**, largely manual.
 
-::: {.fragment}
-::: {.highlight-box style="margin-top: 0.8em;"}
-**Bayesian Optimisation** — designed for exactly this:
+$n$ correctors × $k$ quads → high-dimensional space that grows exponentially for grid search.
 
-- Works in 2–20 dimensions (realistic number of tunable elements)
-- Finds a good solution in **~50 evaluations** vs. thousands for grid search
-- Model-free: works on the real machine without any gradient information
-:::
 :::
 
-::: notes
-Sample efficiency is the key. On a clinical machine, each measurement takes ~30 seconds. BO has been demonstrated at AWAKE (CERN), FLASH (DESY), and clinical proton therapy centres.
+::: {.col-right}
+
+::: {.highlight-box}
+**Bayesian Optimisation fits naturally:**
+
+- Works in 2–20 dimensions
+- Finds a good solution in **~50 evaluations**
+- Model-free — works on the real machine
+- GP surrogate builds up a map of the objective
+:::
+
+::: {.key-result .fragment style="margin-top: 0.8em;"}
+Demonstrated at AWAKE (CERN), FLASH (DESY), and clinical proton therapy centres.
+:::
+
+:::
+
+::: {.clearfix}
 :::
 
 ---
 
 ## Cheetah — PyTorch beam dynamics
 
+::: {.col-left}
+
 ```{python}
 import torch, cheetah
 
-# Build a proton therapy transport section
 segment = cheetah.Segment(elements=[
     cheetah.Drift(length=torch.tensor(0.5)),
     cheetah.Quadrupole(length=torch.tensor(0.1), name="QF"),
@@ -533,26 +846,68 @@ segment = cheetah.Segment(elements=[
     cheetah.Screen(name="monitor"),
 ])
 
-# 150 MeV proton beam (kinetic + rest mass)
 beam_in = cheetah.ParameterBeam.from_twiss(
-    energy=torch.tensor(1088.3e6),        # eV
+    energy=torch.tensor(1088.3e6),  # 150 MeV proton, eV
     beta_x=torch.tensor(1.0),
-    emittance_x=torch.tensor(1e-6),       # m·rad
+    emittance_x=torch.tensor(1e-6),
     species=cheetah.Species("proton"),
 )
 
 beam_out = segment.track(beam_in)
-print(f"σ_x = {beam_out.sigma_x.item()*1e3:.2f} mm")
 ```
 
-::: {.key-result style="margin-top: 0.5em;"}
-Differentiable → gradients flow through the simulation.
-Same code structure on a virtual or real machine.
+:::
+
+::: {.col-right style="padding-top: 1em;"}
+
+::: {.highlight-box}
+**Why Cheetah?**
+
+- PyTorch module → **gradients flow** through the simulation
+- Milliseconds per call
+- Same API whether virtual machine or real machine
+:::
+
+::: {.metric style="margin-top: 0.8em;"}
+σ_x = 1.00 mm (input)
+σ_x + σ_y = 4.83 mm (no quads)
+:::
+
+:::
+
+::: {.clearfix}
 :::
 
 ---
 
 ## BO finds focus in 40 evaluations
+
+::: {.col-left}
+
+```{python}
+from skopt import gp_minimize
+from skopt.space import Real
+
+def objective(params):
+    k1_qf, k1_qd = params
+    segment.QF.k1 = torch.tensor(k1_qf, dtype=torch.float32)
+    segment.QD.k1 = torch.tensor(k1_qd, dtype=torch.float32)
+    beam_out = segment.track(beam_in)
+    sigma = (beam_out.sigma_x + beam_out.sigma_y).item()
+    return sigma if np.isfinite(sigma) else 1.0
+
+result = gp_minimize(
+    func=objective,
+    dimensions=[Real(-10.0, 10.0, name="k1_QF"),
+                Real(-10.0, 10.0, name="k1_QD")],
+    n_calls=40, n_initial_points=8,
+)
+# → best: 4.36 mm (vs 4.83 mm no quads)
+```
+
+:::
+
+::: {.col-right}
 
 ```{python}
 #| echo: false
@@ -565,50 +920,51 @@ np.random.seed(42)
 n = 40
 iters = np.arange(1, n+1)
 
-# Random search — uniform samples, running minimum
-rs_vals = np.random.uniform(4.5, 7.5, n)
-rs_vals[[5, 12, 28]] = [4.62, 4.55, 4.41]
-rs_curve = np.minimum.accumulate(rs_vals)
+rs = np.random.uniform(4.5, 7.5, n)
+rs[[5, 12, 28]] = [4.62, 4.55, 4.41]
+rs_curve = np.minimum.accumulate(rs)
 
-# BO — 8 random init then rapid convergence
 bo_init = np.random.uniform(5.0, 7.5, 8)
 bo_mid  = np.linspace(4.83, 4.42, 20) + np.abs(np.random.normal(0, 0.06, 20))
 bo_end  = 4.36 + np.abs(np.random.normal(0, 0.01, 12))
 bo_vals = np.concatenate([bo_init, bo_mid, bo_end])
 bo_curve = np.minimum.accumulate(bo_vals)
 
-gd_curve = np.ones(n) * 4.83
-
 fig = go.Figure()
-fig.add_trace(go.Scatter(x=iters, y=gd_curve, name="Gradient descent (stuck at flat gradient)",
-    line=dict(color="#64748b", width=2, dash="dot")))
+fig.add_trace(go.Scatter(x=iters, y=np.ones(n)*4.83, name="No quads",
+    line=dict(color="#64748b", width=1.5, dash="dot")))
 fig.add_trace(go.Scatter(x=iters, y=rs_curve, name="Random search",
-    line=dict(color="#f87171", width=2.5, dash="dash")))
-fig.add_trace(go.Scatter(x=iters, y=bo_curve, name="Bayesian optimisation",
-    line=dict(color="#22d3ee", width=3.5)))
-
+    line=dict(color="#f87171", width=2, dash="dash")))
+fig.add_trace(go.Scatter(x=iters, y=bo_curve, name="Bayesian opt.",
+    line=dict(color="#22d3ee", width=3)))
 fig.add_hline(y=4.36, line_dash="dot", line_color="#22d3ee", opacity=0.4)
-fig.add_annotation(x=38, y=4.29, text="BO best: 4.36 mm",
+fig.add_annotation(x=39, y=4.27, text="4.36 mm",
     font=dict(color="#22d3ee", size=13), showarrow=False)
 
-fig.update_layout(
-    xaxis_title="Number of evaluations", yaxis_title="Best σ_x + σ_y  (mm)",
-    height=390, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
-    font=dict(color="#e2e8f0"),
-    legend=dict(bgcolor="rgba(0,0,0,0)", orientation="h", y=1.08, x=0.5, xanchor="center"),
-    yaxis=dict(range=[4.15, 5.6], gridcolor="#1e3048"),
+fig.update_layout(height=390, autosize=True,
+    xaxis_title="Evaluations", yaxis_title="Best σ (mm)",
+    yaxis=dict(range=[4.1, 5.7], gridcolor="#1e3048"),
     xaxis=dict(gridcolor="#1e3048"),
-)
-fig.show()
+    paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
+    font=dict(color="#e2e8f0", size=11),
+    legend=dict(bgcolor="rgba(0,0,0,0)", orientation="h", y=1.08, x=0.5, xanchor="center"),
+    margin=dict(l=40, r=10, t=30, b=40))
+fig
 ```
 
-::: {.qr-box style="margin-top: 0.2em;"}
-**Notebook 02** — includes gradient descent comparison · `notebooks/02_beam_tuning/`
 :::
 
-::: notes
-Results from running the actual notebook locally. At k₁=0, the gradient of (σ_x + σ_y) is nearly zero because focusing in x defocuses in y. BO has no such issue — it's derivative-free.
+::: {.clearfix}
 :::
+
+---
+
+## Notebook 02 — live preview
+
+<iframe src="https://nbviewer.org/github/aghribi/cas2026-ai-medical-accelerators/blob/main/notebooks/02_beam_tuning/notebook.ipynb"
+        width="100%" height="530px" frameborder="0"
+        style="border-radius:6px; border:1px solid #22d3ee; background:#0d1b2a;">
+</iframe>
 
 ---
 
@@ -619,12 +975,12 @@ Surrogate Models
 :::
 
 ::: {style="font-size: 1em; color: #94a3b8;"}
-Replacing tracking codes with neural networks
+Replacing tracking codes with neural networks · Notebook 03
 :::
 
 ---
 
-## The speed problem
+## Surrogate models — method landscape
 
 ```{python}
 #| echo: false
@@ -632,81 +988,137 @@ Replacing tracking codes with neural networks
 
 import plotly.graph_objects as go
 
-methods = ["TraceWin<br>(1 eval)", "G4beamline<br>(1 eval)",
-           "Cheetah<br>(1 000 evals)", "MLP Surrogate<br>(1 000 evals)"]
-times_ms = [60_000, 600_000, 371, 0.6]
-colors   = ["#64748b", "#475569", "#f87171", "#22d3ee"]
-labels   = ["1 min", "10 min", "371 ms", "0.6 ms"]
+# x: log10(training samples needed) — fewer = better for data-scarce settings
+# y: uncertainty quantification quality (1=none → 5=calibrated)
+methods = [
+    ("Gaussian Process",  2.3, 5.0, 28, "#a78bfa", "top right"),
+    ("RBF interpolation", 2.5, 1.5, 22, "#64748b", "bottom right"),
+    ("Random Forest",     3.0, 4.0, 24, "#94a3b8", "top right"),
+    ("PINN",              3.0, 2.8, 24, "#fb923c", "bottom left"),
+    ("Ensemble MLP",      4.2, 5.0, 28, "#a78bfa", "top left"),
+    ("MLP / DNN ★",      3.7, 2.0, 42, "#22d3ee", "bottom right"),
+]
+
+fig = go.Figure()
+for name, logx, y, size, color, pos in methods:
+    is_pick = "★" in name
+    fig.add_trace(go.Scatter(
+        x=[logx], y=[y], mode="markers+text",
+        marker=dict(size=size, color=color,
+            line=dict(color="#e2e8f0" if is_pick else "#0d1b2a",
+                      width=2.5 if is_pick else 1.5)),
+        text=[f"<b>{name}</b>" if is_pick else name],
+        textposition=pos,
+        textfont=dict(size=12 if is_pick else 10, color=color),
+        showlegend=False,
+    ))
+
+fig.add_annotation(x=4.9, y=1.0,
+    text="← faster inference, higher throughput →",
+    showarrow=False, font=dict(size=10, color="#64748b"),
+    xanchor="right")
+
+fig.update_layout(
+    height=490, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
+    font=dict(color="#e2e8f0", size=11),
+    xaxis=dict(title="Training samples required",
+               range=[1.8, 5.0],
+               tickvals=[2, 3, 4, 5],
+               ticktext=["100", "1 000", "10 000", "100 000"],
+               showgrid=True, gridcolor="#1e3048", zeroline=False),
+    yaxis=dict(title="Uncertainty quantification quality",
+               range=[0.6, 5.5],
+               tickvals=[1, 2, 3, 4, 5],
+               ticktext=["None", "–", "Moderate", "–", "Calibrated"],
+               showgrid=True, gridcolor="#1e3048", zeroline=False),
+    margin=dict(l=90, r=30, t=20, b=70),
+)
+fig
+```
+
+::: {.key-result style="margin-top: 0.3em;"}
+**This lecture:** MLP — 5 000 Cheetah samples, sub-millisecond inference, **586× speedup**. Add ensemble for UQ.
+:::
+
+---
+
+## The speed problem
+
+::: {.col-left style="padding-top: 0.5em;"}
+
+For real-time control or online optimisation you need **millisecond response** — not minutes.
+
+**Workflow:**
+
+1. Run the slow tracking code offline for thousands of random inputs
+2. Train a neural network on those input-output pairs
+3. Call the NN instead of the simulator during optimisation
+
+::: {.key-result style="margin-top: 0.8em;"}
+Typical speedup: **10³ – 10⁵×**
+
+Typical error: **< 1%** in the training domain
+:::
+
+:::
+
+::: {.col-right}
+
+```{python}
+#| echo: false
+#| eval: true
+
+import plotly.graph_objects as go
+
+methods = ["TraceWin<br>(1 call)", "G4beamline<br>(1 call)",
+           "Cheetah<br>(1 000 calls)", "Surrogate<br>(1 000 calls)"]
+times = [60_000, 600_000, 371, 0.6]
+colors = ["#64748b", "#475569", "#f87171", "#22d3ee"]
+labels = ["1 min", "10 min", "371 ms", "0.6 ms"]
 
 fig = go.Figure(go.Bar(
-    x=methods, y=times_ms,
-    marker_color=colors,
+    x=methods, y=times, marker_color=colors,
     text=labels, textposition="outside",
-    textfont=dict(color=colors, size=15, family="monospace"),
+    textfont=dict(color=colors, size=14),
 ))
 fig.update_layout(
-    yaxis=dict(type="log", title="Time (ms)", gridcolor="#1e3048",
+    yaxis=dict(type="log", gridcolor="#1e3048",
                tickvals=[1, 1e3, 1e5, 1e6],
                ticktext=["1 ms", "1 s", "1 min", "10 min"]),
     xaxis=dict(gridcolor="#1e3048"),
-    height=390, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
-    font=dict(color="#e2e8f0", size=13),
-    margin=dict(t=60, b=20), showlegend=False,
+    height=420, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
+    font=dict(color="#e2e8f0", size=12),
+    margin=dict(t=50, b=10, l=50, r=10), showlegend=False,
 )
-fig.show()
+fig
 ```
 
-::: notes
-For real-time control or online BO, you need millisecond response. The surrogate is trained once offline and called instead of the slow code during optimisation.
+:::
+
+::: {.clearfix}
 :::
 
 ---
 
 ## Training the surrogate
 
-```{python}
-import torch.nn as nn
+::: {.col-left}
 
-# MLP: (k₁_QF, k₁_QD) → (σ_x, σ_y)  in mm
+```{python}
+# MLP: (k₁_QF, k₁_QD) → (σ_x, σ_y) in mm
 surrogate = nn.Sequential(
     nn.Linear(2, 128), nn.Tanh(),
     nn.Linear(128, 128), nn.Tanh(),
     nn.Linear(128, 128), nn.Tanh(),
     nn.Linear(128, 2),
 )
+# 5 000 Cheetah calls offline (3 s total)
+# 300 epochs · Adam · cosine LR schedule
 ```
 
-::: {.col-left style="margin-top: 0.6em;"}
-**Data:** 5 000 Cheetah evaluations (3 s)
-
-**Training:** 300 epochs with Adam + cosine schedule
 :::
 
-::: {.col-right style="margin-top: 0.6em;"}
-::: {.metric}
-**R² = 1.0000**
-MAE = 0.001 mm
-:::
-::: {.metric style="margin-top: 0.4em;"}
-**586× speedup**
-0.6 ms vs 371 ms
-:::
-:::
-
-::: {.clearfix}
-:::
-
-::: {.qr-box style="margin-top: 0.5em;"}
-**Notebook 03** — parity plot · timing benchmark · ensemble UQ
-:::
-
-::: notes
-Tanh activations are preferred over ReLU for smooth physics surrogates — they produce smoother interpolations. We predict only σ_x and σ_y because the centroid (μ_x, μ_y) is always zero for our symmetric on-axis beam.
-:::
-
----
-
-## Surrogate accuracy — predicted vs. Cheetah
+::: {.col-right}
 
 ```{python}
 #| echo: false
@@ -718,11 +1130,8 @@ from plotly.subplots import make_subplots
 
 np.random.seed(0)
 n = 500
-# Simulate realistic sigma_x distribution (1–30 mm range, nonlinear)
-sigma_true = np.random.gamma(shape=2.0, scale=5.0, size=n) + 0.5
-sigma_true = sigma_true.clip(0.5, 30)
-# Surrogate prediction: nearly perfect with tiny noise
-sigma_pred = sigma_true + np.random.normal(0, 0.002 * sigma_true + 0.001, n)
+sigma_true = (np.random.gamma(2.0, 5.0, n) + 0.5).clip(0.5, 30)
+sigma_pred = sigma_true + np.random.normal(0, 0.002*sigma_true+0.001, n)
 
 fig = make_subplots(rows=1, cols=2,
     subplot_titles=["σ_x — Surrogate vs. Cheetah", "σ_y — Surrogate vs. Cheetah"])
@@ -732,26 +1141,41 @@ for col in [1, 2]:
     fig.add_trace(go.Scatter(x=sigma_true, y=sigma_pred, mode="markers",
         marker=dict(color="#22d3ee", size=3, opacity=0.5),
         showlegend=False), row=1, col=col)
-    fig.add_trace(go.Scatter(x=[lo, hi], y=[lo, hi], mode="lines",
+    fig.add_trace(go.Scatter(x=[lo,hi], y=[lo,hi], mode="lines",
         line=dict(color="#f87171", dash="dash", width=1.5),
         showlegend=False), row=1, col=col)
 
 fig.update_xaxes(title_text="Cheetah (mm)", showgrid=True, gridcolor="#1e3048")
 fig.update_yaxes(title_text="Surrogate (mm)", showgrid=True, gridcolor="#1e3048")
-fig.update_layout(height=390, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
-    font=dict(color="#e2e8f0"))
-fig.show()
+fig.update_layout(height=380, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
+    font=dict(color="#e2e8f0", size=11), margin=dict(l=40,r=10,t=40,b=40))
+fig
 ```
 
-::: notes
-Each point is one (k₁_QF, k₁_QD) test sample. Points lie exactly on the diagonal (perfect prediction). The red dashed line is the identity; any deviation from it would indicate surrogate error.
+::: {.metric style="margin-top: 0.3em;"}
+R² = 1.0000 · MAE = 0.001 mm · **586× speedup**
 :::
+
+:::
+
+::: {.clearfix}
+:::
+
+---
+
+## Notebook 03 — live preview
+
+<iframe src="https://nbviewer.org/github/aghribi/cas2026-ai-medical-accelerators/blob/main/notebooks/03_surrogate_model/notebook.ipynb"
+        width="100%" height="530px" frameborder="0"
+        style="border-radius:6px; border:1px solid #22d3ee; background:#0d1b2a;">
+</iframe>
 
 ---
 
 ## From surrogate to digital twin
 
 ::: {.col-left}
+
 **Surrogate** answers:
 *"What does the simulation predict?"*
 
@@ -759,72 +1183,74 @@ Each point is one (k₁_QF, k₁_QD) test sample. Points lie exactly on the diag
 *"What is my actual machine doing — right now?"*
 
 ::: {.highlight-box style="margin-top: 0.8em;"}
-Digital twin = surrogate + live sensor data + continuous update
-:::
+Digital twin = surrogate + live sensor data + continuous update loop
 :::
 
-::: {.col-right}
 **Medical accelerator applications:**
 
-::: {.fragment}
 - Virtual commissioning before beam-on
-:::
-::: {.fragment}
-- Adaptive QA — twin detects drift, flags recalibration
-:::
-::: {.fragment}
-- Cross-facility transfer — pre-train on one centre, adapt to another
+- Adaptive QA — detect drift, flag recalibration
+- Cross-facility transfer — pre-train at research machine, fine-tune at clinical site
+
 :::
 
-::: {.fragment}
-::: {.key-result style="margin-top: 0.8em;"}
-**TwinRISE** (Horizon Europe 2026–2030): federated digital twins, 19 institutions, 7 countries
+::: {.col-right style="padding-top: 0.5em;"}
+
+::: {.key-result}
+**TwinRISE** (Horizon Europe 2026–2030)
+
+Federated digital twins for accelerators
+across **19 institutions** in **7 countries**
+
+Federated learning: each site trains locally, shares only model updates — preserves data sovereignty for clinical sites.
 :::
-:::
+
 :::
 
 ::: {.clearfix}
-:::
-
-::: notes
-The federated learning angle is crucial for medical machines: each facility trains locally and shares only model updates (not raw data), preserving data sovereignty — required for clinical sites.
-
-Pre-training on a research machine then fine-tuning on a clinical machine solves the data scarcity problem.
 :::
 
 ---
 
 ## Open problems
 
-::: {.fragment .fade-in}
-::: {.highlight-box style="margin: 0.3em 0;"}
-**Data scarcity** — transfer learning from research to clinical machines is promising but not solved
-:::
+::: {.col-left}
+
+::: {.highlight-box style="margin-bottom: 0.5em;"}
+**Data scarcity**
+
+Faults are rare by design — transfer learning from research to clinical machines is not yet solved.
 :::
 
-::: {.fragment .fade-in}
-::: {.highlight-box style="margin: 0.3em 0;"}
-**Explainability** — EU AI Act classifies control-loop AI as "high risk" · auditable decisions required
-:::
+::: {.highlight-box}
+**Cross-facility transfer**
+
+A model trained at Centre A rarely works at Centre B without retraining — domain adaptation is needed.
 :::
 
-::: {.fragment .fade-in}
-::: {.highlight-box style="margin: 0.3em 0;"}
-**Cross-facility transfer** — model from Centre A rarely works at Centre B without retraining
-:::
 :::
 
-::: {.fragment .fade-in}
-::: {.highlight-box style="margin: 0.3em 0;"}
-**Real-time deployment** — integrating PyTorch into proprietary clinical control systems (Varian, Elekta)
-:::
+::: {.col-right}
+
+::: {.highlight-box style="margin-bottom: 0.5em;"}
+**Explainability**
+
+EU AI Act classifies control-loop AI as high risk — auditable, explainable decisions are required.
 :::
 
-::: {.fragment .fade-in}
+::: {.highlight-box}
+**Real-time integration**
+
+Embedding PyTorch models into proprietary clinical control systems (Varian, Elekta) is non-trivial.
+:::
+
+:::
+
+::: {.clearfix}
+:::
+
 ::: {.key-result style="margin-top: 0.6em;"}
-These are open research problems — not blockers.
-AI is already deployed and delivering value in clinical accelerator operations today.
-:::
+These are active research problems — not blockers. AI is already delivering value in clinical operations today.
 :::
 
 ---
@@ -834,20 +1260,20 @@ AI is already deployed and delivering value in clinical accelerator operations t
 | | Tool | Key result |
 |---|---|---|
 | **RF fault detection** | Autoencoder (unsupervised) | ROC-AUC > 0.99, no fault labels |
-| **Beam tuning** | Bayesian optimisation + Cheetah | −10% spot size, 40 evaluations |
-| **Surrogate model** | MLP (Tanh, normalised I/O) | R²=1.00, **586× speedup** |
+| **Beam tuning** | Bayesian opt. + Cheetah | −10% spot size, 40 evaluations |
+| **Surrogate model** | MLP, Tanh, normalised I/O | R²=1.00, **586× speedup** |
 
 ::: {.col-left style="margin-top: 0.8em;"}
 ::: {.key-result}
-Physics gave ML its vocabulary.
-Hopfield → Nobel 2024 (Physics).
+Physics invented the foundations of AI.
+The Nobel Prize in Physics 2024 confirmed it.
 We are natural practitioners.
 :::
 :::
 
 ::: {.col-right style="margin-top: 0.8em;"}
 ::: {.key-result}
-Everything is open and runnable.
+All code is open and runnable on Colab.
 
 `github.com/aghribi/`
 `cas2026-ai-medical-accelerators`
@@ -881,6 +1307,7 @@ Kaiser et al., *PRAB* **27**, 054601 (2024) · Tennant et al., *PRAB* **23**, 11
 Duris et al., *PRL* **124**, 124801 (2020) · Ghribi et al., *Europhysics News* **56**(1) (2025)
 
 `github.com/aghribi/cas2026-ai-medical-accelerators`
+`aghribi.github.io/acc-ml-living-review`
 :::
 
 :::

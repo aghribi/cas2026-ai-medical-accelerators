@@ -158,3 +158,20 @@ $code-bg:               rgba(34, 211, 238, 0.06);
 
 // ── Progress bar ──────────────────────────────────────────────────────────────
 .reveal .progress { color: #22d3ee; }
+
+// ── Plotly figures — fill available width ────────────────────────────────────
+.reveal .cell-output-display {
+  width: 100%;
+  display: block;
+}
+.reveal .js-plotly-plot,
+.reveal .plotly-graph-div {
+  width: 100% !important;
+  max-width: 100%;
+}
+
+// ── iframes — full height ─────────────────────────────────────────────────────
+.reveal iframe {
+  display: block;
+  border-radius: 6px;
+}
