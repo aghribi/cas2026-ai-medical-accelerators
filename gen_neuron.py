@@ -66,60 +66,90 @@ plt.close(fig1)
 print("Saved bio_neuron_annotated.png")
 
 # ── Figure 2: McCulloch–Pitts artificial neuron ──────────────────────────────
-fig2, ax = plt.subplots(figsize=(10, 4.2), facecolor=BG)
+fig2, ax = plt.subplots(figsize=(11, 4.6), facecolor=BG)
 ax.set_facecolor(BG)
 ax.axis('off')
-ax.set_xlim(0, 10)
+ax.set_xlim(0, 11)
 ax.set_ylim(0, 10)
 
 sig_x, sig_y = 4.8, 5.0
 
+# Input nodes + weighted arrows
 for (lbl, ix, iy), wl in zip(
-        [('x₃', 1.1, 7.8), ('x₂', 1.1, 5.0), ('x₁', 1.1, 2.2)],
+        [('x₃', 1.0, 7.8), ('x₂', 1.0, 5.0), ('x₁', 1.0, 2.2)],
         ['w₃', 'w₂', 'w₁']):
     ax.add_patch(Ellipse((ix, iy), 1.3, 1.1,
                          facecolor=DARK, edgecolor=CYAN2, lw=2, zorder=4))
-    ax.text(ix, iy, lbl, color=WHITE, fontsize=11, ha='center', va='center',
+    ax.text(ix, iy, lbl, color=WHITE, fontsize=12, ha='center', va='center',
             fontweight='bold', zorder=5)
     ax.annotate('', xy=(sig_x - 0.90, sig_y + (iy - sig_y) * 0.13),
                 xytext=(ix + 0.65, iy),
                 arrowprops=dict(arrowstyle='->', color=CYAN, lw=1.8,
                                 mutation_scale=12), zorder=3)
-    ax.text((ix + sig_x) / 2 - 0.2, (iy + sig_y) / 2 + 0.05,
-            wl, color=GRAY, fontsize=9, ha='center', va='center')
+    # weight label — brighter and larger
+    mx = (ix + 0.65 + sig_x - 0.90) / 2 - 0.1
+    my = (iy + sig_y + (iy - sig_y) * 0.13) / 2 + 0.12
+    ax.text(mx, my, wl, color=CYAN2, fontsize=10.5, ha='center', va='center',
+            fontweight='bold')
 
-ax.text(1.1, 1.0, 'Binary\ninputs', color=GRAY, fontsize=8.5, ha='center')
+ax.text(1.0, 0.85, 'Binary inputs', color=GRAY, fontsize=9, ha='center')
 
-ax.add_patch(Ellipse((sig_x, sig_y), 1.8, 1.6,
+# Sigma node
+ax.add_patch(Ellipse((sig_x, sig_y), 1.9, 1.7,
                      facecolor=DARK, edgecolor=CYAN, lw=2.5, zorder=4))
-ax.text(sig_x, sig_y, 'Σ', color=CYAN, fontsize=20, ha='center', va='center',
+ax.text(sig_x, sig_y + 0.08, 'Σ', color=CYAN, fontsize=22, ha='center', va='center',
         fontweight='bold', zorder=5)
-ax.text(sig_x, sig_y - 1.35, r'$\Sigma\,w_i x_i$', color=GRAY,
-        fontsize=9, ha='center')
+ax.text(sig_x, sig_y - 1.45, r'$\Sigma\,w_i x_i$', color=GRAY,
+        fontsize=9.5, ha='center')
 
-ax.annotate('', xy=(7.1, sig_y), xytext=(sig_x + 0.90, sig_y),
+# Arrow sigma → threshold
+ax.annotate('', xy=(6.85, sig_y), xytext=(sig_x + 0.95, sig_y),
             arrowprops=dict(arrowstyle='->', color=CYAN, lw=1.8,
                             mutation_scale=12), zorder=3)
 
-ax.add_patch(FancyBboxPatch((7.1, sig_y - 0.75), 1.60, 1.50,
-                            boxstyle='round,pad=0.10',
+# Threshold box — draw a Heaviside step function inside instead of text
+bx0, bx1 = 6.85, 9.05
+by0, by1 = sig_y - 0.85, sig_y + 0.85
+ax.add_patch(FancyBboxPatch((bx0, by0), bx1 - bx0, by1 - by0,
+                            boxstyle='round,pad=0.08',
                             facecolor='#2d1515', edgecolor=RED, lw=2.5, zorder=4))
-ax.text(7.90, sig_y + 0.08, 'f(·)', color=RED, fontsize=11.5,
-        ha='center', va='center', fontweight='bold', zorder=5)
-ax.text(7.90, sig_y - 0.35, '≥ θ ?', color=RED, fontsize=9,
-        ha='center', va='center', zorder=5)
-ax.text(7.90, sig_y - 1.35, 'Threshold θ', color=RED, fontsize=8.5, ha='center')
 
-ax.annotate('', xy=(9.25, sig_y), xytext=(8.70, sig_y),
+# Heaviside step function drawn inside the box
+mid_x = (bx0 + bx1) / 2        # ≈ 7.95
+step_lo_y = sig_y - 0.50
+step_hi_y = sig_y + 0.52
+margin_x = 0.52
+# horizontal baseline → step → plateau
+sx = [bx0 + margin_x, mid_x, mid_x, bx1 - margin_x]
+sy_ = [step_lo_y,     step_lo_y, step_hi_y, step_hi_y]
+ax.plot(sx, sy_, color=RED, lw=2.2, solid_joinstyle='miter', zorder=6)
+# dashed vertical at θ
+ax.plot([mid_x, mid_x], [step_lo_y - 0.08, step_hi_y + 0.08],
+        color=RED, lw=1.1, linestyle='--', alpha=0.55, zorder=6)
+# θ label below the step
+ax.text(mid_x, by0 + 0.08, 'θ', color=RED, fontsize=10.5,
+        ha='center', va='bottom', fontstyle='italic', zorder=7)
+# "0" and "1" level markers
+ax.text(bx0 + 0.12, step_lo_y, '0', color=RED, fontsize=8, ha='left',
+        va='center', alpha=0.75, zorder=7)
+ax.text(bx0 + 0.12, step_hi_y, '1', color=RED, fontsize=8, ha='left',
+        va='center', alpha=0.75, zorder=7)
+
+ax.text((bx0 + bx1) / 2, by0 - 0.30, 'Binary threshold',
+        color=RED, fontsize=9, ha='center')
+
+# Arrow threshold → output
+ax.annotate('', xy=(9.60, sig_y), xytext=(bx1, sig_y),
             arrowprops=dict(arrowstyle='->', color=CYAN, lw=1.8,
                             mutation_scale=12), zorder=3)
 
-ax.add_patch(Circle((9.55, sig_y), 0.55,
+# Output node
+ax.add_patch(Circle((10.05, sig_y), 0.60,
                     facecolor=DARK, edgecolor=CYAN2, lw=2, zorder=4))
-ax.text(9.55, sig_y, 'y', color=CYAN2, fontsize=13, ha='center', va='center',
+ax.text(10.05, sig_y, 'y', color=CYAN2, fontsize=14, ha='center', va='center',
         fontweight='bold', zorder=5)
-ax.text(9.55, sig_y - 1.1, '0 or 1', color=GRAY, fontsize=8.5, ha='center')
-ax.text(9.55, sig_y - 1.55, 'Binary\noutput', color=GRAY, fontsize=8, ha='center')
+ax.text(10.05, sig_y - 1.20, 'Binary output\n(0 or 1)',
+        color=GRAY, fontsize=9, ha='center', linespacing=1.35)
 
 ax.set_title('McCulloch–Pitts artificial neuron (1943)',
              color=WHITE, fontsize=12, fontweight='bold', pad=6)
