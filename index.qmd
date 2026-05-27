@@ -150,13 +150,19 @@ From the perceptron to the Nobel Prize in Physics
 
 ## McCulloch & Pitts — the first artificial neuron (1943)
 
-<img src="assets/portrait_pitts.png" style="float:right; margin: 0 0 0.3em 0.8em; border-radius:6px; border:1px solid rgba(34,211,238,0.4); width:75px;">
+<img src="assets/Mccullochpitts.jpeg" style="float:right; margin: 0 0 0.3em 0.8em; border-radius:6px; border:1px solid rgba(34,211,238,0.4); width:150px;">
 
-**Warren McCulloch** (neuroscientist) & **Walter Pitts** (logician) — 1943 — first mathematical model of a neuron, mapping neural activity onto Boolean logic.
+**Warren McCulloch** & **Walter Pitts** (1943) — first mathematical model of a neuron.
+
+::: {style="font-size:0.78em; margin: 0.2em 0 0 0; line-height:1.55;"}
+- **Dendrites** collect signals from neighbouring neurons (inputs)
+- **Soma** integrates them: fires if $\sum w_i x_i \geq \theta$
+- **Axon** propagates the output signal to downstream neurons
+:::
 
 <div style="clear:both;"></div>
 
-<img src="assets/mcculloch_pitts_neuron.png" style="width:100%; max-height:64vh; object-fit:contain; border-radius:6px; margin-top:0.1em;">
+<img src="assets/mcculloch_pitts_neuron.png" style="width:100%; max-height:54vh; object-fit:contain; border-radius:6px; margin-top:0.15em;">
 
 ::: {.slide-ref}
 McCulloch & Pitts (1943). A logical calculus of the ideas immanent in nervous activity. *Bull. Math. Biophysics* 5, 115–133.
