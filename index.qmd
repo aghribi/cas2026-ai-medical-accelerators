@@ -146,6 +146,57 @@ Unsupervised, sample-efficient, and physics-informed approaches are not just pre
 From the perceptron to the Nobel Prize in Physics
 :::
 
+```{python}
+#| echo: false
+#| eval: true
+
+import plotly.graph_objects as go
+
+events = [
+    (1943, "McCulloch-Pitts<br>neuron", 1, "#475569"),
+    (1957, "Rosenblatt<br>Perceptron", -1, "#22d3ee"),
+    (1969, "Minsky-Papert<br>(XOR limit)", 1, "#f87171"),
+    (1982, "Hopfield<br>networks", -1, "#22d3ee"),
+    (1986, "Backprop<br>(Rumelhart)", 1, "#22d3ee"),
+    (1998, "LeNet<br>(LeCun)", -1, "#a78bfa"),
+    (2006, "Deep belief<br>nets (Hinton)", 1, "#a78bfa"),
+    (2012, "AlexNet<br>(ImageNet)", -1, "#fb923c"),
+    (2017, "Transformers<br>(Attention)", 1, "#fb923c"),
+    (2022, "ChatGPT", -1, "#f87171"),
+    (2024, "Nobel Prize<br>Physics", 1, "#fbbf24"),
+]
+
+fig = go.Figure()
+fig.add_shape(type="line", x0=1938, x1=2026, y0=0, y1=0,
+    line=dict(color="#22d3ee", width=2.5))
+
+for year, label, side, color in events:
+    y_end = 0.52 * side
+    fig.add_shape(type="line", x0=year, x1=year, y0=0, y1=y_end * 0.82,
+        line=dict(color=color, width=1.5, dash="dot"))
+    fig.add_trace(go.Scatter(x=[year], y=[0], mode="markers",
+        marker=dict(color=color, size=11, line=dict(color="#0d1b2a", width=2)),
+        showlegend=False, hovertext=f"{year}: {label}"))
+    fig.add_annotation(x=year, y=y_end,
+        text=f"<b>{year}</b><br><span style='font-size:10px'>{label}</span>",
+        showarrow=False, font=dict(size=11, color=color), align="center")
+
+fig.update_layout(
+    height=380, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#0d1b2a",
+    margin=dict(l=10, r=10, t=10, b=10),
+    xaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[1936, 2027]),
+    yaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[-0.9, 0.9]),
+    font=dict(color="#e2e8f0"),
+)
+fig
+```
+
+::: notes
+The yellow dot at 2024 is the Nobel Prize in Physics awarded to Hopfield and Hinton — formally recognising that the foundations of modern AI are physics.
+
+Note the two "winters" (after 1969 and after the late 1980s) — periods when funding and interest collapsed because the field overpromised. The current period since AlexNet in 2012 has been the longest sustained growth in AI history.
+:::
+
 ---
 
 ## McCulloch & Pitts — the first artificial neuron (1943)
@@ -222,6 +273,10 @@ Rosenblatt's Mark 1 Perceptron (1958) was a physical hardware device — it made
 ::: {.clearfix}
 :::
 
+::: {.slide-ref}
+Rosenblatt, F. (1958). The perceptron: a probabilistic model for information storage and organization in the brain. *Psychol. Rev.* 65(6), 386–408.
+:::
+
 ::: notes
 The Mark 1 Perceptron at Cornell learned to recognise patterns from photographs. The same gradient-based idea underlies GPT-4.
 :::
@@ -271,66 +326,18 @@ The Minsky-Papert result was a setback, but the issue was simply that one layer 
 
 ---
 
-## A history of AI — key milestones
-
-```{python}
-#| echo: false
-#| eval: true
-
-import plotly.graph_objects as go
-
-events = [
-    (1943, "McCulloch-Pitts<br>neuron", 1, "#475569"),
-    (1957, "Rosenblatt<br>Perceptron", -1, "#22d3ee"),
-    (1969, "Minsky-Papert<br>(XOR limit)", 1, "#f87171"),
-    (1982, "Hopfield<br>networks", -1, "#22d3ee"),
-    (1986, "Backprop<br>(Rumelhart)", 1, "#22d3ee"),
-    (1998, "LeNet<br>(LeCun)", -1, "#a78bfa"),
-    (2006, "Deep belief<br>nets (Hinton)", 1, "#a78bfa"),
-    (2012, "AlexNet<br>(ImageNet)", -1, "#fb923c"),
-    (2017, "Transformers<br>(Attention)", 1, "#fb923c"),
-    (2022, "ChatGPT", -1, "#f87171"),
-    (2024, "Nobel Prize<br>Physics", 1, "#fbbf24"),
-]
-
-fig = go.Figure()
-fig.add_shape(type="line", x0=1938, x1=2026, y0=0, y1=0,
-    line=dict(color="#22d3ee", width=2.5))
-
-for year, label, side, color in events:
-    y_end = 0.52 * side
-    fig.add_shape(type="line", x0=year, x1=year, y0=0, y1=y_end * 0.82,
-        line=dict(color=color, width=1.5, dash="dot"))
-    fig.add_trace(go.Scatter(x=[year], y=[0], mode="markers",
-        marker=dict(color=color, size=11, line=dict(color="#0d1b2a", width=2)),
-        showlegend=False, hovertext=f"{year}: {label}"))
-    fig.add_annotation(x=year, y=y_end,
-        text=f"<b>{year}</b><br><span style='font-size:10px'>{label}</span>",
-        showarrow=False, font=dict(size=11, color=color), align="center")
-
-fig.update_layout(
-    height=520, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#0d1b2a",
-    margin=dict(l=10, r=10, t=10, b=10),
-    xaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[1936, 2027]),
-    yaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[-0.9, 0.9]),
-    font=dict(color="#e2e8f0"),
-)
-fig
-```
-
-::: {.key-result style="margin-top: 0.3em;"}
-Physics gave AI its mathematical foundations at every major inflection point.
-:::
-
-::: notes
-The yellow dot at 2024 is the Nobel Prize in Physics awarded to Hopfield and Hinton — formally recognising that the foundations of modern AI are physics.
-
-Note the two "winters" (after 1969 and after the late 1980s) — periods when funding and interest collapsed because the field overpromised. The current period since AlexNet in 2012 has been the longest sustained growth in AI history.
-:::
-
----
-
 ## Physics at the core of AI
+
+<div style="position:absolute; top:0.2em; right:0.4em; z-index:10; display:flex; gap:0.5em;">
+<figure style="text-align:center; margin:0;">
+<img src="assets/portrait_hopfield.png" style="border-radius:6px; border:1px solid rgba(34,211,238,0.4); height:115px;">
+<figcaption style="font-size:0.55em; color:#94a3b8; margin-top:0.2em;">J. Hopfield</figcaption>
+</figure>
+<figure style="text-align:center; margin:0;">
+<img src="assets/portrait_hinton.png" style="border-radius:6px; border:1px solid rgba(34,211,238,0.4); height:115px;">
+<figcaption style="font-size:0.55em; color:#94a3b8; margin-top:0.2em;">G. Hinton</figcaption>
+</figure>
+</div>
 
 ::: {.col-left}
 
@@ -343,17 +350,6 @@ $$E = -\frac{1}{2} \sum_{ij} w_{ij} s_i s_j$$
 :::
 
 ::: {.col-right}
-
-::: {style="display:flex; gap:0.6em; justify-content:center; margin-bottom:0.5em;"}
-<figure style="text-align:center; margin:0;">
-<img src="assets/portrait_hopfield.png" style="border-radius:6px; border:1px solid rgba(34,211,238,0.4); height:100px;">
-<figcaption style="font-size:0.55em; color:#94a3b8; margin-top:0.2em;">J. Hopfield</figcaption>
-</figure>
-<figure style="text-align:center; margin:0;">
-<img src="assets/portrait_hinton.png" style="border-radius:6px; border:1px solid rgba(34,211,238,0.4); height:100px;">
-<figcaption style="font-size:0.55em; color:#94a3b8; margin-top:0.2em;">G. Hinton</figcaption>
-</figure>
-:::
 
 ::: {.highlight-box}
 **Nobel Prize in Physics 2024**
@@ -374,6 +370,83 @@ Awarded in **Physics**, not Computer Science.
 The Nobel Committee's citation is explicit: Hopfield's use of statistical mechanics to build associative memory, and Hinton's extension to probabilistic models using the Boltzmann distribution, are the foundations.
 
 As accelerator physicists, we think in terms of Hamiltonians, phase spaces, and energy minimisation every day. ML is a natural extension of our toolkit.
+:::
+
+---
+
+## Hopfield networks — memory as energy minimisation
+
+:::: {.columns style="margin-top:0.3em;"}
+::: {.column width="52%"}
+
+**Analogy with spin glasses** (Ising model):
+
+- Neurons $s_i \in \{-1, +1\}$ — binary, like magnetic spins
+- Weights $w_{ij}$ — like spin-coupling constants
+- Energy always descends toward a minimum → **stored memories = energy minima**
+- A noisy cue evolves toward the nearest stored pattern
+
+::: {style="font-size:0.78em; margin-top:0.5em; line-height:1.5;"}
+**Hebbian learning rule** (pattern storage):
+$$w_{ij} = \frac{1}{N}\sum_\mu \xi_i^\mu \xi_j^\mu$$
+Patterns $\xi^\mu$ are imprinted as valleys in the energy landscape.
+:::
+
+:::
+::: {.column width="46%"}
+
+::: {.highlight-box style="margin-bottom:0.5em;"}
+**Retrieval = gradient descent on E**
+
+Starting from a partial cue, the network rolls downhill
+in energy space to the nearest stored memory —
+like a ball settling into a valley.
+:::
+
+::: {.key-result}
+**Capacity ≈ 0.14 N patterns** for N neurons
+
+Derived via replica methods from statistical mechanics —
+not a computer science result.
+:::
+
+:::
+::::
+
+::: {.slide-ref}
+Hopfield, J.J. (1982). Neural networks and physical systems with emergent collective computational abilities. *PNAS* 79, 2554–2558. · Amit, Gutfreund & Sompolinsky (1985). *PRL* 55, 1530.
+:::
+
+::: notes
+The capacity result 0.14N comes from Amit, Gutfreund and Sompolinsky (1985) using the replica trick from spin glass theory — pure statistical mechanics. The overlap with Ising models, partition functions and free energy is not a metaphor: it is the same mathematics.
+:::
+
+---
+
+## Statistical mechanics → deep learning
+
+::: {style="margin-top:0.2em; font-size:0.88em;"}
+
+| Physics concept | ML analogue |
+|:---|:---|
+| **Hamiltonian / energy** $H(s)$ | **Loss function** $\mathcal{L}(\theta)$ |
+| **Partition function** $Z = \sum_s e^{-H/T}$ | **Normalisation constant** (softmax, VAE) |
+| **Temperature** $T$ | **Learning rate / annealing schedule** |
+| **Boltzmann distribution** $P \propto e^{-E/T}$ | **Softmax output, Boltzmann machine** |
+| **Phase transition** | **Grokking — sharp generalisation threshold** |
+| **Langevin dynamics** | **Stochastic gradient descent (SGD)** |
+| **Free energy** $F = -T \ln Z$ | **ELBO / variational lower bound (VAE)** |
+
+:::
+
+::: {.key-result style="margin-top:0.5em;"}
+These are not metaphors — they are the **same mathematics**, rediscovered independently.
+SGD is Langevin dynamics; dropout is a thermal noise regulariser.
+As accelerator physicists we already speak this language.
+:::
+
+::: notes
+The connection between SGD and Langevin dynamics was formalised by Welling & Teh (2011). The Boltzmann machine (Hinton & Sejnowski 1983) is a literal physical model. Phase transitions in learning (grokking) are an active research topic since Power et al. (2022). These connections mean accelerator physicists are naturally equipped to understand ML at a deep level — the toolkit is the same.
 :::
 
 # Practical Foundations {.section-divider background-color="#0a1520"}
