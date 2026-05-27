@@ -14,5 +14,24 @@
       Plotly.Plots.resize(el);
     });
   });
+
+  // Yellow-highlight first 3 boxes when the trigger fragment is shown
+  Reveal.on('fragmentshown', function (e) {
+    if (e.fragment && e.fragment.id === 'lecture-focus-trigger') {
+      ['box-fault', 'box-tuning', 'box-surrogate'].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.classList.add('lecture-highlight');
+      });
+    }
+  });
+
+  Reveal.on('fragmenthidden', function (e) {
+    if (e.fragment && e.fragment.id === 'lecture-focus-trigger') {
+      ['box-fault', 'box-tuning', 'box-surrogate'].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.classList.remove('lecture-highlight');
+      });
+    }
+  });
 })();
 </script>
