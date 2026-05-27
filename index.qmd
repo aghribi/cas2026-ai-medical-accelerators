@@ -72,6 +72,11 @@ Welcome. This lecture covers AI applied to the machine — the accelerator — n
 | 47–50 min | Digital twins & open problems |
 | 50–60 min | Q&A |
 
+::: {style="margin-top: 0.6em; font-size: 0.75em; color: #94a3b8; line-height: 1.6;"}
+`github.com/aghribi/cas2026-ai-medical-accelerators`
+AccML review: `aghribi.github.io/acc-ml-living-review`
+:::
+
 :::
 
 ::: {.col-right style="padding-top: 0.3em;"}
@@ -82,12 +87,6 @@ Welcome. This lecture covers AI applied to the machine — the accelerator — n
 - `01_fault_detection` — autoencoder on RF waveforms
 - `02_beam_tuning` — Bayesian optimisation with Cheetah
 - `03_surrogate_model` — MLP surrogate + ensemble UQ
-:::
-
-::: {style="margin-top: 0.8em; font-size: 0.85em; color: #94a3b8;"}
-`github.com/aghribi/cas2026-ai-medical-accelerators`
-
-AccML living review: `aghribi.github.io/acc-ml-living-review`
 :::
 
 :::
@@ -144,8 +143,6 @@ AI can keep that machine reliable, efficient, and well-characterised.
 Unsupervised, sample-efficient, and physics-informed approaches are not just preferences — they are requirements.
 :::
 
----
-
 # A Brief History of AI {.section-divider background-color="#0a1520"}
 
 ::: {style="color: #22d3ee; font-size: 1.2em; margin-top: 0.6em;"}
@@ -162,19 +159,8 @@ From the perceptron to the Nobel Prize in Physics
 
 $$y = \text{sign}\!\left(\sum_i w_i x_i - \theta\right)$$
 
-A single neuron that learns from examples by adjusting weights $w_i$.
-
+A single neuron that learns from examples by adjusting weights.
 Inspired by McCulloch-Pitts neurons (1943) and Hebbian learning.
-
-::: {.fragment}
-**1969 — Minsky & Papert:** the perceptron cannot solve XOR.
-Neural networks enter a decade-long winter.
-:::
-
-::: {.fragment}
-**1986 — Rumelhart, Hinton, Williams:** backpropagation.
-Multi-layer networks can learn any function.
-:::
 
 :::
 
@@ -183,17 +169,13 @@ Multi-layer networks can learn any function.
 ::: {.highlight-box}
 **The perceptron learning rule:**
 
-If the prediction is wrong, update:
 $$w_i \leftarrow w_i + \eta \cdot (y - \hat{y}) \cdot x_i$$
 
-This is the origin of gradient-based learning.
-Every modern neural network still follows this principle.
+Every modern network still follows this principle.
 :::
 
-::: {.fragment style="margin-top: 1em;"}
-::: {.key-result}
-From a single neuron in 1957 to GPT-4 in 2023 — the same mathematical idea, scaled and stacked.
-:::
+::: {.key-result style="margin-top: 0.8em;"}
+Rosenblatt's Mark 1 Perceptron (1958) was a physical hardware device — it made the front page of the New York Times.
 :::
 
 :::
@@ -202,9 +184,50 @@ From a single neuron in 1957 to GPT-4 in 2023 — the same mathematical idea, sc
 :::
 
 ::: notes
-Rosenblatt built the Mark 1 Perceptron at Cornell in 1958 — a physical hardware device that learned to recognise patterns from photographs. It made the front page of the New York Times.
+The Mark 1 Perceptron at Cornell learned to recognise patterns from photographs. The same gradient-based idea underlies GPT-4.
+:::
 
-The Minsky-Papert result was a setback, but in retrospect the issue was simply that one layer isn't enough. Two layers can solve XOR. Backpropagation made multi-layer training tractable.
+---
+
+## AI winters and the deep learning renaissance
+
+::: {.col-left}
+
+::: {.highlight-box}
+**1969 — Minsky & Papert**
+
+Proved the perceptron cannot solve XOR.
+Neural networks enter a decade-long *first winter*.
+:::
+
+::: {.highlight-box style="margin-top: 0.6em;"}
+**1986 — Rumelhart, Hinton, Williams**
+
+Backpropagation: multi-layer networks can learn any function.
+Second spring — then a second winter in the 1990s.
+:::
+
+:::
+
+::: {.col-right}
+
+::: {.key-result}
+**2012 — AlexNet** wins ImageNet by 10 percentage points.
+
+The current era of deep learning begins.
+:::
+
+::: {.key-result style="margin-top: 0.8em;"}
+From a single neuron in 1957 to GPT-4 in 2023 — the same mathematical idea, scaled and stacked.
+:::
+
+:::
+
+::: {.clearfix}
+:::
+
+::: notes
+The Minsky-Papert result was a setback, but the issue was simply that one layer is not enough. Two layers can solve XOR. Backpropagation made multi-layer training tractable.
 :::
 
 ---
@@ -247,7 +270,7 @@ for year, label, side, color in events:
         showarrow=False, font=dict(size=11, color=color), align="center")
 
 fig.update_layout(
-    height=460, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#0d1b2a",
+    height=520, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#0d1b2a",
     margin=dict(l=10, r=10, t=10, b=10),
     xaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[1936, 2027]),
     yaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[-0.9, 0.9]),
@@ -285,18 +308,15 @@ $$E = -\frac{1}{2} \sum_{ij} w_{ij} s_i s_j$$
 ::: {.highlight-box}
 **Nobel Prize in Physics 2024**
 
-*"for foundational discoveries and inventions that enable machine learning with artificial neural networks"*
+*"for foundational discoveries enabling machine learning with artificial neural networks"*
 
 — **John J. Hopfield** & **Geoffrey E. Hinton**
 
 Awarded in **Physics**, not Computer Science.
 :::
 
-::: {.fragment style="margin-top: 0.8em; font-size: 0.88em;"}
-Physics concepts still active in modern ML:
-
-- Renormalisation group ↔ deep hierarchies
-- Path integrals ↔ diffusion models
+::: {.key-result style="margin-top: 0.8em;"}
+Renormalisation group ↔ deep hierarchies · Path integrals ↔ diffusion models
 :::
 
 :::
@@ -346,7 +366,7 @@ for year, label, side, color in events:
         showarrow=False, font=dict(size=11, color=color), align="center")
 
 fig.update_layout(
-    height=460, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#0d1b2a",
+    height=520, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#0d1b2a",
     margin=dict(l=10, r=10, t=10, b=10),
     xaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[1987, 2029]),
     yaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[-0.9, 0.9]),
@@ -363,8 +383,13 @@ fig
 
 ## AccML Living Review — the state of the art
 
+::: {style="display: flex; gap: 0.8em; font-size: 0.78em; margin-bottom: 0.4em; color: #94a3b8;"}
+[aghribi.github.io/acc-ml-living-review](https://aghribi.github.io/acc-ml-living-review) ·
+[github.com/aghribi/acc-ml-living-review](https://github.com/aghribi/acc-ml-living-review)
+:::
+
 <iframe src="https://aghribi.github.io/acc-ml-living-review"
-        width="100%" height="560px" frameborder="0"
+        width="100%" height="590px" frameborder="0"
         style="border-radius: 6px; border: 1px solid #22d3ee;">
 </iframe>
 
@@ -410,8 +435,6 @@ This living review covers all ML applications in accelerator physics — updated
 ::: notes
 This lecture covers the first three in depth with runnable code.
 :::
-
----
 
 # Use Case 1 {.section-divider background-color="#0a1520"}
 
@@ -461,7 +484,7 @@ for name, x, y, size, color, pos in methods:
     ))
 
 fig.update_layout(
-    height=490, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
+    height=530, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
     font=dict(color="#e2e8f0", size=11),
     xaxis=dict(title="Training data volume required",
                range=[-0.3, 2.5],
@@ -490,17 +513,13 @@ fig
 
 Every RF pulse → one **IQ waveform** per cavity at ~1 kHz.
 
-A fault shows up in the waveform, but:
-
-- Clinical machines are designed to be safe → faults are **rare**
-- A supervised classifier needs thousands of fault examples per class
+- Clinical machines are **safe by design** → faults are rare
+- Supervised classifiers need thousands of fault examples per class
 
 ::: {.fragment}
-::: {.key-result style="margin-top: 0.8em;"}
-**Solution:** autoencoder trained on normal pulses only.
-
+::: {.key-result style="margin-top: 0.6em;"}
+**Solution:** autoencoder on normal pulses only.
 Anomaly score = reconstruction error.
-Train on normal. Flag the unusual.
 :::
 :::
 
@@ -587,9 +606,9 @@ for col, (name, fn, color) in enumerate(cases, 1):
     fig.add_trace(go.Scatter(x=t, y=Q, line=dict(color=color, width=1.5),
         showlegend=False), row=2, col=col)
 
-fig.update_layout(height=440, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
+fig.update_layout(height=510, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
     font=dict(color="#e2e8f0", size=11), margin=dict(l=30, r=10, t=50, b=10),
-    legend=dict(orientation="h", y=1.13, x=0.5, xanchor="center"))
+    legend=dict(orientation="h", y=1.08, x=0.5, xanchor="center"))
 fig.update_xaxes(showgrid=False, zeroline=False, color="#475569")
 fig.update_yaxes(showgrid=True, gridcolor="#1e3048", zeroline=False, color="#475569")
 fig
@@ -698,7 +717,7 @@ fig.update_layout(barmode="overlay", height=360, autosize=True,
 fig
 ```
 
-::: {.metric style="margin-top: 0.4em;"}
+::: {.key-result style="margin-top: 0.4em; font-size: 1.05em; text-align: center;"}
 **ROC-AUC > 0.99**
 :::
 
@@ -711,12 +730,10 @@ fig
 
 ## Notebook 01 — live preview
 
-<iframe src="https://nbviewer.org/github/aghribi/cas2026-ai-medical-accelerators/blob/main/notebooks/01_fault_detection/notebook.ipynb"
-        width="100%" height="530px" frameborder="0"
+<iframe src="https://nbviewer.org/github/aghribi/cas2026-ai-medical-accelerators/blob/main/notebooks/01_fault_detection/notebook.ipynb?flush_cache=true"
+        width="100%" height="610px" frameborder="0"
         style="border-radius:6px; border:1px solid #22d3ee; background:#0d1b2a;">
 </iframe>
-
----
 
 # Use Case 2 {.section-divider background-color="#0a1520"}
 
@@ -769,7 +786,7 @@ fig.add_annotation(x=1.6, y=4.35, text="← best quadrant",
     showarrow=False, font=dict(size=10, color="#fbbf24"), xanchor="left")
 
 fig.update_layout(
-    height=490, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
+    height=530, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
     font=dict(color="#e2e8f0", size=11),
     xaxis=dict(title="Evaluations to converge  (← fewer = better)",
                range=[1.0, 5.0],
@@ -815,9 +832,8 @@ $n$ correctors × $k$ quads → high-dimensional space that grows exponentially 
 **Bayesian Optimisation fits naturally:**
 
 - Works in 2–20 dimensions
-- Finds a good solution in **~50 evaluations**
-- Model-free — works on the real machine
-- GP surrogate builds up a map of the objective
+- **~50 evaluations** to a good solution
+- Model-free — no simulator needed
 :::
 
 ::: {.key-result .fragment style="margin-top: 0.8em;"}
@@ -868,9 +884,8 @@ beam_out = segment.track(beam_in)
 - Same API whether virtual machine or real machine
 :::
 
-::: {.metric style="margin-top: 0.8em;"}
-σ_x = 1.00 mm (input)
-σ_x + σ_y = 4.83 mm (no quads)
+::: {.key-result style="margin-top: 0.8em; font-size: 0.9em;"}
+σ_x = 1.00 mm (input beam) · σ_x + σ_y = 4.83 mm (no quads)
 :::
 
 :::
@@ -941,7 +956,7 @@ fig.add_hline(y=4.36, line_dash="dot", line_color="#22d3ee", opacity=0.4)
 fig.add_annotation(x=39, y=4.27, text="4.36 mm",
     font=dict(color="#22d3ee", size=13), showarrow=False)
 
-fig.update_layout(height=390, autosize=True,
+fig.update_layout(height=460, autosize=True,
     xaxis_title="Evaluations", yaxis_title="Best σ (mm)",
     yaxis=dict(range=[4.1, 5.7], gridcolor="#1e3048"),
     xaxis=dict(gridcolor="#1e3048"),
@@ -961,12 +976,10 @@ fig
 
 ## Notebook 02 — live preview
 
-<iframe src="https://nbviewer.org/github/aghribi/cas2026-ai-medical-accelerators/blob/main/notebooks/02_beam_tuning/notebook.ipynb"
-        width="100%" height="530px" frameborder="0"
+<iframe src="https://nbviewer.org/github/aghribi/cas2026-ai-medical-accelerators/blob/main/notebooks/02_beam_tuning/notebook.ipynb?flush_cache=true"
+        width="100%" height="610px" frameborder="0"
         style="border-radius:6px; border:1px solid #22d3ee; background:#0d1b2a;">
 </iframe>
-
----
 
 # Use Case 3 {.section-divider background-color="#0a1520"}
 
@@ -1019,7 +1032,7 @@ fig.add_annotation(x=4.9, y=1.0,
     xanchor="right")
 
 fig.update_layout(
-    height=490, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
+    height=530, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
     font=dict(color="#e2e8f0", size=11),
     xaxis=dict(title="Training samples required",
                range=[1.8, 5.0],
@@ -1046,18 +1059,16 @@ fig
 
 ::: {.col-left style="padding-top: 0.5em;"}
 
-For real-time control or online optimisation you need **millisecond response** — not minutes.
+Real-time control needs **millisecond response** — not minutes.
 
 **Workflow:**
 
-1. Run the slow tracking code offline for thousands of random inputs
-2. Train a neural network on those input-output pairs
-3. Call the NN instead of the simulator during optimisation
+1. Run the slow code offline for thousands of inputs
+2. Train a neural network on those pairs
+3. Call the NN instead of the simulator at runtime
 
-::: {.key-result style="margin-top: 0.8em;"}
-Typical speedup: **10³ – 10⁵×**
-
-Typical error: **< 1%** in the training domain
+::: {.key-result style="margin-top: 0.6em;"}
+Typical speedup: **10³–10⁵×** · error **< 1%** in domain
 :::
 
 :::
@@ -1086,7 +1097,7 @@ fig.update_layout(
                tickvals=[1, 1e3, 1e5, 1e6],
                ticktext=["1 ms", "1 s", "1 min", "10 min"]),
     xaxis=dict(gridcolor="#1e3048"),
-    height=420, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
+    height=460, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
     font=dict(color="#e2e8f0", size=12),
     margin=dict(t=50, b=10, l=50, r=10), showlegend=False,
 )
@@ -1152,21 +1163,21 @@ fig.update_layout(height=380, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcol
 fig
 ```
 
-::: {.metric style="margin-top: 0.3em;"}
-R² = 1.0000 · MAE = 0.001 mm · **586× speedup**
-:::
-
 :::
 
 ::: {.clearfix}
+:::
+
+::: {.key-result style="margin-top: 0.4em; text-align: center; font-size: 1.05em;"}
+R² = 1.0000 · MAE = 0.001 mm · **586× speedup**
 :::
 
 ---
 
 ## Notebook 03 — live preview
 
-<iframe src="https://nbviewer.org/github/aghribi/cas2026-ai-medical-accelerators/blob/main/notebooks/03_surrogate_model/notebook.ipynb"
-        width="100%" height="530px" frameborder="0"
+<iframe src="https://nbviewer.org/github/aghribi/cas2026-ai-medical-accelerators/blob/main/notebooks/03_surrogate_model/notebook.ipynb?flush_cache=true"
+        width="100%" height="610px" frameborder="0"
         style="border-radius:6px; border:1px solid #22d3ee; background:#0d1b2a;">
 </iframe>
 
@@ -1186,11 +1197,9 @@ R² = 1.0000 · MAE = 0.001 mm · **586× speedup**
 Digital twin = surrogate + live sensor data + continuous update loop
 :::
 
-**Medical accelerator applications:**
-
-- Virtual commissioning before beam-on
-- Adaptive QA — detect drift, flag recalibration
-- Cross-facility transfer — pre-train at research machine, fine-tune at clinical site
+::: {.key-result style="margin-top: 0.8em;"}
+Applications: virtual commissioning · adaptive QA · cross-facility transfer
+:::
 
 :::
 
@@ -1217,15 +1226,11 @@ Federated learning: each site trains locally, shares only model updates — pres
 ::: {.col-left}
 
 ::: {.highlight-box style="margin-bottom: 0.5em;"}
-**Data scarcity**
-
-Faults are rare by design — transfer learning from research to clinical machines is not yet solved.
+**Data scarcity** — faults are rare by design; transfer from research to clinical is unsolved.
 :::
 
 ::: {.highlight-box}
-**Cross-facility transfer**
-
-A model trained at Centre A rarely works at Centre B without retraining — domain adaptation is needed.
+**Cross-facility transfer** — a model from Centre A rarely works at Centre B; domain adaptation needed.
 :::
 
 :::
@@ -1233,15 +1238,11 @@ A model trained at Centre A rarely works at Centre B without retraining — doma
 ::: {.col-right}
 
 ::: {.highlight-box style="margin-bottom: 0.5em;"}
-**Explainability**
-
-EU AI Act classifies control-loop AI as high risk — auditable, explainable decisions are required.
+**Explainability** — EU AI Act classifies control-loop AI as high risk; auditable decisions required.
 :::
 
 ::: {.highlight-box}
-**Real-time integration**
-
-Embedding PyTorch models into proprietary clinical control systems (Varian, Elekta) is non-trivial.
+**Real-time integration** — embedding PyTorch into proprietary clinical systems (Varian, Elekta) is non-trivial.
 :::
 
 :::
@@ -1250,7 +1251,7 @@ Embedding PyTorch models into proprietary clinical control systems (Varian, Elek
 :::
 
 ::: {.key-result style="margin-top: 0.6em;"}
-These are active research problems — not blockers. AI is already delivering value in clinical operations today.
+Active research problems — not blockers. AI is already delivering value in clinical operations today.
 :::
 
 ---
