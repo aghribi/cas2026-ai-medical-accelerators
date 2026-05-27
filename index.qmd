@@ -69,9 +69,9 @@ Welcome. This lecture covers AI applied to the machine — the accelerator — n
 | 47–50 min | Digital twins & open problems |
 | 50–60 min | Q&A |
 
-::: {style="margin-top: 0.6em; font-size: 0.75em; color: #94a3b8; line-height: 1.6;"}
-`github.com/aghribi/cas2026-ai-medical-accelerators`
-AccML review: `aghribi.github.io/acc-ml-living-review`
+::: {style="margin-top: 0.6em; font-size: 0.75em; color: #94a3b8; line-height: 1.8;"}
+<a href="https://github.com/aghribi/cas2026-ai-medical-accelerators" style="color:#94a3b8;"><svg class="gh-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>aghribi/cas2026-ai-medical-accelerators</a>
+AccML review: [aghribi.github.io/acc-ml-living-review](https://aghribi.github.io/acc-ml-living-review)
 :::
 
 :::
@@ -331,90 +331,79 @@ As accelerator physicists, we think in terms of Hamiltonians, phase spaces, and 
 
 ## AI arrives at accelerators
 
-::: {.col-left style="font-size: 0.82em;"}
-
-::: {.highlight-box style="margin-bottom: 0.45em; padding: 0.4em 0.7em;"}
-**1990s — First NNs on real machines**
-
-CERN orbit correction · ion source control (SLAC, ALS)
-Isolated, hand-crafted — no transfer, no documentation.
-:::
-
-::: {.highlight-box style="margin-bottom: 0.45em; padding: 0.4em 0.7em;"}
-**2010–2018 — ML enters operations**
-
-SRF fault classification at CEBAF (JLab) · first surrogate models
-SVMs and random forests become routine — but still facility-specific.
-:::
-
-::: {.highlight-box style="padding: 0.4em 0.7em;"}
-**2019 → present — Deep learning changes scale**
-
-RL in production at LCLS & ESRF · differentiable beam dynamics
-KIT/KARA: **−30% energy footprint** on a real storage ring (2024)
-:::
-
-:::
-
-::: {.col-right}
-
 ```{python}
 #| echo: false
 #| eval: true
 
 import plotly.graph_objects as go
 
+fig = go.Figure()
+
+# Era shaded regions
+fig.add_vrect(x0=1988, x1=2009,  fillcolor="#475569", opacity=0.12, layer="below", line_width=0)
+fig.add_vrect(x0=2009, x1=2018.5, fillcolor="#3b82f6", opacity=0.10, layer="below", line_width=0)
+fig.add_vrect(x0=2018.5, x1=2028, fillcolor="#22d3ee", opacity=0.10, layer="below", line_width=0)
+
+# Era labels (top)
+for x, label, color in [
+    (1998.5, "1990s–2009<br><i>First neural networks</i>", "#64748b"),
+    (2013.5, "2010–2018<br><i>ML enters operations</i>",  "#60a5fa"),
+    (2023,   "2019 → now<br><i>Deep learning at scale</i>","#22d3ee"),
+]:
+    fig.add_annotation(x=x, y=0.78, text=label,
+        showarrow=False, font=dict(size=11, color=color), align="center")
+
+# Central timeline
+fig.add_shape(type="line", x0=1989, x1=2027, y0=0, y1=0,
+    line=dict(color="#e2e8f0", width=2))
+
+# Events
 events = [
-    (1993, "CERN / ALS<br>first NNs", 1, "#475569"),
-    (2016, "Edelen survey<br>revival", -1, "#94a3b8"),
-    (2019, "BO at LCLS<br>(Duris+2020)", 1, "#22d3ee"),
+    (1993, "CERN orbit<br>correction (NN)", 1, "#475569"),
+    (2016, "Edelen survey<br>revival", -1, "#60a5fa"),
+    (2019, "BO at LCLS<br>Duris+2020", 1, "#22d3ee"),
     (2020, "SRF faults<br>JLab AE", -1, "#22d3ee"),
     (2021, "Cheetah<br>PyTorch sim", 1, "#fb923c"),
     (2024, "KARA −30%<br>energy footprint", -1, "#fbbf24"),
     (2026, "TwinRISE<br>19 institutions", 1, "#f87171"),
 ]
 
-fig = go.Figure()
-fig.add_shape(type="line", x0=1989, x1=2028, y0=0, y1=0,
-    line=dict(color="#22d3ee", width=2))
-
 for year, label, side, color in events:
     y_end = 0.52 * side
     fig.add_shape(type="line", x0=year, x1=year, y0=0, y1=y_end * 0.82,
         line=dict(color=color, width=1.5, dash="dot"))
     fig.add_trace(go.Scatter(x=[year], y=[0], mode="markers",
-        marker=dict(color=color, size=10, line=dict(color="#0d1b2a", width=2)),
+        marker=dict(color=color, size=11, line=dict(color="#0d1b2a", width=2)),
         showlegend=False))
     fig.add_annotation(x=year, y=y_end,
         text=f"<b>{year}</b><br><span style='font-size:9px'>{label}</span>",
-        showarrow=False, font=dict(size=10, color=color), align="center")
+        showarrow=False, font=dict(size=11, color=color), align="center")
 
 fig.update_layout(
-    height=480, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#0d1b2a",
-    margin=dict(l=5, r=5, t=10, b=10),
-    xaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[1987, 2029]),
-    yaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[-0.9, 0.9]),
+    height=540, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#0d1b2a",
+    margin=dict(l=10, r=10, t=15, b=10),
+    xaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[1986, 2029]),
+    yaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[-0.92, 0.95]),
     font=dict(color="#e2e8f0"),
 )
 fig
 ```
 
-:::
-
-::: {.clearfix}
+::: {.key-result style="margin-top: 0.3em; font-size: 0.78em;"}
+KIT/KARA 2024: **−30% energy footprint** measured on real storage ring (Ghribi et al., *EPN* 2025) · the exponential phase is **now**
 :::
 
 ::: notes
-30 years from first experiments to production deployment. KARA −30% energy footprint was measured on the real machine in 2024. The exponential part is now.
+30 years from first NNs to production AI systems. The key inflection point is 2019: BO in production at LCLS (Duris+2020), RL at ESRF (Leemann+2019), differentiable simulation with Cheetah (Kaiser+2024). KARA result is not a simulation — measured on the real machine.
 :::
 
 ---
 
 ## AccML Living Review — the state of the art
 
-::: {style="display: flex; gap: 0.8em; font-size: 0.78em; margin-bottom: 0.4em; color: #94a3b8;"}
+::: {style="display: flex; gap: 0.8em; font-size: 0.78em; margin-bottom: 0.4em; color: #94a3b8; align-items: center;"}
 [aghribi.github.io/acc-ml-living-review](https://aghribi.github.io/acc-ml-living-review) ·
-[github.com/aghribi/acc-ml-living-review](https://github.com/aghribi/acc-ml-living-review)
+<a href="https://github.com/aghribi/acc-ml-living-review" style="color:#94a3b8;"><svg class="gh-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>aghribi/acc-ml-living-review</a>
 :::
 
 <iframe src="https://aghribi.github.io/acc-ml-living-review"
@@ -787,14 +776,16 @@ import numpy as np
 
 # x: log10(typical evaluations to converge) — lower = better
 # y: works on real machine without gradient (1=no → 5=yes)
+# Scope: static beam-tuning optimisation (not sequential online control)
 methods = [
-    ("Grid Search",       4.3, 4.6, 22, "#475569", "top left"),
-    ("RL / MOGA",         3.7, 5.0, 26, "#a78bfa", "top right"),
-    ("Random Search",     2.5, 4.5, 24, "#94a3b8", "bottom right"),
-    ("CMA-ES",            2.7, 4.7, 22, "#64748b", "top right"),
-    ("Nelder-Mead",       2.3, 3.7, 22, "#94a3b8", "bottom left"),
-    ("Gradient descent",  1.8, 1.4, 24, "#fb923c", "bottom right"),
-    ("Bayesian Opt. ★",  1.6, 5.0, 42, "#22d3ee", "top right"),
+    ("Grid Search",          4.3, 4.6, 22, "#475569", "top left"),
+    ("MOGA / GA",            3.6, 4.8, 24, "#a78bfa", "top right"),
+    ("RL † online ctrl",     3.8, 5.0, 22, "#a78bfa", "bottom right"),
+    ("Random Search",        2.5, 4.5, 24, "#94a3b8", "bottom right"),
+    ("CMA-ES",               2.7, 4.7, 22, "#64748b", "top right"),
+    ("Nelder-Mead",          2.3, 3.7, 22, "#94a3b8", "bottom left"),
+    ("Gradient descent",     1.8, 1.4, 24, "#fb923c", "bottom right"),
+    ("Bayesian Opt. ★",     1.6, 5.0, 42, "#22d3ee", "top right"),
 ]
 
 fig = go.Figure()
@@ -813,6 +804,9 @@ for name, logx, y, size, color, pos in methods:
 
 fig.add_annotation(x=1.6, y=4.35, text="← best quadrant",
     showarrow=False, font=dict(size=10, color="#fbbf24"), xanchor="left")
+fig.add_annotation(x=4.95, y=0.85,
+    text="† RL: best for sequential online control (not single-shot optimisation) — Emma+2018, Kain+2020",
+    showarrow=False, font=dict(size=9, color="#64748b"), xanchor="right")
 
 fig.update_layout(
     height=530, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
@@ -834,7 +828,7 @@ fig
 ```
 
 ::: {.key-result style="margin-top: 0.3em; font-size: 0.78em;"}
-**This lecture:** Bayesian Optimisation — ~50 evaluations, model-free, works directly on the machine.
+**This lecture:** Bayesian Optimisation — ~50 evaluations, model-free, works on the machine. (Duris et al., *PRL* 2020; Frol et al., *IPAC* 2019) · Positions are approximate for beam-tuning context.
 :::
 
 ---
@@ -1079,7 +1073,7 @@ fig
 ```
 
 ::: {.key-result style="margin-top: 0.3em; font-size: 0.78em;"}
-**This lecture:** MLP — 5 000 Cheetah samples, sub-ms inference, **586× speedup**. Add ensemble for UQ.
+**This lecture:** MLP — 5 000 Cheetah samples, sub-ms inference, **586× speedup**. Add ensemble for UQ. (Edelen+2016; Kaiser+2024) · Positions are approximate for beam-physics context.
 :::
 
 ---
@@ -1317,27 +1311,62 @@ All code is open and runnable on Colab.
 
 ## {.plain background-color="#0d1b2a"}
 
-::: {style="text-align: center; padding-top: 2.5em;"}
+::: {style="text-align: center; padding-top: 1em;"}
 
-::: {style="font-size: 2em; font-weight: 700; color: #f1f5f9;"}
-Thank you
+::: {style="font-size: 1.9em; font-weight: 700; color: #f1f5f9;"}
+Thank you · Questions welcome
 :::
 
-::: {style="color: #22d3ee; font-size: 1.1em; margin: 0.5em 0;"}
-Questions welcome
-:::
-
-::: {style="border-top: 1.5px solid #22d3ee; width: 180px; margin: 1em auto;"}
-:::
-
-::: {style="color: #94a3b8; font-size: 0.75em; line-height: 2.0;"}
+::: {style="color: #94a3b8; font-size: 0.7em; margin-top: 0.4em;"}
 Dr. Adnan Ghribi · GANIL / CNRS-IN2P3 · `adnan.ghribi@ganil.fr`
-
-Kaiser et al., *PRAB* **27**, 054601 (2024) · Tennant et al., *PRAB* **23**, 114601 (2020)
-Duris et al., *PRL* **124**, 124801 (2020) · Ghribi et al., *Europhysics News* **56**(1) (2025)
-
-`github.com/aghribi/cas2026-ai-medical-accelerators`
-`aghribi.github.io/acc-ml-living-review`
 :::
 
+:::
+
+::: {style="border-top: 1px solid rgba(34,211,238,0.3); margin: 0.6em 0;"}
+:::
+
+::: {.col-left style="font-size: 0.72em;"}
+
+**Key references**
+
+- Duris et al., *PRL* **124**, 124801 (2020) — BO at LCLS
+- Tennant et al., *PRAB* **23**, 114601 (2020) — SRF faults JLab
+- Kaiser et al., *PRAB* **27**, 054601 (2024) — Cheetah diff. sim.
+- Ghribi et al., *EPN* **56**(1), 15 (2025) — KARA −30%
+- Edelen et al., *IEEE TNS* **63**, 878 (2016) — ML survey
+
+**Lecture slides & code**
+
+<a href="https://github.com/aghribi/cas2026-ai-medical-accelerators" style="color:#22d3ee;"><svg class="gh-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>aghribi/cas2026-ai-medical-accelerators</a>
+
+[aghribi.github.io/acc-ml-living-review](https://aghribi.github.io/acc-ml-living-review) — AccML living review
+
+:::
+
+::: {.col-right style="font-size: 0.72em;"}
+
+**Hands-on notebooks — open on Colab**
+
+::: {.highlight-box style="padding: 0.5em 0.7em; margin-bottom: 0.4em;"}
+**01 · RF Fault Detection**
+Autoencoder on IQ waveforms · ROC-AUC > 0.99
+[Open in Colab →](https://colab.research.google.com/github/aghribi/cas2026-ai-medical-accelerators/blob/main/notebooks/01_fault_detection/notebook.ipynb)
+:::
+
+::: {.highlight-box style="padding: 0.5em 0.7em; margin-bottom: 0.4em;"}
+**02 · Beam Tuning (BO + Cheetah)**
+Bayesian optimisation · −10% spot size in 40 evals
+[Open in Colab →](https://colab.research.google.com/github/aghribi/cas2026-ai-medical-accelerators/blob/main/notebooks/02_beam_tuning/notebook.ipynb)
+:::
+
+::: {.highlight-box style="padding: 0.5em 0.7em;"}
+**03 · Surrogate Model**
+MLP surrogate · R²=1.00 · 586× speedup
+[Open in Colab →](https://colab.research.google.com/github/aghribi/cas2026-ai-medical-accelerators/blob/main/notebooks/03_surrogate_model/notebook.ipynb)
+:::
+
+:::
+
+::: {.clearfix}
 :::

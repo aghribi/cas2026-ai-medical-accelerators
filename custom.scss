@@ -176,3 +176,12 @@ $code-bg:               rgba(34, 211, 238, 0.06);
   border-radius: 6px;
 }
 
+// ── Inline SVG icon helper ────────────────────────────────────────────────────
+.reveal .gh-icon {
+  width: 0.85em;
+  height: 0.85em;
+  fill: #22d3ee;
+  vertical-align: -0.1em;
+  margin-right: 0.25em;
+}
+
