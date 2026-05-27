@@ -152,7 +152,7 @@ From the perceptron to the Nobel Prize in Physics
 
 ::: {.col-left}
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Rosenblatt_with_perceptron.jpg/160px-Rosenblatt_with_perceptron.jpg" style="float:right; margin: 0 0 0.4em 0.8em; border-radius:6px; border:1px solid #22d3ee; width:120px;">
+<img src="assets/portrait_rosenblatt.png" style="float:right; margin: 0 0 0.4em 0.8em; border-radius:6px; border:1px solid rgba(34,211,238,0.4); width:110px;">
 
 **Frank Rosenblatt, 1957** — the Perceptron:
 
@@ -306,11 +306,11 @@ $$E = -\frac{1}{2} \sum_{ij} w_{ij} s_i s_j$$
 
 ::: {style="display:flex; gap:0.6em; justify-content:center; margin-bottom:0.5em;"}
 <figure style="text-align:center; margin:0;">
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/John_Hopfield_2009.jpg/120px-John_Hopfield_2009.jpg" style="border-radius:6px; border:1px solid #22d3ee; height:90px;">
+<img src="assets/portrait_hopfield.png" style="border-radius:6px; border:1px solid rgba(34,211,238,0.4); height:100px;">
 <figcaption style="font-size:0.55em; color:#94a3b8; margin-top:0.2em;">J. Hopfield</figcaption>
 </figure>
 <figure style="text-align:center; margin:0;">
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Geoffrey_Hinton_at_UBC.jpg/120px-Geoffrey_Hinton_at_UBC.jpg" style="border-radius:6px; border:1px solid #22d3ee; height:90px;">
+<img src="assets/portrait_hinton.png" style="border-radius:6px; border:1px solid rgba(34,211,238,0.4); height:100px;">
 <figcaption style="font-size:0.55em; color:#94a3b8; margin-top:0.2em;">G. Hinton</figcaption>
 </figure>
 :::

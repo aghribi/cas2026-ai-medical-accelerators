@@ -3,6 +3,7 @@ project:
   output-dir: _site
   resources:
     - notebooks_rendered/
+    - assets/
 
 execute:
   echo: true
