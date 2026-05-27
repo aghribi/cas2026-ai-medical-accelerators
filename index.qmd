@@ -148,6 +148,27 @@ From the perceptron to the Nobel Prize in Physics
 
 ---
 
+## McCulloch & Pitts — the first artificial neuron (1943)
+
+<img src="assets/portrait_pitts.png" style="float:right; margin: 0 0 0.4em 0.8em; border-radius:6px; border:1px solid rgba(34,211,238,0.4); width:90px;">
+
+**Warren McCulloch** (neuroscientist) & **Walter Pitts** (logician) — first mathematical model of a neuron, grounded in Boolean logic.
+
+::: {.highlight-box style="margin: 0.25em 0; padding: 0.35em 0.8em; font-size:0.88em;"}
+A neuron **fires** when the weighted sum of its inputs exceeds a threshold θ:
+$$y = \begin{cases} 1 & \text{if } \textstyle\sum_i w_i x_i \geq \theta \\ 0 & \text{otherwise} \end{cases}$$
+:::
+
+<div style="clear:both;"></div>
+
+<img src="assets/mcculloch_pitts_neuron.png" style="width:100%; margin-top:0.15em; border-radius:6px;">
+
+::: {.slide-ref}
+McCulloch & Pitts (1943). A logical calculus of the ideas immanent in nervous activity. *Bull. Math. Biophysics* 5, 115–133.
+:::
+
+---
+
 ## The perceptron — where it all began (1957)
 
 ::: {.col-left}
