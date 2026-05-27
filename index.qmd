@@ -1,8 +1,4 @@
 ---
-title: "AI Applications for Medical Accelerators"
-subtitle: "Accelerator Side"
-author: "Dr. Adnan Ghribi · GANIL / CNRS-IN2P3"
-date: "June 2026"
 format:
   revealjs:
     theme: [default, custom.scss]
@@ -334,6 +330,33 @@ As accelerator physicists, we think in terms of Hamiltonians, phase spaces, and 
 
 ## AI arrives at accelerators
 
+::: {.col-left style="font-size: 0.82em;"}
+
+::: {.highlight-box style="margin-bottom: 0.45em; padding: 0.4em 0.7em;"}
+**1990s — First NNs on real machines**
+
+CERN orbit correction · ion source control (SLAC, ALS)
+Isolated, hand-crafted — no transfer, no documentation.
+:::
+
+::: {.highlight-box style="margin-bottom: 0.45em; padding: 0.4em 0.7em;"}
+**2010–2018 — ML enters operations**
+
+SRF fault classification at CEBAF (JLab) · first surrogate models
+SVMs and random forests become routine — but still facility-specific.
+:::
+
+::: {.highlight-box style="padding: 0.4em 0.7em;"}
+**2019 → present — Deep learning changes scale**
+
+RL in production at LCLS & ESRF · differentiable beam dynamics
+KIT/KARA: **−30% energy footprint** on a real storage ring (2024)
+:::
+
+:::
+
+::: {.col-right}
+
 ```{python}
 #| echo: false
 #| eval: true
@@ -341,33 +364,33 @@ As accelerator physicists, we think in terms of Hamiltonians, phase spaces, and 
 import plotly.graph_objects as go
 
 events = [
-    (1993, "First NNs in<br>accelerator control<br>(SLAC/ALS)", 1, "#475569"),
-    (2016, "RL for CERN<br>injection (pilot)", -1, "#a78bfa"),
-    (2019, "BO at LCLS<br>4× faster tuning", 1, "#22d3ee"),
-    (2020, "Autoencoder<br>SRF faults (JLab)", -1, "#22d3ee"),
-    (2021, "Cheetah: PyTorch<br>beam dynamics", 1, "#fb923c"),
-    (2024, "ARTIFACT/KARA<br>−30% beam losses", -1, "#fbbf24"),
-    (2026, "TwinRISE:<br>19 institutions", 1, "#f87171"),
+    (1993, "CERN / ALS<br>first NNs", 1, "#475569"),
+    (2016, "Edelen survey<br>revival", -1, "#94a3b8"),
+    (2019, "BO at LCLS<br>(Duris+2020)", 1, "#22d3ee"),
+    (2020, "SRF faults<br>JLab AE", -1, "#22d3ee"),
+    (2021, "Cheetah<br>PyTorch sim", 1, "#fb923c"),
+    (2024, "KARA −30%<br>energy footprint", -1, "#fbbf24"),
+    (2026, "TwinRISE<br>19 institutions", 1, "#f87171"),
 ]
 
 fig = go.Figure()
 fig.add_shape(type="line", x0=1989, x1=2028, y0=0, y1=0,
-    line=dict(color="#22d3ee", width=2.5))
+    line=dict(color="#22d3ee", width=2))
 
 for year, label, side, color in events:
     y_end = 0.52 * side
     fig.add_shape(type="line", x0=year, x1=year, y0=0, y1=y_end * 0.82,
         line=dict(color=color, width=1.5, dash="dot"))
     fig.add_trace(go.Scatter(x=[year], y=[0], mode="markers",
-        marker=dict(color=color, size=11, line=dict(color="#0d1b2a", width=2)),
+        marker=dict(color=color, size=10, line=dict(color="#0d1b2a", width=2)),
         showlegend=False))
     fig.add_annotation(x=year, y=y_end,
-        text=f"<b>{year}</b><br><span style='font-size:10px'>{label}</span>",
-        showarrow=False, font=dict(size=11, color=color), align="center")
+        text=f"<b>{year}</b><br><span style='font-size:9px'>{label}</span>",
+        showarrow=False, font=dict(size=10, color=color), align="center")
 
 fig.update_layout(
-    height=520, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#0d1b2a",
-    margin=dict(l=10, r=10, t=10, b=10),
+    height=480, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#0d1b2a",
+    margin=dict(l=5, r=5, t=10, b=10),
     xaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[1987, 2029]),
     yaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[-0.9, 0.9]),
     font=dict(color="#e2e8f0"),
@@ -375,8 +398,13 @@ fig.update_layout(
 fig
 ```
 
-::: {.key-result style="margin-top: 0.3em;"}
-30 years from first experiments to production deployment. The exponential part is **now**.
+:::
+
+::: {.clearfix}
+:::
+
+::: notes
+30 years from first experiments to production deployment. KARA −30% energy footprint was measured on the real machine in 2024. The exponential part is now.
 :::
 
 ---
@@ -501,8 +529,8 @@ fig.update_layout(
 fig
 ```
 
-::: {.key-result style="margin-top: 0.3em;"}
-**This lecture:** Autoencoder — unsupervised, works on normal-only data, scales to 1 kHz waveform streams.
+::: {.key-result style="margin-top: 0.3em; font-size: 0.78em;"}
+**This lecture:** Autoencoder — unsupervised, normal-data only, scales to 1 kHz waveform streams.
 :::
 
 ---
@@ -804,8 +832,8 @@ fig.update_layout(
 fig
 ```
 
-::: {.key-result style="margin-top: 0.3em;"}
-**This lecture:** Bayesian Optimisation — converges in ~50 evaluations, model-free, works directly on the machine.
+::: {.key-result style="margin-top: 0.3em; font-size: 0.78em;"}
+**This lecture:** Bayesian Optimisation — ~50 evaluations, model-free, works directly on the machine.
 :::
 
 ---
@@ -1049,8 +1077,8 @@ fig.update_layout(
 fig
 ```
 
-::: {.key-result style="margin-top: 0.3em;"}
-**This lecture:** MLP — 5 000 Cheetah samples, sub-millisecond inference, **586× speedup**. Add ensemble for UQ.
+::: {.key-result style="margin-top: 0.3em; font-size: 0.78em;"}
+**This lecture:** MLP — 5 000 Cheetah samples, sub-ms inference, **586× speedup**. Add ensemble for UQ.
 :::
 
 ---
