@@ -18,6 +18,7 @@ format:
     footer: "CAS 2026 · Jurmala · AI for Medical Accelerators — Accelerator Side · A. Ghribi"
     chalkboard: false
     mouse-wheel: false
+    include-after-body: _afterbody.html
 execute:
   echo: true
   eval: false

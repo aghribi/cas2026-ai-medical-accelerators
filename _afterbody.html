@@ -1,0 +1,18 @@
+<script>
+(function () {
+  function resizePlotsIn(slide) {
+    if (!slide) return;
+    slide.querySelectorAll('.js-plotly-plot').forEach(function (el) {
+      Plotly.Plots.resize(el);
+    });
+  }
+
+  Reveal.on('ready',        function (e) { resizePlotsIn(e.currentSlide); });
+  Reveal.on('slidechanged', function (e) { resizePlotsIn(e.currentSlide); });
+  Reveal.on('resize',       function ()  {
+    document.querySelectorAll('.js-plotly-plot').forEach(function (el) {
+      Plotly.Plots.resize(el);
+    });
+  });
+})();
+</script>
