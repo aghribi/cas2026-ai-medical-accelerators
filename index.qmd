@@ -336,6 +336,347 @@ The Nobel Committee's citation is explicit: Hopfield's use of statistical mechan
 As accelerator physicists, we think in terms of Hamiltonians, phase spaces, and energy minimisation every day. ML is a natural extension of our toolkit.
 :::
 
+# Practical Foundations {.section-divider background-color="#0a1520"}
+
+::: {style="color: #22d3ee; font-size: 1.6em; font-weight: 800; margin-top: 0.5em;"}
+From raw signals to trained model
+:::
+
+::: {style="font-size: 1em; color: #94a3b8;"}
+Data · Features · Method selection · Pipeline
+:::
+
+---
+
+## Data quality — garbage in, garbage out
+
+::: {.col-left}
+
+Before any model, **the data must be trustworthy**.
+
+::: {.highlight-box style="margin: 0.35em 0; padding: 0.35em 0.7em;"}
+**① Clean** — remove corrupted pulses, stuck sensors, dropouts
+:::
+::: {.highlight-box style="margin: 0.35em 0; padding: 0.35em 0.7em;"}
+**② Synchronise** — align timestamps across RF, BPM, power supplies
+:::
+::: {.highlight-box style="margin: 0.35em 0; padding: 0.35em 0.7em;"}
+**③ Normalise** — zero-mean / unit-variance; prevents one channel dominating
+:::
+::: {.highlight-box style="margin: 0.35em 0; padding: 0.35em 0.7em;"}
+**④ Balance** — SRF faults < 0.1 % of pulses; a naïve model learns to ignore them
+:::
+
+::: {.key-result style="margin-top: 0.5em;"}
+A model trained on bad data learns bad behaviour. No algorithm compensates for this.
+:::
+
+:::
+
+::: {.col-right}
+
+```{python}
+#| echo: false
+#| eval: true
+
+import numpy as np
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+np.random.seed(42)
+t = np.linspace(0, 4*np.pi, 300)
+raw = np.sin(t) + 0.25 * np.random.randn(300)
+raw[55] = 3.9
+raw[195] = -3.6
+cleaned = (np.sin(t) + 0.1 * np.random.randn(300))
+cleaned = (cleaned - cleaned.mean()) / cleaned.std()
+
+fig = make_subplots(
+    rows=2, cols=1,
+    subplot_titles=["Raw signal — noise & outliers", "After cleaning & normalisation"],
+    vertical_spacing=0.14,
+)
+
+fig.add_trace(go.Scatter(
+    x=t, y=raw, mode='lines',
+    line=dict(color='#64748b', width=1.2), showlegend=False,
+), row=1, col=1)
+fig.add_trace(go.Scatter(
+    x=[t[55], t[195]], y=[raw[55], raw[195]], mode='markers',
+    marker=dict(color='#f87171', size=13, symbol='x',
+                line=dict(width=2.5, color='#f87171')),
+    showlegend=False,
+), row=1, col=1)
+fig.add_annotation(x=t[55], y=raw[55]+0.25, text="outlier",
+    showarrow=False, font=dict(size=9, color='#f87171'), row=1, col=1)
+
+fig.add_trace(go.Scatter(
+    x=t, y=cleaned, mode='lines',
+    line=dict(color='#22d3ee', width=1.4), showlegend=False,
+), row=2, col=1)
+
+for r in [1, 2]:
+    fig.update_xaxes(showgrid=False, showticklabels=False, zeroline=False, row=r, col=1)
+    fig.update_yaxes(showgrid=True, gridcolor='#1e3048', zeroline=True,
+                     zerolinecolor='#334155', row=r, col=1)
+
+fig.update_layout(
+    height=430, autosize=True,
+    paper_bgcolor='#0d1b2a', plot_bgcolor='#111f30',
+    font=dict(color='#e2e8f0', size=11),
+    margin=dict(t=30, b=5, l=10, r=10),
+)
+fig
+```
+
+:::
+
+::: {.clearfix}
+:::
+
+---
+
+## Feature engineering — from 1 024 numbers to 3
+
+```{python}
+#| echo: false
+#| eval: true
+
+import numpy as np
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+np.random.seed(7)
+n = 256
+t = np.linspace(0, 1, n) * 1000  # ms
+
+# Simulated SRF cavity IQ: flat-top pulse with ramps
+A = np.zeros(n)
+A[30:220] = 1.0
+A[30:60]  = np.linspace(0, 1, 30)
+A[195:220] = np.linspace(1, 0, 25)
+A += 0.03 * np.random.randn(n)
+
+phase_drift = np.zeros(n)
+phase_drift[30:220] = np.cumsum(0.003 * np.random.randn(190))
+I = A * np.cos(phase_drift)
+Q = A * np.sin(phase_drift)
+
+mean_amp   = float(np.mean(A[30:220]))
+phase_std  = float(np.std(phase_drift[30:220]) * 180 / np.pi)
+fill_frac  = float(np.sum(A > 0.5) / n)
+
+fig = make_subplots(
+    rows=1, cols=2,
+    subplot_titles=[
+        "Raw IQ waveform — 256 samples / pulse",
+        "Extracted features — 3 scalars",
+    ],
+    column_widths=[0.62, 0.38],
+)
+
+fig.add_trace(go.Scatter(x=t, y=I, mode='lines',
+    line=dict(color='#60a5fa', width=1.2), name='I'), row=1, col=1)
+fig.add_trace(go.Scatter(x=t, y=Q, mode='lines',
+    line=dict(color='#a78bfa', width=1.2), name='Q'), row=1, col=1)
+fig.add_trace(go.Scatter(x=t, y=A, mode='lines',
+    line=dict(color='#22d3ee', width=2.2), name='|A| amplitude'), row=1, col=1)
+
+fig.add_trace(go.Bar(
+    x=['Mean<br>amplitude', 'Phase drift<br>(deg)', 'Fill<br>fraction'],
+    y=[mean_amp, phase_std, fill_frac],
+    marker_color=['#22d3ee', '#f87171', '#fb923c'],
+    text=[f'{mean_amp:.3f}', f'{phase_std:.2f}°', f'{fill_frac:.2f}'],
+    textposition='outside',
+    textfont=dict(color='#e2e8f0', size=13),
+    showlegend=False,
+), row=1, col=2)
+
+fig.add_annotation(
+    x=0.5, y=1.07, xref='paper', yref='paper',
+    text="<b style='color:#22d3ee;'>256 numbers → 3 numbers</b>  ·  99 % compression, all information retained",
+    showarrow=False, font=dict(size=12, color='#e2e8f0'),
+)
+
+fig.update_xaxes(showgrid=True, gridcolor='#1e3048', zeroline=False,
+    title_text="Time (ms)", row=1, col=1)
+fig.update_yaxes(showgrid=True, gridcolor='#1e3048', zeroline=False, row=1, col=1)
+fig.update_xaxes(showgrid=False, row=1, col=2)
+fig.update_yaxes(showgrid=True, gridcolor='#1e3048', zeroline=False,
+    range=[0, max(mean_amp, phase_std, fill_frac)*1.4], row=1, col=2)
+
+fig.update_layout(
+    height=470, autosize=True,
+    paper_bgcolor='#0d1b2a', plot_bgcolor='#111f30',
+    font=dict(color='#e2e8f0', size=11),
+    legend=dict(bgcolor='rgba(0,0,0,0)', font=dict(size=10), x=0.02, y=0.98),
+    margin=dict(t=50, b=15, l=10, r=10),
+)
+fig
+```
+
+::: {.key-result style="margin-top: 0.4em;"}
+Good features = simpler models + better generalisation + faster training. Domain knowledge beats brute force.
+:::
+
+---
+
+## Choosing the right method
+
+```{python}
+#| echo: false
+#| eval: true
+
+import plotly.graph_objects as go
+
+# x: training data / evaluations needed (0 = very few → 3 = large dataset)
+# y: works without fault labels (1 = needs full labels → 5 = fully unsupervised)
+methods = [
+    ("Threshold rules",      0.05, 4.3, 22, "#475569", "top right"),
+    ("PCA / statistics",     0.30, 3.8, 22, "#64748b", "bottom right"),
+    ("Isolation Forest",     0.65, 3.4, 24, "#94a3b8", "bottom right"),
+    ("RL (online)",          0.90, 3.1, 26, "#fb923c", "top right"),
+    ("Bayesian Opt ★",       0.40, 4.1, 44, "#22d3ee", "bottom left"),
+    ("Autoencoder ★",        1.25, 4.6, 44, "#22d3ee", "top left"),
+    ("GP Surrogate",         1.70, 2.6, 26, "#60a5fa", "bottom right"),
+    ("SVM (supervised)",     1.35, 1.0, 24, "#94a3b8", "bottom right"),
+    ("MLP Surrogate ★",      2.45, 1.8, 44, "#22d3ee", "top right"),
+    ("Deep CNN / LSTM",      2.80, 1.2, 28, "#a78bfa", "bottom right"),
+    ("Transformer / LLM",    3.10, 0.7, 26, "#a78bfa", "top left"),
+]
+
+fig = go.Figure()
+
+fig.add_shape(type="rect", x0=-0.15, x1=1.65, y0=2.7, y1=5.2,
+    fillcolor="rgba(34,211,238,0.04)", layer="below",
+    line=dict(color="rgba(34,211,238,0.25)", width=1, dash="dot"))
+fig.add_annotation(x=0.75, y=5.05, text="<i>clinical-machine zone</i>",
+    showarrow=False, font=dict(size=10, color="#22d3ee"), opacity=0.6)
+
+for name, x, y, size, color, pos in methods:
+    is_pick = "★" in name
+    fig.add_trace(go.Scatter(
+        x=[x], y=[y], mode="markers+text",
+        marker=dict(size=size, color=color,
+            line=dict(color="#e2e8f0" if is_pick else "#0d1b2a",
+                      width=2.5 if is_pick else 1.5)),
+        text=[f"<b>{name}</b>" if is_pick else name],
+        textposition=pos,
+        textfont=dict(size=13 if is_pick else 10, color=color),
+        showlegend=False,
+    ))
+
+fig.update_layout(
+    height=490, autosize=True,
+    paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
+    font=dict(color="#e2e8f0", size=11),
+    xaxis=dict(
+        title="Training data / evaluations needed",
+        range=[-0.3, 3.5],
+        tickvals=[0.3, 1.5, 2.7],
+        ticktext=["Very few  (< 100)", "Moderate  (1 000s)", "Large  (> 10 000s)"],
+        showgrid=True, gridcolor="#1e3048", zeroline=False,
+    ),
+    yaxis=dict(
+        title="Works without fault labels",
+        range=[0.3, 5.4],
+        tickvals=[1, 2, 3, 4, 5],
+        ticktext=["Needs full<br>label set", "Needs partial<br>labels",
+                  "Semi-super-<br>vised", "Mostly<br>label-free", "Fully<br>unsupervised"],
+        showgrid=True, gridcolor="#1e3048", zeroline=False,
+    ),
+    margin=dict(l=110, r=30, t=15, b=70),
+)
+fig
+```
+
+::: {.slide-ref}
+★ methods used in this lecture. Existing detail landscapes: anomaly detection → slide 14 · optimisation → slide 21 · surrogate → slide 27
+:::
+
+---
+
+## The ML pipeline — from data to inference
+
+```{python}
+#| echo: false
+#| eval: true
+
+import plotly.graph_objects as go
+
+stages = [
+    ("Raw\nData",      "#475569", "Waveforms\nimages, logs\nset-points"),
+    ("Pre-\nprocess",  "#3b82f6", "Clean · sync\nnormalise\nresample"),
+    ("Feature\nextract","#6366f1", "FFT · Gaussian\nfit · statistics\ndomain stats"),
+    ("Train &\nvalidate","#a78bfa","80/20 split\ncross-val\nloss / AUC"),
+    ("Deploy\n& infer", "#22d3ee", "Sub-ms resp.\nmonitoring\nretraining"),
+]
+
+fig = go.Figure()
+
+bw, bh = 1.35, 0.72
+dx = 1.80
+
+for i, (label, color, sub) in enumerate(stages):
+    x0 = i * dx
+    xm = x0 + bw / 2
+    fig.add_shape(type="rect", x0=x0, x1=x0+bw, y0=-bh/2, y1=bh/2,
+        fillcolor=color, opacity=0.15, line=dict(color=color, width=2))
+    fig.add_annotation(x=xm, y=0.10, text=f"<b>{label}</b>",
+        showarrow=False, font=dict(size=13, color=color), align='center')
+    fig.add_annotation(x=xm, y=-0.24,
+        text=f"<span style='font-size:9px;color:#94a3b8;'>{sub}</span>",
+        showarrow=False, align='center')
+    if i < len(stages) - 1:
+        xa = x0 + bw + 0.02
+        xb = x0 + dx - 0.02
+        fig.add_annotation(x=xb, y=0, ax=xa, ay=0,
+            xref='x', yref='y', axref='x', ayref='y',
+            arrowhead=2, arrowsize=1.2, arrowwidth=2,
+            arrowcolor='rgba(34,211,238,0.6)', showarrow=True, text='')
+
+uc_data = [
+    ("#22d3ee", "UC1 · Fault detection",
+     "IQ waveforms → amplitude / phase\n→ autoencoder → reconstruction error → alarm"),
+    ("#22d3ee", "UC2 · Beam tuning",
+     "Quad settings → Cheetah sim\n→ BO acquisition → next proposal → evaluate"),
+    ("#22d3ee", "UC3 · Surrogate",
+     "5 000 Cheetah calls → normalise\n→ MLP (3-layer) → 586 × faster inference"),
+]
+
+n_uc = len(uc_data)
+total_w = (len(stages) - 1) * dx + bw
+uc_w = total_w / n_uc - 0.15
+y_top = -bh/2 - 0.18
+
+for k, (col, title, desc) in enumerate(uc_data):
+    x0_uc = k * (uc_w + 0.15)
+    xm_uc = x0_uc + uc_w / 2
+    fig.add_shape(type="rect", x0=x0_uc, x1=x0_uc+uc_w,
+        y0=y_top - 0.62, y1=y_top,
+        fillcolor="rgba(34,211,238,0.06)", layer="below",
+        line=dict(color="rgba(34,211,238,0.35)", width=1))
+    fig.add_annotation(x=xm_uc, y=y_top - 0.10,
+        text=f"<b style='color:#22d3ee;font-size:11px;'>{title}</b>",
+        showarrow=False, align='center')
+    fig.add_annotation(x=xm_uc, y=y_top - 0.36,
+        text=f"<span style='font-size:9px;color:#94a3b8;'>{desc}</span>",
+        showarrow=False, align='center')
+
+fig.update_layout(
+    height=490, autosize=True,
+    paper_bgcolor='#0d1b2a', plot_bgcolor='#0d1b2a',
+    xaxis=dict(showgrid=False, showticklabels=False, zeroline=False,
+        range=[-0.25, (len(stages)-1)*dx + bw + 0.25]),
+    yaxis=dict(showgrid=False, showticklabels=False, zeroline=False,
+        range=[-1.2, 0.55]),
+    margin=dict(t=10, b=5, l=5, r=5),
+    showlegend=False,
+    font=dict(color='#e2e8f0'),
+)
+fig
+```
+
 ---
 
 ## AI arrives at accelerators
