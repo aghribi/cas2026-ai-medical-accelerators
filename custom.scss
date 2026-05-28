@@ -244,6 +244,13 @@ $code-bg:               rgba(34, 211, 238, 0.06);
   font-size: 1.05em;
 }
 
+// ── Full-screen iframe slides (no footer / no slide number) ──────────────────
+.reveal:has(.present.no-footer) .footer,
+.reveal:has(.present.no-footer) .slide-number {
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
 // ── Lecture-focus highlight (yellow) for slide 12 ────────────────────────────
 .reveal .highlight-box.lecture-highlight {
   background: rgba(251, 191, 36, 0.15) !important;
