@@ -69,8 +69,9 @@ Welcome. This lecture covers AI applied to the machine — the accelerator — n
 | 12–24 min | **Use case 1** — RF fault detection |
 | 24–35 min | **Use case 2** — Beam tuning |
 | 35–47 min | **Use case 3** — Surrogate models |
-| 47–50 min | Digital twins & open problems |
-| 50–60 min | Q&A |
+| 47–52 min | Digital twins & open problems |
+| 52–57 min | What's next · Opportunities |
+| 57–60 min | Q&A |
 
 ::: {style="margin-top: 0.6em; font-size: 0.75em; color: #94a3b8; line-height: 1.8;"}
 <a href="https://github.com/aghribi/cas2026-ai-medical-accelerators" style="color:#94a3b8;"><svg class="gh-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>aghribi/cas2026-ai-medical-accelerators</a>
@@ -690,12 +691,16 @@ fig.update_layout(
 fig
 ```
 
-<div class="fragment slide-callout-overlay">
-<div class="callout-box">
+---
+
+## {background-color="#0a1a2a" .no-footer}
+
+::: {style="display:flex; align-items:center; justify-content:center; min-height:580px;"}
+<div class="callout-box" style="max-width:62%; font-size:1.05em;">
 A model trained on bad data learns bad behaviour.<br>
 <span style="font-weight:400; font-size:0.82em; color:#94a3b8;">No algorithm compensates for this.</span>
 </div>
-</div>
+:::
 
 ---
 
@@ -777,12 +782,16 @@ fig
 256 numbers → 3 numbers · 99 % compression, all information retained
 :::
 
-<div class="fragment slide-callout-overlay">
-<div class="callout-box">
+---
+
+## {background-color="#0a1a2a" .no-footer}
+
+::: {style="display:flex; align-items:center; justify-content:center; min-height:580px;"}
+<div class="callout-box" style="max-width:62%; font-size:1.05em;">
 Good features = simpler models + better generalisation.<br>
 <span style="font-weight:400; font-size:0.82em; color:#94a3b8;">Domain knowledge beats brute force.</span>
 </div>
-</div>
+:::
 
 ---
 
@@ -1307,27 +1316,20 @@ fig
 ::: {.clearfix}
 :::
 
-<div class="fragment slide-callout-overlay">
+---
+
+## {background-color="#140c00" .no-footer}
+
+::: {style="display:flex; align-items:center; justify-content:center; min-height:580px;"}
 <div class="concept-callout-box">
-<div class="concept-callout-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-0.15em;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Concept — Training epoch &amp; ROC-AUC</div>
-<div style="display:flex; gap:1.6em;">
-<div style="flex:1; border-right:1px solid rgba(251,191,36,0.25); padding-right:1.2em;">
-<strong>Epoch</strong> — one complete pass over the entire training dataset.<br>
-1 epoch = dataset_size / batch_size iterations (gradient steps).<br><br>
-Too few epochs → underfitting.<br>
-Too many → overfitting (memorises noise).<br>
-<span style="color:#94a3b8; font-size:0.90em;">Stop when validation loss starts rising while training loss still falls.</span>
-</div>
-<div style="flex:1; padding-left:0.4em;">
-<strong>ROC-AUC</strong> — sweep the decision threshold 0→1, plot TPR vs FPR at each threshold.<br>
-Area under that curve = AUC.<br><br>
-AUC = 0.5 → random classifier<br>
-AUC = 1.0 → perfect separation<br>
-<span style="color:#94a3b8; font-size:0.90em;">Threshold-independent → ideal for rare-event detection (SRF faults &lt; 0.1 %).</span>
+<div class="concept-callout-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-0.15em;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Concept — ROC-AUC</div>
+<div>
+Sweep the decision threshold from 0 to 1. At each value, plot <strong>True Positive Rate</strong> (sensitivity) vs <strong>False Positive Rate</strong> (1 − specificity).<br>
+<strong>AUC</strong> = area under that curve. &emsp;AUC 0.5 → random classifier &emsp;AUC 1.0 → perfect separation.<br>
+<span style="color:#94a3b8; font-size:0.92em;">Threshold-independent — essential when fault rate &lt; 0.1 %: no fixed threshold is meaningful across operating conditions.</span>
 </div>
 </div>
-</div>
-</div>
+:::
 
 ---
 
@@ -1453,26 +1455,21 @@ Demonstrated at AWAKE (CERN), FLASH (DESY), and clinical proton therapy centres.
 ::: {.clearfix}
 :::
 
-<div class="fragment slide-callout-overlay">
+---
+
+## {background-color="#140c00" .no-footer}
+
+::: {style="display:flex; align-items:center; justify-content:center; min-height:580px;"}
 <div class="concept-callout-box">
-<div class="concept-callout-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-0.15em;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Concept — Bayesian inference &amp; prior</span>
-<div style="text-align:center; font-size:1.05em; margin-bottom:0.55em; color:#e2e8f0;">
-P(θ | data) &nbsp;∝&nbsp; P(data | θ) &nbsp;×&nbsp; P(θ)
-</div>
-<div style="display:flex; gap:1.6em; font-size:0.93em;">
-<div style="flex:1; border-right:1px solid rgba(251,191,36,0.25); padding-right:1.2em;">
-<strong>Prior</strong> P(θ): your belief <em>before</em> seeing data.<br>
-Encodes physics knowledge — e.g. "the function is smooth", "noise ≈ 1 %".<br><br>
-<strong>Posterior</strong> P(θ|data): updated belief <em>after</em> data.<br>
-This is what BO uses as its surrogate model.
-</div>
-<div style="flex:1; padding-left:0.4em;">
-<strong>vs. Frequentist:</strong> only data has probability; hypotheses do not. Bayesian methods assign probabilities to hypotheses directly — more natural for decision-making under uncertainty.<br><br>
-<span style="color:#94a3b8; font-size:0.92em;">In BO: a distribution over possible objective functions, not one guess. Explores where uncertain, exploits where confident.</span>
+<div class="concept-callout-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-0.15em;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Concept — Bayesian prior</div>
+<div>
+A <strong>prior</strong> P(f) encodes your belief <em>before</em> data — e.g. "the beam response is smooth in magnet space".<br>
+Bayes' theorem updates it: <strong>P(f | data) ∝ P(data | f) · P(f)</strong> — the result is the <em>posterior</em>.<br>
+BO uses the posterior to pick the next probe: explore where uncertain, exploit where promising.<br>
+<span style="color:#94a3b8; font-size:0.92em;">Every measurement actively informs the next — no wasted machine evaluations.</span>
 </div>
 </div>
-</div>
-</div>
+:::
 
 ---
 
@@ -1602,30 +1599,21 @@ fig
 ::: {.clearfix}
 :::
 
-<div class="fragment slide-callout-overlay">
+---
+
+## {background-color="#140c00" .no-footer}
+
+::: {style="display:flex; align-items:center; justify-content:center; min-height:580px;"}
 <div class="concept-callout-box">
-<div class="concept-callout-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-0.15em;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Concept — Gaussian process &amp; kernel</div>
-<div style="display:flex; gap:1.6em;">
-<div style="flex:1.1; border-right:1px solid rgba(251,191,36,0.25); padding-right:1.2em;">
-<strong>Gaussian process</strong> — a distribution over functions.<br>
-Defined by a mean m(x) and a <strong>kernel</strong> k(x,x').<br>
-At any finite set of inputs → joint Gaussian.<br>
-Posterior is closed-form: mean + variance.<br>
-<span style="color:#94a3b8; font-size:0.90em;">Far from data → wide uncertainty band → explore there.<br>
-Near data → narrow band → exploit there.</span>
-</div>
-<div style="flex:0.9; padding-left:0.4em; font-size:0.92em;">
-<strong>Kernel = prior on smoothness</strong><br><br>
-<strong>RBF / SE</strong>: very smooth, ∞-differentiable<br>
-<strong>Matérn 5/2</strong>: physical systems default<br>
-<strong>Matérn 3/2</strong>: rougher, noisier data<br>
-<strong>Periodic</strong>: cyclic signals (RF phase)<br>
-<strong>Linear</strong>: Bayesian linear regression<br><br>
-<span style="color:#94a3b8; font-size:0.90em;">For beam tuning: Matérn 5/2 is the practical default.</span>
+<div class="concept-callout-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-0.15em;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Concept — Gaussian process</div>
+<div>
+A distribution over functions — defined by a <strong>kernel</strong> k(x, x') encoding smoothness. Any finite inputs yield a joint Gaussian: mean (prediction) + variance (uncertainty).<br>
+Far from data → wide variance → explore. Near data → narrow → exploit. Posterior updates in <strong>closed form</strong>.<br>
+<strong>Kernels:</strong> Matérn 5/2 (physical systems default) · RBF (very smooth) · Periodic (cyclic RF signals).<br>
+<span style="color:#94a3b8; font-size:0.92em;">The kernel encodes physical priors about the objective — the most important modelling choice in BO.</span>
 </div>
 </div>
-</div>
-</div>
+:::
 
 ---
 
@@ -1708,29 +1696,21 @@ fig
 Edelen et al., *IEEE TNS* 63 (2016) · Kaiser et al., *PRAB* 27 (2024)
 :::
 
-<div class="fragment slide-callout-overlay">
+---
+
+## {background-color="#140c00" .no-footer}
+
+::: {style="display:flex; align-items:center; justify-content:center; min-height:580px;"}
 <div class="concept-callout-box">
-<div class="concept-callout-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-0.15em;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Concept — Uncertainty quantification (UQ)</div>
-<div style="display:flex; gap:1.6em;">
-<div style="flex:1; border-right:1px solid rgba(251,191,36,0.25); padding-right:1.2em;">
-<strong>Epistemic</strong> — model uncertainty.<br>
-Caused by insufficient training data. <em>Reducible</em>: add more samples.<br>
-<span style="color:#94a3b8; font-size:0.90em;">"We don't know because we haven't looked enough."</span><br><br>
-<strong>Aleatoric</strong> — measurement noise.<br>
-Inherent randomness in the data. <em>Irreducible</em>.<br>
-<span style="color:#94a3b8; font-size:0.90em;">"The machine itself is stochastic."</span>
-</div>
-<div style="flex:1; padding-left:0.4em; font-size:0.93em;">
-<strong>Methods:</strong><br>
-<strong>Deep ensembles</strong> — spread of N independent models.<br>
-<strong>MC Dropout</strong> — stochastic forward passes at inference.<br>
-<strong>Gaussian processes</strong> — closed-form posterior variance.<br>
-<strong>Conformal prediction</strong> — coverage guarantees, no assumptions.<br><br>
-<span style="color:#94a3b8; font-size:0.92em;">Knowing <em>when the model is uncertain</em> is as important as the prediction itself for safety-critical decisions.</span>
+<div class="concept-callout-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-0.15em;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Concept — Uncertainty quantification</div>
+<div>
+<strong>Epistemic</strong> (model) uncertainty: caused by insufficient data — <em>reducible</em> by collecting more samples.<br>
+<strong>Aleatoric</strong> (data) uncertainty: inherent measurement noise — <em>irreducible</em>.<br>
+Methods: <strong>deep ensembles</strong> (spread of N models) · <strong>MC Dropout</strong> (stochastic inference) · <strong>Gaussian processes</strong> (closed-form variance).<br>
+<span style="color:#94a3b8; font-size:0.92em;">Knowing <em>when the model is uncertain</em> is as important as the prediction itself — especially for safety-critical beam control.</span>
 </div>
 </div>
-</div>
-</div>
+:::
 
 ---
 
@@ -1933,24 +1913,123 @@ Federated learning: each site trains locally, shares only model updates — pres
 Active research problems — not blockers. AI is already delivering value in clinical operations today.
 :::
 
-<div class="fragment slide-callout-overlay">
+---
+
+## {background-color="#140c00" .no-footer}
+
+::: {style="display:flex; align-items:center; justify-content:center; min-height:580px;"}
 <div class="concept-callout-box">
 <div class="concept-callout-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-0.15em;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Concept — Explainability (XAI)</div>
-<div style="display:flex; gap:1.6em;">
-<div style="flex:1.1; border-right:1px solid rgba(251,191,36,0.25); padding-right:1.2em;">
-<strong>SHAP</strong> — assigns each input a numerical contribution to the prediction.
-Grounded in Shapley values from cooperative game theory (1953). Model-agnostic.<br>
-<strong>LIME</strong> — fits a local linear model around one specific prediction to explain it.<br>
-<strong>Feature importance</strong> — global ranking of which inputs drive most predictions.
-</div>
-<div style="flex:0.9; padding-left:0.4em; font-size:0.93em;">
-<strong>Why it matters here:</strong><br>
-EU AI Act (2024) classifies control-loop AI on clinical machines as <em>high-risk</em> — auditable, explainable decisions required.<br><br>
-<span style="color:#94a3b8; font-size:0.92em;">In practice: use SHAP to verify the model learned physics, not a data artefact.</span>
+<div>
+<strong>SHAP</strong>: assigns each input a numerical contribution to the prediction (Shapley values from game theory, 1953 — model-agnostic).<br>
+<strong>LIME</strong>: fits a local linear model around one specific prediction to explain it locally.<br>
+EU AI Act (2024) classifies control-loop AI on clinical machines as <em>high-risk</em> — auditable, explainable decisions required.<br>
+<span style="color:#94a3b8; font-size:0.92em;">In practice: SHAP tells you whether the model learned beam physics or a spurious data artefact.</span>
 </div>
 </div>
-</div>
-</div>
+:::
+
+---
+
+## What comes next — advanced AI for accelerators
+
+::: {.col-left}
+
+::: {.highlight-box style="margin-bottom: 0.5em; font-size:0.85em;"}
+**Foundation models for accelerators**
+
+Large pretrained models fine-tuned on machine data — enable cross-facility transfer without retraining from scratch.
+:::
+
+::: {.highlight-box style="margin-bottom: 0.5em; font-size:0.85em;"}
+**Physics-Informed Neural Networks (PINNs)**
+
+Embed beam dynamics equations directly into the loss function — physics constraints respected even far from training data.
+:::
+
+::: {.highlight-box style="font-size:0.85em;"}
+**Transformers for time-series control**
+
+Attention captures long-range patterns in beam signals — strong performance on non-stationary, correlated sequences.
+:::
+
+:::
+
+::: {.col-right}
+
+::: {.highlight-box style="margin-bottom: 0.5em; font-size:0.85em;"}
+**Reinforcement learning — closed-loop autonomy**
+
+Policy learned directly in the control loop. Demonstrated at ESRF, SNS, and proton therapy facilities. Adaptive QA is next.
+:::
+
+::: {.highlight-box style="margin-bottom: 0.5em; font-size:0.85em;"}
+**Generative models — solving data scarcity**
+
+VAEs and diffusion models synthesise realistic fault waveforms for training — directly addresses the clinical-machine bottleneck.
+:::
+
+::: {.key-result style="font-size:0.82em;"}
+These build directly on everything covered today.
+The field is moving fast — the foundations you have are the right ones.
+:::
+
+:::
+
+::: {.clearfix}
+:::
+
+::: notes
+This is an appetizer, not a full menu. Foundation models (e.g. CERN's accelerator-specific LLM prototypes), PINNs (several groups at SNS and ESS), and RL (Emma+2018, Kain+2020, Hirlaender+2020) are all active research directions with published results. The key message: the gap between today's lecture and the frontier is smaller than students often assume.
+:::
+
+---
+
+## Stay connected — opportunities
+
+::: {style="display:flex; gap:0.55em; margin-top:0.3em;"}
+::: {.highlight-box style="flex:1; font-size:0.80em; padding:0.55em 0.75em; margin:0;"}
+**RAISE** — Resource for AI Science in Europe
+
+€107 M Horizon Europe pilot · launched Nov 2025
+Virtual institute — "CERN for AI" · 19 partner countries
+
+<a href="https://research-and-innovation.ec.europa.eu/strategy/strategy-research-and-innovation/our-digital-future/european-ai-science-strategy/raise-resource-ai-science-europe_en" style="color:#22d3ee; font-size:0.88em;">research-and-innovation.ec.europa.eu → RAISE</a>
+:::
+
+::: {.highlight-box style="flex:1; font-size:0.80em; padding:0.55em 0.75em; margin:0;"}
+**GENESIS Mission** — US Dept. of Energy
+
+$293 M for AI × national science challenges
+17 DOE national laboratories · launched Nov 2025
+
+<a href="https://www.energy.gov/undersecretaryforscience/genesis-mission/genesis-mission" style="color:#22d3ee; font-size:0.88em;">energy.gov → Genesis Mission</a>
+:::
+:::
+
+::: {style="display:flex; gap:0.55em; margin-top:0.55em;"}
+::: {.highlight-box style="flex:1; font-size:0.80em; padding:0.55em 0.75em; margin:0;"}
+**RL4AA** — Reinforcement Learning for Autonomous Accelerators
+
+Annual workshop + challenge · 2026 edition: **Liverpool**
+Community hub: tutorials, datasets, open challenges
+
+<a href="https://rl4aa.github.io/" style="color:#22d3ee; font-size:0.88em;">rl4aa.github.io</a>
+:::
+
+::: {.highlight-box style="flex:1; font-size:0.80em; padding:0.55em 0.75em; margin:0;"}
+**AISSAI Hackathon** — AI for Particle Accelerators
+
+Hands-on school + hackathon · **Oct 11–16 2026**
+Organised at IN2P3 · open to students and researchers
+
+<a href="https://indico.in2p3.fr/event/39704/" style="color:#22d3ee; font-size:0.88em;">indico.in2p3.fr/event/39704</a>
+:::
+:::
+
+::: notes
+RAISE: the full EU AI in Science strategy aims to double Horizon Europe AI funding to €3B/year, with RAISE as the flagship virtual institute. The €107M is the initial Horizon Europe pilot budget (WP26-27). GENESIS: the $293M is the DOE Request for Applications; an additional $320M was announced for AI infrastructure (American Science Cloud). RL4AA 2027 is not yet announced.
+:::
 
 ---
 
@@ -1995,10 +2074,10 @@ All code is open and runnable on Colab.
 - Kaiser et al., *PRAB* **27**, 054601 (2024) — Cheetah differentiable sim.
 - Ghribi et al., *EPN* **56**(1), 15 (2025) — KARA −30% energy
 - Edelen et al., *IEEE TNS* **63**, 878 (2016) — ML for accelerators survey
-- Leemann et al., *PRAB* **22**, 101601 (2019) — RL at ESRF
+- Leemann et al., *PRL* **123**, 194801 (2019) — model-independent ML at ALS
 - Frol et al., *IPAC* 2019 — BO for emittance minimisation
 - Hopfield, *PNAS* **79** (1982) — associative memory networks
-- Hinton & Sejnowski, *Cognitive Science* **7** (1983) — Boltzmann machines
+- Ackley, Hinton & Sejnowski, *Cognitive Science* **9**, 147 (1985) — Boltzmann machines
 
 **Living review**
 

@@ -1,4 +1,42 @@
 <script>
+// ── Callout overlay — navigation pass-through ─────────────────────────────────
+// backdrop-filter on iOS/WebKit absorbs touch events even with pointer-events:none.
+// We removed backdrop-filter from CSS; this JS block provides a belt-and-braces fix:
+// 1. Force pointer-events:none as inline style (overrides any CSS specificity issue).
+// 2. If an overlay somehow intercepts a touch, forward it as Reveal.next().
+(function () {
+  function patchOverlays() {
+    document.querySelectorAll('.slide-callout-overlay').forEach(function (el) {
+      el.style.pointerEvents = 'none';
+      el.querySelectorAll('*').forEach(function (child) {
+        child.style.pointerEvents = 'none';
+      });
+      // Touch fallback: if a tap lands here despite the above, advance the slide
+      el.addEventListener('touchend', function (e) {
+        e.stopPropagation();
+        Reveal.next();
+      }, { passive: false });
+      el.addEventListener('click', function (e) {
+        e.stopPropagation();
+        Reveal.next();
+      });
+    });
+  }
+  // Run once DOM is ready and again after Reveal initialises (fragments are in DOM)
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', patchOverlays);
+  } else {
+    patchOverlays();
+  }
+  if (typeof Reveal !== 'undefined') {
+    Reveal.on('ready', patchOverlays);
+  } else {
+    document.addEventListener('DOMContentLoaded', function () {
+      if (typeof Reveal !== 'undefined') Reveal.on('ready', patchOverlays);
+    });
+  }
+})();
+
 (function () {
   function resizePlotsIn(slide) {
     if (!slide) return;
