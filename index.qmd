@@ -281,7 +281,7 @@ Rosenblatt, F. (1958). The perceptron: a probabilistic model for information sto
 :::
 
 ::: notes
-The Mark 1 Perceptron at Cornell learned to recognise patterns from photographs. The same gradient-based idea underlies GPT-4.
+The Mark 1 Perceptron at Cornell learned to recognise patterns from photographs. The core idea — adjustable weighted connections that learn from examples — is the conceptual ancestor of modern deep networks, though the perceptron update rule (a discrete correction on misclassification) is historically and mathematically distinct from backpropagation.
 :::
 
 ---
@@ -569,7 +569,7 @@ As accelerator physicists we already speak this language.
 :::
 
 ::: notes
-The connection between SGD and Langevin dynamics was formalised by Welling & Teh (2011). The Boltzmann machine (Hinton & Sejnowski 1983) is a literal physical model. Phase transitions in learning (grokking) are an active research topic since Power et al. (2022). These connections mean accelerator physicists are naturally equipped to understand ML at a deep level — the toolkit is the same.
+The connection between SGD and Langevin dynamics was formalised by Welling & Teh (2011). The Boltzmann machine (Ackley, Hinton & Sejnowski 1985) is a literal physical model. Phase transitions in learning (grokking) are an active research topic since Power et al. (2022). These connections mean accelerator physicists are naturally equipped to understand ML at a deep level — the toolkit is the same.
 :::
 
 # Practical Foundations {.section-divider background-color="#0a1520"}
@@ -946,7 +946,7 @@ Edelen et al., *IEEE TNS* 63 (2016) · Duris et al., *PRL* 124 (2020) · Kaiser 
 :::
 
 ::: notes
-30 years from first NNs to production AI systems. The key inflection point is 2019: BO in production at LCLS (Duris+2020), RL at ESRF (Leemann+2019), differentiable simulation with Cheetah (Kaiser+2024). KARA result is not a simulation — measured on the real machine.
+30 years from first NNs to production AI systems. The key inflection point is 2019: BO in production at LCLS (Duris+2020), ML-based model-independent stabilisation at ALS (Leemann+2019, PRL 123:194801), differentiable simulation with Cheetah (Kaiser+2024, PRAB). KARA result is not a simulation — measured on the real machine.
 :::
 
 ---
