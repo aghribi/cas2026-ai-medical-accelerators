@@ -35,8 +35,9 @@
   });
 })();
 
-// ── Laser pointer — hold Q ────────────────────────────────────────────────────
+// ── Laser pointer — hold Q (keyboard) or toggle button (tablet) ──────────────
 (function () {
+  // Shared dot element
   var dot = document.createElement('div');
   dot.style.cssText =
     'position:fixed;width:20px;height:20px;border-radius:50%;' +
@@ -46,23 +47,80 @@
     'transform:translate(-50%,-50%);display:none;';
   document.body.appendChild(dot);
 
+  // ── Keyboard (mouse/trackpad) ─────────────────────────────────────────────
   window.addEventListener('mousemove', function (e) {
     dot.style.left = e.clientX + 'px';
     dot.style.top  = e.clientY + 'px';
   }, true);
 
-  var active = false;
   document.addEventListener('keydown', function (e) {
-    if ((e.key === 'q' || e.key === 'Q') && !e.repeat) {
-      active = true;
+    if ((e.key === 'q' || e.key === 'Q') && !e.repeat)
       dot.style.display = 'block';
-    }
   });
   document.addEventListener('keyup', function (e) {
-    if (e.key === 'q' || e.key === 'Q') {
-      active = false;
+    if (e.key === 'q' || e.key === 'Q')
       dot.style.display = 'none';
-    }
   });
+
+  // ── Tablet toggle button ──────────────────────────────────────────────────
+  var btn = document.createElement('button');
+  // SVG crosshair icon
+  btn.innerHTML =
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"' +
+    ' fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">' +
+    '<circle cx="12" cy="12" r="9"/>' +
+    '<line x1="12" y1="3"  x2="12" y2="7"/>' +
+    '<line x1="12" y1="17" x2="12" y2="21"/>' +
+    '<line x1="3"  y1="12" x2="7"  y2="12"/>' +
+    '<line x1="17" y1="12" x2="21" y2="12"/>' +
+    '<circle cx="12" cy="12" r="2" fill="currentColor"/>' +
+    '</svg>';
+  btn.title = 'Laser pointer (tap to toggle)';
+  btn.style.cssText =
+    'position:fixed;top:0.7em;right:0.7em;z-index:99998;' +
+    'width:2.6em;height:2.6em;border-radius:50%;' +
+    'display:flex;align-items:center;justify-content:center;' +
+    'background:rgba(13,27,42,0.75);border:2px solid #22d3ee;' +
+    'color:#22d3ee;cursor:pointer;transition:background 0.2s,border-color 0.2s,color 0.2s;' +
+    'touch-action:manipulation;';
+  document.body.appendChild(btn);
+
+  var touchActive = false;
+
+  function setTouchMode(on) {
+    touchActive = on;
+    btn.style.background    = on ? 'rgba(248,113,113,0.85)' : 'rgba(13,27,42,0.75)';
+    btn.style.borderColor   = on ? '#f87171' : '#22d3ee';
+    btn.style.color         = on ? '#fff'    : '#22d3ee';
+    if (!on) dot.style.display = 'none';
+  }
+
+  btn.addEventListener('pointerdown', function (e) {
+    e.stopPropagation();
+  });
+  btn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    setTouchMode(!touchActive);
+  });
+
+  window.addEventListener('touchstart', function (e) {
+    if (!touchActive) return;
+    var t = e.touches[0];
+    dot.style.left    = t.clientX + 'px';
+    dot.style.top     = t.clientY + 'px';
+    dot.style.display = 'block';
+  }, true);
+
+  window.addEventListener('touchmove', function (e) {
+    if (!touchActive) return;
+    var t = e.touches[0];
+    dot.style.left = t.clientX + 'px';
+    dot.style.top  = t.clientY + 'px';
+  }, { capture: true, passive: true });
+
+  window.addEventListener('touchend', function () {
+    if (!touchActive) return;
+    dot.style.display = 'none';
+  }, true);
 })();
 </script>
