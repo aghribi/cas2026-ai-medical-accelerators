@@ -1309,6 +1309,121 @@ fig
 
 ---
 
+## Concept — training epoch {.concept-aside}
+
+<span class="concept-tag">aside</span>
+
+::: {.col-left}
+
+**One epoch** = one complete pass over the entire training dataset.
+
+::: {style="font-size:0.80em; margin-top:0.3em;"}
+| Term | Meaning |
+|---|---|
+| **Epoch** | One full dataset pass |
+| **Batch** | One subset → one gradient step |
+| **Iteration** | = one batch = one weight update |
+:::
+
+::: {style="font-size:0.75em; color:#94a3b8; margin-top:0.4em;"}
+Example: 10 000 samples · batch size 100
+→ **1 epoch = 100 iterations**
+:::
+
+:::
+
+::: {.col-right}
+
+::: {.highlight-box style="font-size:0.82em; margin-bottom:0.4em;"}
+**Why repeat many times?**
+The model improves weights a little each pass.
+Too few epochs → underfitting.
+Too many → overfitting (memorises training noise).
+:::
+
+::: {.warning-box style="font-size:0.82em;"}
+Watch the **validation loss**: stop when it
+rises while training loss keeps falling —
+that is the overfitting point.
+:::
+
+:::
+
+::: {.clearfix}
+:::
+
+---
+
+## Concept — ROC-AUC {.concept-aside}
+
+<span class="concept-tag">aside</span>
+
+:::: {.columns style="margin-top:0.15em;"}
+::: {.column width="52%"}
+
+```{python}
+#| echo: false
+#| eval: true
+import numpy as np
+import plotly.graph_objects as go
+
+fpr_rand = np.linspace(0, 1, 60)
+tpr_rand = fpr_rand
+
+fpr_good = np.array([0, 0.02, 0.06, 0.12, 0.22, 0.40, 0.62, 0.82, 1.0])
+tpr_good = np.array([0, 0.52, 0.75, 0.87, 0.93, 0.96, 0.98, 0.99, 1.0])
+
+fpr_perf = np.array([0, 0.004, 0.008, 0.02, 0.06, 0.15, 0.4, 1.0])
+tpr_perf = np.array([0, 0.88,  0.95,  0.97, 0.985, 0.993, 0.998, 1.0])
+
+fig = go.Figure()
+fig.add_trace(go.Scatter(x=fpr_rand, y=tpr_rand, mode='lines',
+    line=dict(color='#475569', width=1.5, dash='dot'), name='Random — AUC = 0.50'))
+fig.add_trace(go.Scatter(x=fpr_good, y=tpr_good, mode='lines',
+    line=dict(color='#22d3ee', width=2.5), name='Good — AUC ≈ 0.88'))
+fig.add_trace(go.Scatter(x=fpr_perf, y=tpr_perf, mode='lines',
+    line=dict(color='#fbbf24', width=2.5), name='This model — AUC > 0.99'))
+
+fig.update_layout(
+    height=310, autosize=True,
+    paper_bgcolor='#0d1b2a', plot_bgcolor='#111f30',
+    xaxis=dict(title='FPR — false alarm rate', showgrid=True,
+               gridcolor='#1e3048', range=[0, 1]),
+    yaxis=dict(title='TPR — detection rate', showgrid=True,
+               gridcolor='#1e3048', range=[0, 1]),
+    legend=dict(bgcolor='rgba(0,0,0,0)', font=dict(size=9), x=0.32, y=0.08),
+    margin=dict(t=8, b=42, l=62, r=8),
+    font=dict(color='#e2e8f0', size=10),
+)
+fig
+```
+
+:::
+::: {.column width="46%"}
+
+**Receiver Operating Characteristic** — Area Under Curve
+
+::: {.highlight-box style="font-size:0.80em; margin-bottom:0.4em;"}
+**TPR** (sensitivity) = TP / (TP + FN)
+**FPR** (fall-out)   = FP / (FP + TN)
+
+Sweep decision threshold 0 → 1:
+each point on the curve = one threshold.
+:::
+
+::: {.key-result style="font-size:0.80em;"}
+**AUC = 0.5** → random classifier
+**AUC = 1.0** → perfect separation
+
+Threshold-independent → ideal for
+rare-event detection (SRF faults < 0.1 %)
+:::
+
+:::
+::::
+
+---
+
 ## Notebook 01 — live preview
 
 <iframe src="notebooks_rendered/01_fault_detection.html"
@@ -1424,6 +1539,53 @@ $n$ correctors × $k$ quads → high-dimensional space that grows exponentially 
 
 ::: {.key-result .fragment style="margin-top: 0.8em;"}
 Demonstrated at AWAKE (CERN), FLASH (DESY), and clinical proton therapy centres.
+:::
+
+:::
+
+::: {.clearfix}
+:::
+
+---
+
+## Concept — Bayesian inference & prior {.concept-aside}
+
+<span class="concept-tag">aside</span>
+
+::: {.col-left}
+
+**Bayesian = represent uncertainty as probability**
+
+$$P(\theta \mid \text{data}) \;\propto\; \underbrace{P(\text{data}\mid\theta)}_{\text{likelihood}} \times \underbrace{P(\theta)}_{\text{prior}}$$
+
+::: {.highlight-box style="font-size:0.80em; margin-top:0.45em; margin-bottom:0.35em;"}
+**Prior** $P(\theta)$: your belief *before* seeing data.
+Can encode physics — e.g. "the function is smooth",
+"measurement noise is about 1 %".
+:::
+
+::: {.highlight-box style="font-size:0.80em;"}
+**Posterior** $P(\theta\mid\text{data})$: updated belief *after* data.
+This is what BO uses as its surrogate model.
+:::
+
+:::
+
+::: {.col-right}
+
+::: {.warning-box style="font-size:0.80em; margin-bottom:0.45em;"}
+**vs. Frequentist statistics:**
+A hypothesis has no probability — only data does.
+Bayesian methods assign probabilities to
+hypotheses directly, which is more natural
+for decision-making under uncertainty.
+:::
+
+::: {.key-result style="font-size:0.80em;"}
+In BO, we maintain a **distribution over
+possible objective functions** — not one guess —
+so the algorithm knows *where it is uncertain*
+and explores those regions first.
 :::
 
 :::
@@ -1561,6 +1723,113 @@ fig
 
 ---
 
+## Concept — Gaussian process {.concept-aside}
+
+<span class="concept-tag">aside</span>
+
+:::: {.columns style="margin-top:0.15em;"}
+::: {.column width="54%"}
+
+```{python}
+#| echo: false
+#| eval: true
+import numpy as np
+import plotly.graph_objects as go
+
+np.random.seed(3)
+x_obs = np.array([0.10, 0.30, 0.55, 0.80, 0.92])
+y_obs = np.array([0.35, 0.85, 0.30, 0.72, 0.48])
+
+x_pred = np.linspace(0, 1, 120)
+
+def rbf_kernel(x1, x2, l=0.18, sf=0.45):
+    return sf**2 * np.exp(-0.5 * ((x1[:, None] - x2[None, :]) / l)**2)
+
+noise = 0.015
+K    = rbf_kernel(x_obs, x_obs) + noise * np.eye(len(x_obs))
+Ks   = rbf_kernel(x_pred, x_obs)
+Kss  = rbf_kernel(x_pred, x_pred)
+
+alpha   = np.linalg.solve(K, y_obs)
+mu      = Ks @ alpha
+v       = np.linalg.solve(K, Ks.T)
+std     = np.sqrt(np.maximum(np.diag(Kss) - np.sum(Ks * v.T, axis=1), 0))
+
+fig = go.Figure()
+fig.add_trace(go.Scatter(
+    x=np.concatenate([x_pred, x_pred[::-1]]),
+    y=np.concatenate([mu + 2*std, (mu - 2*std)[::-1]]),
+    fill='toself', fillcolor='rgba(34,211,238,0.13)',
+    line=dict(color='rgba(0,0,0,0)'), name='95 % confidence', showlegend=True))
+fig.add_trace(go.Scatter(x=x_pred, y=mu, mode='lines',
+    line=dict(color='#22d3ee', width=2.5), name='GP mean'))
+fig.add_trace(go.Scatter(x=x_obs, y=y_obs, mode='markers',
+    marker=dict(color='#fbbf24', size=11, symbol='circle'), name='Observations'))
+
+fig.update_layout(
+    height=305, autosize=True,
+    paper_bgcolor='#0d1b2a', plot_bgcolor='#111f30',
+    xaxis=dict(title='Input (e.g. quad strength)', showgrid=True,
+               gridcolor='#1e3048', range=[0, 1]),
+    yaxis=dict(title='Objective (e.g. spot size)', showgrid=True,
+               gridcolor='#1e3048'),
+    legend=dict(bgcolor='rgba(0,0,0,0)', font=dict(size=9), x=0.02, y=0.98),
+    margin=dict(t=8, b=42, l=60, r=8),
+    font=dict(color='#e2e8f0', size=10),
+)
+fig
+```
+
+:::
+::: {.column width="44%"}
+
+A **Gaussian Process** is a distribution over functions.
+
+::: {.highlight-box style="font-size:0.78em; margin-bottom:0.35em;"}
+Defined by a **mean** $m(x)$ and a **kernel** $k(x,x')$.
+
+At any finite set of inputs → joint Gaussian.
+Posterior is **closed-form**: mean + variance.
+:::
+
+::: {.highlight-box style="font-size:0.78em; margin-bottom:0.35em;"}
+**Far from data** → wide uncertainty band.
+**Near data** → narrow band.
+:::
+
+::: {.key-result style="font-size:0.78em;"}
+In BO the GP is the **surrogate**: it predicts
+the objective *and* its uncertainty, guiding
+where to evaluate next (explore vs exploit).
+:::
+
+:::
+::::
+
+---
+
+## Concept — GP kernels {.concept-aside}
+
+<span class="concept-tag">aside</span>
+
+The kernel $k(x,x')$ encodes **how similar two inputs are** — i.e. your prior belief about function smoothness.
+
+::: {style="font-size:0.78em; margin-top:0.35em;"}
+| Kernel | Sketch | Best for |
+|---|---|---|
+| **RBF / Squared Exp.** | $\exp\!\left(-\tfrac{\|x-x'\|^2}{2\ell^2}\right)$ | Very smooth, ∞-differentiable functions |
+| **Matérn 5/2** | rougher than RBF | Physical systems — realistic smoothness |
+| **Matérn 3/2** | rougher still | Noisy physical measurements |
+| **Periodic** | $\exp\!\left(-\tfrac{2\sin^2(\pi\|x-x'\|/p)}{\ell^2}\right)$ | Cyclic behaviour (RF phase drift) |
+| **Linear** | $x \cdot x'$ | Bayesian linear regression as a GP |
+:::
+
+::: {.key-result style="margin-top:0.4em; font-size:0.82em;"}
+For accelerator tuning: **Matérn 5/2** is the practical default — smooth enough for beam physics, robust to measurement noise.
+:::
+
+---
+
 ## Notebook 02 — live preview
 
 <iframe src="notebooks_rendered/02_beam_tuning.html"
@@ -1638,6 +1907,61 @@ fig
 
 ::: {.slide-ref}
 Edelen et al., *IEEE TNS* 63 (2016) · Kaiser et al., *PRAB* 27 (2024)
+:::
+
+---
+
+## Concept — uncertainty quantification {.concept-aside}
+
+<span class="concept-tag">aside</span>
+
+::: {.col-left}
+
+**Two fundamentally different sources of uncertainty:**
+
+::: {.highlight-box style="font-size:0.82em; margin-bottom:0.4em;"}
+**Epistemic** — model / knowledge uncertainty
+
+Caused by insufficient training data.
+**Reducible**: add more samples and it shrinks.
+*"We don't know because we haven't looked enough."*
+:::
+
+::: {.highlight-box style="font-size:0.82em;"}
+**Aleatoric** — data / measurement uncertainty
+
+Inherent noise in the measurements.
+**Irreducible**: no amount of data removes it.
+*"The machine itself is stochastic."*
+:::
+
+:::
+
+::: {.col-right}
+
+**Methods for UQ:**
+
+::: {.highlight-box style="font-size:0.78em; margin-bottom:0.35em;"}
+**Deep ensembles** — train N independent models;
+spread of predictions = uncertainty estimate.
+:::
+
+::: {.highlight-box style="font-size:0.78em; margin-bottom:0.35em;"}
+**MC Dropout** — keep dropout active at inference;
+multiple stochastic passes ≈ Bayesian posterior.
+:::
+
+::: {.highlight-box style="font-size:0.78em; margin-bottom:0.35em;"}
+**Gaussian processes** — closed-form posterior variance (see GP slide).
+:::
+
+::: {.key-result style="font-size:0.80em; margin-top:0.3em;"}
+For safety-critical decisions: knowing **when the model is uncertain** is as important as the prediction itself.
+:::
+
+:::
+
+::: {.clearfix}
 :::
 
 ---
@@ -1839,6 +2163,58 @@ Federated learning: each site trains locally, shares only model updates — pres
 
 ::: {.key-result style="margin-top: 0.6em;"}
 Active research problems — not blockers. AI is already delivering value in clinical operations today.
+:::
+
+---
+
+## Concept — explainability (XAI) {.concept-aside}
+
+<span class="concept-tag">aside</span>
+
+::: {.col-left}
+
+**Why does the model give this output?**
+
+::: {.highlight-box style="font-size:0.80em; margin-bottom:0.4em;"}
+**SHAP** (SHapley Additive exPlanations)
+Assigns each input feature a numerical contribution
+to the prediction. Grounded in cooperative game
+theory (Shapley, 1953). Model-agnostic.
+:::
+
+::: {.highlight-box style="font-size:0.80em; margin-bottom:0.4em;"}
+**LIME** — Local Interpretable Model-agnostic Explanations
+Fits a simple linear model *locally* around
+one specific input to explain that one prediction.
+:::
+
+::: {.highlight-box style="font-size:0.80em;"}
+**Feature importance** — global ranking of which
+inputs drive most predictions across the dataset.
+:::
+
+:::
+
+::: {.col-right}
+
+::: {.warning-box style="font-size:0.80em; margin-bottom:0.5em;"}
+**EU AI Act (2024)**
+AI in the clinical accelerator control loop
+= **high-risk system**.
+Requires auditable, explainable decisions
+and human oversight at every step.
+:::
+
+::: {.key-result style="font-size:0.80em;"}
+In practice: use SHAP to verify the model
+learned **physics** (e.g. beam loss correlates
+with RF phase — not a data artefact).
+This is how you build operator trust.
+:::
+
+:::
+
+::: {.clearfix}
 :::
 
 ---
