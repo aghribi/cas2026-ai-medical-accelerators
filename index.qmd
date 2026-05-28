@@ -324,7 +324,7 @@ From a single neuron in 1957 to GPT-4 in 2023 — the same mathematical idea, sc
 :::
 
 ::: notes
-The Minsky-Papert result was a setback, but the issue was simply that one layer is not enough. Two layers can solve XOR. Backpropagation made multi-layer training tractable.
+The Minsky-Papert result was a setback, but the real fix was the sigmoid activation function — a smooth, differentiable non-linearity that replaced the binary threshold. With a differentiable activation, gradients can flow back through multiple layers, making backpropagation tractable. A step function has zero gradient almost everywhere; you cannot train through it.
 :::
 
 ---
