@@ -34,4 +34,35 @@
     }
   });
 })();
+
+// ── Laser pointer — hold Q ────────────────────────────────────────────────────
+(function () {
+  var dot = document.createElement('div');
+  dot.style.cssText =
+    'position:fixed;width:20px;height:20px;border-radius:50%;' +
+    'background:rgba(248,113,113,0.92);' +
+    'box-shadow:0 0 10px 5px rgba(248,113,113,0.55),0 0 2px 1px rgba(248,113,113,0.9);' +
+    'pointer-events:none;z-index:99999;' +
+    'transform:translate(-50%,-50%);display:none;';
+  document.body.appendChild(dot);
+
+  window.addEventListener('mousemove', function (e) {
+    dot.style.left = e.clientX + 'px';
+    dot.style.top  = e.clientY + 'px';
+  }, true);
+
+  var active = false;
+  document.addEventListener('keydown', function (e) {
+    if ((e.key === 'q' || e.key === 'Q') && !e.repeat) {
+      active = true;
+      dot.style.display = 'block';
+    }
+  });
+  document.addEventListener('keyup', function (e) {
+    if (e.key === 'q' || e.key === 'Q') {
+      active = false;
+      dot.style.display = 'none';
+    }
+  });
+})();
 </script>

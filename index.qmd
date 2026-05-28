@@ -20,9 +20,6 @@ format:
       theme: whiteboard
       boardmarker-width: 3
       chalk-width: 3
-    pointer:
-      pointerSize: 20
-      color: '#f87171'
     mouse-wheel: false
     include-after-body: _afterbody.html
 execute:
