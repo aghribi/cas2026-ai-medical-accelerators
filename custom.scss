@@ -253,28 +253,36 @@ $code-bg:               rgba(34, 211, 238, 0.06);
 
 // ── Concept callout overlay (amber, reuses .slide-callout-overlay backdrop) ───
 .reveal .concept-callout-box {
-  background: #0d1b2a;
+  background: #140c00;           // warm dark amber — visually distinct from cold navy slides
   border: 2px solid #fbbf24;
   border-radius: 14px;
-  padding: 0.85em 1.5em;
   max-width: 82%;
-  box-shadow: 0 0 50px rgba(251, 191, 36, 0.22);
+  box-shadow: 0 0 55px rgba(251, 191, 36, 0.28);
   color: #e2e8f0;
   line-height: 1.6;
   font-size: 0.95em;
   text-align: left;
+  overflow: hidden;              // keeps header strip flush to rounded corners
 }
 
+// Header strip — bleeds to box edges, amber tinted background
 .reveal .concept-callout-label {
-  display: block;
-  font-size: 0.56em;
+  display: flex;
+  align-items: center;
+  gap: 0.45em;
+  background: rgba(251, 191, 36, 0.16);
+  padding: 0.45em 1.3em;
+  border-bottom: 1px solid rgba(251, 191, 36, 0.38);
+  font-size: 0.57em;
   font-weight: 700;
   color: #fbbf24;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.10em;
   text-transform: uppercase;
-  border-bottom: 1px solid rgba(251, 191, 36, 0.30);
-  padding-bottom: 0.35em;
-  margin-bottom: 0.6em;
+}
+
+// Content area — automatic padding on any direct child div that is not the label
+.reveal .concept-callout-box > div:not(.concept-callout-label) {
+  padding: 0.75em 1.3em 0.85em 1.3em;
 }
 
 // ── Lecture-focus highlight (yellow) for slide 12 ────────────────────────────
