@@ -499,19 +499,30 @@ fig.add_trace(go.Scatter(
     marker=dict(color="#fb923c", size=7),
     showlegend=False,
 ))
-fig.add_annotation(x=0.35, y=0.05, text="Noisy cue",
+fig.add_annotation(x=0.35, y=0.05, text="Noisy / partial input",
     font=dict(size=9, color="#fb923c"),
-    showarrow=True, ax=-40, ay=25,
+    showarrow=True, ax=-45, ay=28,
     arrowcolor="#fb923c", arrowwidth=1.5)
+fig.add_annotation(x=0.88, y=0.62, text="each update:<br>energy ↓",
+    font=dict(size=8.5, color="#fb923c"), showarrow=False,
+    xanchor="left", bgcolor="rgba(13,27,42,0.7)")
+fig.add_annotation(x=1.3, y=1.1, text="recalled<br>memory",
+    font=dict(size=9, color="#fbbf24"),
+    showarrow=True, ax=38, ay=-28,
+    arrowcolor="#fbbf24", arrowwidth=1.5)
+fig.add_annotation(x=-1.3, y=-1.1, text="energy<br>minimum",
+    font=dict(size=8.5, color="#94a3b8"),
+    showarrow=True, ax=-38, ay=22,
+    arrowcolor="#475569", arrowwidth=1.2)
 fig.update_layout(
     height=330, autosize=True,
     paper_bgcolor="#0d1b2a", plot_bgcolor="#0d1b2a",
     xaxis=dict(showgrid=False, showticklabels=False, zeroline=False),
     yaxis=dict(showgrid=False, showticklabels=False, zeroline=False),
-    margin=dict(l=5, r=5, t=22, b=5),
+    margin=dict(l=5, r=5, t=28, b=5),
     font=dict(color="#e2e8f0"),
-    title=dict(text="Energy landscape E(s)",
-               font=dict(size=11, color="#94a3b8"), x=0.5, y=0.99),
+    title=dict(text="Network state space — stored memories = energy minima",
+               font=dict(size=10, color="#94a3b8"), x=0.5, y=0.99),
 )
 fig
 ```
@@ -519,19 +530,29 @@ fig
 :::
 ::: {.column width="44%"}
 
-::: {.highlight-box style="margin-bottom:0.5em; font-size:0.76em;"}
-**Retrieval = descend in energy**
+::: {.highlight-box style="margin-bottom:0.4em; font-size:0.75em;"}
+**① Intuition — ball rolling into a valley**
 
-Updates spins one-by-one:
-$s_i \leftarrow \text{sign}(\sum_j w_{ij} s_j)$
-— always converging to the nearest stored memory.
+Memories are stored as **energy minima** (blue wells).
+Give a noisy or incomplete input → the network rolls
+downhill step by step → arrives at the nearest stored pattern.
 :::
 
-::: {.key-result .fragment style="font-size:0.76em;"}
-**Capacity ≈ 0.14 N patterns**
+::: {.highlight-box style="margin-bottom:0.4em; font-size:0.75em;"}
+**② Mechanism — spin-by-spin update**
 
-For N neurons, up to ~0.14N patterns stored reliably.
-Derived by **replica method** (stat. mech.) — not a CS result.
+$s_i \leftarrow \text{sign}(\sum_j w_{ij} s_j)$
+
+Energy decreases at every step: **guaranteed convergence**.
+Weights $w_{ij} = \frac{1}{N}\sum_\mu \xi_i^\mu \xi_j^\mu$ encode the memories.
+:::
+
+::: {.key-result .fragment style="font-size:0.75em;"}
+**③ Limit — capacity ≈ 0.14 N patterns**
+
+N neurons → at most ~0.14N memories stored cleanly.
+Beyond this threshold retrieval fails **catastrophically**
+(a sharp phase transition, not a gradual degradation).
 :::
 
 :::
@@ -542,7 +563,7 @@ Amit, Gutfreund & Sompolinsky (1985). Storing infinite numbers of patterns in a 
 :::
 
 ::: notes
-The capacity limit 0.14N is a phase-transition result: beyond this, retrieval fails catastrophically. This uses the replica trick from spin-glass theory — Amit, Gutfreund and Sompolinsky 1985. It is pure statistical mechanics applied to neural networks.
+Walk through the three boxes in order. ① The ball-in-valley analogy lands immediately for physicists — it's a potential well problem. ② The weight matrix is the Hebb rule: neurons that fire together wire together; the outer product $\xi\xi^T$ sums one rank-1 matrix per stored pattern. ③ The 0.14N capacity is a phase-transition result from Amit, Gutfreund & Sompolinsky (PRL 1985) using the replica trick from spin-glass theory — the same mathematics as a magnetic phase transition. Beyond 0.14N the recall error jumps discontinuously from ~0 to ~0.5: total failure, not graceful degradation.
 :::
 
 ---
