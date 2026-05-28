@@ -501,7 +501,7 @@ fig.add_annotation(x=0.35, y=0.05, text="Noisy cue",
     showarrow=True, ax=-40, ay=25,
     arrowcolor="#fb923c", arrowwidth=1.5)
 fig.update_layout(
-    height=370, autosize=True,
+    height=330, autosize=True,
     paper_bgcolor="#0d1b2a", plot_bgcolor="#0d1b2a",
     xaxis=dict(showgrid=False, showticklabels=False, zeroline=False),
     yaxis=dict(showgrid=False, showticklabels=False, zeroline=False),
@@ -516,20 +516,19 @@ fig
 :::
 ::: {.column width="44%"}
 
-::: {.highlight-box style="margin-bottom:0.6em;"}
+::: {.highlight-box style="margin-bottom:0.5em; font-size:0.76em;"}
 **Retrieval = descend in energy**
 
-The network updates spins one-by-one:
-$$s_i \leftarrow \text{sign}\!\left(\sum_j w_{ij} s_j\right)$$
-Always converging to the nearest stored memory.
+Updates spins one-by-one:
+$s_i \leftarrow \text{sign}(\sum_j w_{ij} s_j)$
+— always converging to the nearest stored memory.
 :::
 
-::: {.key-result}
+::: {.key-result .fragment style="font-size:0.76em;"}
 **Capacity ≈ 0.14 N patterns**
 
-For N neurons, up to ~0.14N patterns can be stored reliably.
-
-Derived by **replica method** from statistical mechanics — not a CS result.
+For N neurons, up to ~0.14N patterns stored reliably.
+Derived by **replica method** (stat. mech.) — not a CS result.
 :::
 
 :::
@@ -667,9 +666,12 @@ fig.update_layout(
 fig
 ```
 
-::: {.key-result style="margin-top: 0.4em; font-size:0.78em;"}
-A model trained on bad data learns bad behaviour. No algorithm compensates for this.
-:::
+<div class="fragment slide-callout-overlay">
+<div class="callout-box">
+A model trained on bad data learns bad behaviour.<br>
+<span style="font-weight:400; font-size:0.82em; color:#94a3b8;">No algorithm compensates for this.</span>
+</div>
+</div>
 
 ---
 
@@ -751,9 +753,12 @@ fig
 256 numbers → 3 numbers · 99 % compression, all information retained
 :::
 
-::: {.key-result style="margin-top: 0.2em; font-size:0.78em;"}
-Good features = simpler models + better generalisation. Domain knowledge beats brute force.
-:::
+<div class="fragment slide-callout-overlay">
+<div class="callout-box">
+Good features = simpler models + better generalisation.<br>
+<span style="font-weight:400; font-size:0.82em; color:#94a3b8;">Domain knowledge beats brute force.</span>
+</div>
+</div>
 
 ---
 
@@ -961,32 +966,32 @@ This living review covers all ML applications in accelerator physics — updated
 ## Six ways AI helps accelerators today
 
 ::: {.fragment .fade-in}
-::: {.highlight-box #box-fault style="margin: 0.2em 0; padding: 0.3em 0.8em; font-size:0.85em;"}
+::: {.highlight-box #box-fault style="margin: 0.35em 0; padding: 0.45em 0.9em; font-size:0.85em; line-height:1.6;"}
 **Fault detection** — classify anomalous events before interlocks trigger
 :::
 :::
 ::: {.fragment .fade-in}
-::: {.highlight-box #box-tuning style="margin: 0.2em 0; padding: 0.3em 0.8em; font-size:0.85em;"}
+::: {.highlight-box #box-tuning style="margin: 0.35em 0; padding: 0.45em 0.9em; font-size:0.85em; line-height:1.6;"}
 **Beam tuning** — find optimal settings with minimal beam time (< 50 evaluations)
 :::
 :::
 ::: {.fragment .fade-in}
-::: {.highlight-box #box-surrogate style="margin: 0.2em 0; padding: 0.3em 0.8em; font-size:0.85em;"}
+::: {.highlight-box #box-surrogate style="margin: 0.35em 0; padding: 0.45em 0.9em; font-size:0.85em; line-height:1.6;"}
 **Surrogate models** — replace slow tracking codes (10³–10⁵× speedup)
 :::
 :::
 ::: {.fragment .fade-in}
-::: {.highlight-box style="margin: 0.2em 0; padding: 0.3em 0.8em; font-size:0.85em;"}
+::: {.highlight-box style="margin: 0.35em 0; padding: 0.45em 0.9em; font-size:0.85em; line-height:1.6;"}
 **Predictive maintenance** — forecast failures before they occur
 :::
 :::
 ::: {.fragment .fade-in}
-::: {.highlight-box style="margin: 0.2em 0; padding: 0.3em 0.8em; font-size:0.85em;"}
+::: {.highlight-box style="margin: 0.35em 0; padding: 0.45em 0.9em; font-size:0.85em; line-height:1.6;"}
 **Adaptive control** — online reinforcement learning in the control loop
 :::
 :::
 ::: {.fragment .fade-in #lecture-focus-trigger}
-::: {.highlight-box style="margin: 0.2em 0; padding: 0.3em 0.8em; font-size:0.85em;"}
+::: {.highlight-box style="margin: 0.35em 0; padding: 0.45em 0.9em; font-size:0.85em; line-height:1.6;"}
 **Digital twins** — live virtual model of the actual machine, continuously updated
 :::
 :::
