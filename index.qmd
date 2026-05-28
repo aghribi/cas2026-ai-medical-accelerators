@@ -16,7 +16,13 @@ format:
     margin: 0.05
     center: false
     footer: "CAS 2026 · Jurmala · AI for Medical Accelerators — Accelerator Side · A. Ghribi"
-    chalkboard: false
+    chalkboard:
+      theme: whiteboard
+      boardmarker-width: 3
+      chalk-width: 3
+    pointer:
+      pointerSize: 20
+      color: '#f87171'
     mouse-wheel: false
     include-after-body: _afterbody.html
 execute:
