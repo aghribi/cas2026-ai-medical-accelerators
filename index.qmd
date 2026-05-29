@@ -691,16 +691,12 @@ fig.update_layout(
 fig
 ```
 
----
-
-## {background-color="#0a1a2a" .no-footer}
-
-::: {style="display:flex; align-items:center; justify-content:center; min-height:580px;"}
-<div class="callout-box" style="max-width:62%; font-size:1.05em;">
+<div class="fragment slide-callout-overlay">
+<div class="callout-box">
 A model trained on bad data learns bad behaviour.<br>
 <span style="font-weight:400; font-size:0.82em; color:#94a3b8;">No algorithm compensates for this.</span>
 </div>
-:::
+</div>
 
 ---
 
@@ -782,16 +778,12 @@ fig
 256 numbers → 3 numbers · 99 % compression, all information retained
 :::
 
----
-
-## {background-color="#0a1a2a" .no-footer}
-
-::: {style="display:flex; align-items:center; justify-content:center; min-height:580px;"}
-<div class="callout-box" style="max-width:62%; font-size:1.05em;">
+<div class="fragment slide-callout-overlay">
+<div class="callout-box">
 Good features = simpler models + better generalisation.<br>
 <span style="font-weight:400; font-size:0.82em; color:#94a3b8;">Domain knowledge beats brute force.</span>
 </div>
-:::
+</div>
 
 ---
 
@@ -1316,11 +1308,7 @@ fig
 ::: {.clearfix}
 :::
 
----
-
-## {background-color="#140c00" .no-footer}
-
-::: {style="display:flex; align-items:center; justify-content:center; min-height:580px;"}
+<div class="fragment slide-callout-overlay">
 <div class="concept-callout-box">
 <div class="concept-callout-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-0.15em;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Concept — ROC-AUC</div>
 <div>
@@ -1329,7 +1317,7 @@ Sweep the decision threshold from 0 to 1. At each value, plot <strong>True Posit
 <span style="color:#94a3b8; font-size:0.92em;">Threshold-independent — essential when fault rate &lt; 0.1 %: no fixed threshold is meaningful across operating conditions.</span>
 </div>
 </div>
-:::
+</div>
 
 ---
 
@@ -1455,11 +1443,7 @@ Demonstrated at AWAKE (CERN), FLASH (DESY), and clinical proton therapy centres.
 ::: {.clearfix}
 :::
 
----
-
-## {background-color="#140c00" .no-footer}
-
-::: {style="display:flex; align-items:center; justify-content:center; min-height:580px;"}
+<div class="fragment slide-callout-overlay">
 <div class="concept-callout-box">
 <div class="concept-callout-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-0.15em;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Concept — Bayesian prior</div>
 <div>
@@ -1469,7 +1453,7 @@ BO uses the posterior to pick the next probe: explore where uncertain, exploit w
 <span style="color:#94a3b8; font-size:0.92em;">Every measurement actively informs the next — no wasted machine evaluations.</span>
 </div>
 </div>
-:::
+</div>
 
 ---
 
@@ -1599,11 +1583,7 @@ fig
 ::: {.clearfix}
 :::
 
----
-
-## {background-color="#140c00" .no-footer}
-
-::: {style="display:flex; align-items:center; justify-content:center; min-height:580px;"}
+<div class="fragment slide-callout-overlay">
 <div class="concept-callout-box">
 <div class="concept-callout-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-0.15em;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Concept — Gaussian process</div>
 <div>
@@ -1613,7 +1593,7 @@ Far from data → wide variance → explore. Near data → narrow → exploit. P
 <span style="color:#94a3b8; font-size:0.92em;">The kernel encodes physical priors about the objective — the most important modelling choice in BO.</span>
 </div>
 </div>
-:::
+</div>
 
 ---
 
@@ -1696,11 +1676,7 @@ fig
 Edelen et al., *IEEE TNS* 63 (2016) · Kaiser et al., *PRAB* 27 (2024)
 :::
 
----
-
-## {background-color="#140c00" .no-footer}
-
-::: {style="display:flex; align-items:center; justify-content:center; min-height:580px;"}
+<div class="fragment slide-callout-overlay">
 <div class="concept-callout-box">
 <div class="concept-callout-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-0.15em;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Concept — Uncertainty quantification</div>
 <div>
@@ -1710,7 +1686,7 @@ Methods: <strong>deep ensembles</strong> (spread of N models) · <strong>MC Drop
 <span style="color:#94a3b8; font-size:0.92em;">Knowing <em>when the model is uncertain</em> is as important as the prediction itself — especially for safety-critical beam control.</span>
 </div>
 </div>
-:::
+</div>
 
 ---
 
@@ -1913,11 +1889,7 @@ Federated learning: each site trains locally, shares only model updates — pres
 Active research problems — not blockers. AI is already delivering value in clinical operations today.
 :::
 
----
-
-## {background-color="#140c00" .no-footer}
-
-::: {style="display:flex; align-items:center; justify-content:center; min-height:580px;"}
+<div class="fragment slide-callout-overlay">
 <div class="concept-callout-box">
 <div class="concept-callout-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-0.15em;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Concept — Explainability (XAI)</div>
 <div>
@@ -1927,7 +1899,7 @@ EU AI Act (2024) classifies control-loop AI on clinical machines as <em>high-ris
 <span style="color:#94a3b8; font-size:0.92em;">In practice: SHAP tells you whether the model learned beam physics or a spurious data artefact.</span>
 </div>
 </div>
-:::
+</div>
 
 ---
 

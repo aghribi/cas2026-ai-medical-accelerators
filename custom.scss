@@ -238,6 +238,7 @@ $code-bg:               rgba(34, 211, 238, 0.06);
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;   // prevent inner box from spilling outside slide and covering controls
   background: rgba(13, 27, 42, 0.90);
   // backdrop-filter removed: causes iOS/WebKit compositing bug where touch events
   // are swallowed even with pointer-events:none, blocking reveal.js navigation
