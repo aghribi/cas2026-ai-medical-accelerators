@@ -1905,54 +1905,92 @@ EU AI Act (2024) classifies control-loop AI on clinical machines as <em>high-ris
 
 ## What comes next — advanced AI for accelerators
 
-::: {.col-left}
+:::: {.columns style="margin-top:0.25em; gap:1.5em;"}
+::: {.column width="38%"}
 
-::: {.highlight-box style="margin-bottom: 0.5em; font-size:0.85em;"}
-**Foundation models for accelerators**
-
-Large pretrained models fine-tuned on machine data — enable cross-facility transfer without retraining from scratch.
+::: {.fragment .highlight-box style="font-size:0.78em; margin-bottom:0.28em;"}
+**Foundation models** — large pretrained nets fine-tuned per facility; cross-machine transfer without retraining.
 :::
 
-::: {.highlight-box style="margin-bottom: 0.5em; font-size:0.85em;"}
-**Physics-Informed Neural Networks (PINNs)**
-
-Embed beam dynamics equations directly into the loss function — physics constraints respected even far from training data.
+::: {.fragment .highlight-box style="font-size:0.78em; margin-bottom:0.28em;"}
+**PINNs** — beam dynamics equations embedded in the loss; physics constraints hold far from training data.
 :::
 
-::: {.highlight-box style="font-size:0.85em;"}
-**Transformers for time-series control**
-
-Attention captures long-range patterns in beam signals — strong performance on non-stationary, correlated sequences.
+::: {.fragment .highlight-box style="font-size:0.78em; margin-bottom:0.28em;"}
+**Transformers** — attention on beam time-series; handles non-stationary, correlated signals.
 :::
 
+::: {.fragment .highlight-box style="font-size:0.78em; margin-bottom:0.28em;"}
+**Reinforcement learning** — closed-loop policy; live at ESRF, SNS, proton therapy facilities.
 :::
 
-::: {.col-right}
-
-::: {.highlight-box style="margin-bottom: 0.5em; font-size:0.85em;"}
-**Reinforcement learning — closed-loop autonomy**
-
-Policy learned directly in the control loop. Demonstrated at ESRF, SNS, and proton therapy facilities. Adaptive QA is next.
-:::
-
-::: {.highlight-box style="margin-bottom: 0.5em; font-size:0.85em;"}
-**Generative models — solving data scarcity**
-
-VAEs and diffusion models synthesise realistic fault waveforms for training — directly addresses the clinical-machine bottleneck.
-:::
-
-::: {.key-result style="font-size:0.82em;"}
-These build directly on everything covered today.
-The field is moving fast — the foundations you have are the right ones.
+::: {.fragment .highlight-box style="font-size:0.78em; margin-bottom:0;"}
+**Generative models** — VAEs / diffusion synthesise fault waveforms; solves clinical-machine data scarcity.
 :::
 
 :::
+::: {.column width="60%"}
 
-::: {.clearfix}
+```{python}
+#| echo: false
+#| eval: true
+
+import plotly.graph_objects as go
+
+techs = [
+    ("Foundation\nmodels",   3.2, 8.8, 38, "#a78bfa"),
+    ("PINNs",                5.2, 7.5, 34, "#60a5fa"),
+    ("Transformers",         5.8, 8.2, 34, "#22d3ee"),
+    ("Reinforcement\nlearning", 8.2, 9.4, 46, "#fb923c"),
+    ("Generative\nmodels",   4.1, 8.0, 34, "#34d399"),
+]
+
+fig = go.Figure()
+
+for name, x, y, size, color in techs:
+    fig.add_trace(go.Scatter(
+        x=[x], y=[y],
+        mode="markers+text",
+        marker=dict(size=size, color=color, opacity=0.85,
+                    line=dict(color="rgba(255,255,255,0.25)", width=1.5)),
+        text=[name],
+        textposition="top center",
+        textfont=dict(size=10, color="#e2e8f0"),
+        showlegend=False,
+    ))
+
+fig.add_shape(type="rect", x0=6.5, x1=10, y0=8.5, y1=10,
+              fillcolor="rgba(251,146,60,0.07)",
+              line=dict(color="rgba(251,146,60,0.3)", width=1, dash="dot"))
+fig.add_annotation(x=8.25, y=9.8, text="In production now",
+    font=dict(size=9, color="#fb923c"), showarrow=False)
+
+fig.update_layout(
+    height=390,
+    paper_bgcolor="#0d1b2a", plot_bgcolor="#0d1b2a",
+    xaxis=dict(title="Readiness →", range=[1.5, 10.5],
+               tickvals=[2, 4, 6, 8, 10],
+               ticktext=["Concept", "Research", "Prototype", "Pilot", "Production"],
+               gridcolor="#1e3048", showgrid=True,
+               title_font=dict(size=11, color="#94a3b8"),
+               tickfont=dict(size=9, color="#64748b")),
+    yaxis=dict(title="Impact on medical accelerators →", range=[6.5, 10.2],
+               tickvals=[7, 8, 9, 10],
+               ticktext=["Moderate", "High", "Very high", "Transformative"],
+               gridcolor="#1e3048", showgrid=True,
+               title_font=dict(size=11, color="#94a3b8"),
+               tickfont=dict(size=9, color="#64748b")),
+    margin=dict(l=10, r=10, t=15, b=40),
+    font=dict(color="#e2e8f0"),
+)
+fig
+```
+
 :::
+::::
 
 ::: notes
-This is an appetizer, not a full menu. Foundation models (e.g. CERN's accelerator-specific LLM prototypes), PINNs (several groups at SNS and ESS), and RL (Emma+2018, Kain+2020, Hirlaender+2020) are all active research directions with published results. The key message: the gap between today's lecture and the frontier is smaller than students often assume.
+This is an appetizer, not a full menu. Foundation models (e.g. CERN's accelerator-specific LLM prototypes), PINNs (several groups at SNS and ESS), and RL (Emma+2018, Kain+2020, Hirlaender+2020) are all active research directions with published results. The key message: the gap between today's lecture and the frontier is smaller than students often assume. Bubble position is schematic — readiness is illustrative, not a formal TRL score.
 :::
 
 ---
