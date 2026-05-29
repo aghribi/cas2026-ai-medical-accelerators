@@ -439,7 +439,7 @@ As accelerator physicists, we think in terms of Hamiltonians, phase spaces, and 
 
 The same mathematics describes **Ising spins** and **neural networks**:
 
-::: {style="font-size:0.82em; line-height:1.5;"}
+::: {style="font-size:0.80em; line-height:1.5;"}
 | Ising model | Hopfield network |
 |:---|:---|
 | Spin $s_i \in \{-1,+1\}$ | Neuron state |
@@ -448,7 +448,7 @@ The same mathematics describes **Ising spins** and **neural networks**:
 | Ground state | Stored memory |
 :::
 
-::: {style="margin-top:0.5em; font-size:0.84em;"}
+::: {style="margin-top:0.5em; font-size:0.80em;"}
 **Hebbian learning** — to store pattern $\xi^\mu$:
 $$w_{ij} = \frac{1}{N}\sum_\mu \xi_i^\mu \xi_j^\mu$$
 :::
@@ -1937,8 +1937,8 @@ Embedding PyTorch into Varian / Elekta systems is non-trivial.
 :::
 ::::
 
-::: {.key-result style="font-size:0.78em; margin-top:0.55em;"}
-Active research — not blockers. AI delivers value in clinical operations **today**.
+::: {style="text-align:center; font-size:0.76em; margin-top:0.55em; color:#94a3b8;"}
+Active research — not blockers. AI delivers value **today**.
 :::
 
 <div class="fragment slide-callout-overlay">
@@ -2047,13 +2047,13 @@ This is an appetizer, not a full menu. Foundation models (e.g. CERN's accelerato
 ::: {.fragment .highlight-box style="font-size:0.76em; padding:0.55em 0.8em; margin-bottom:0.45em;"}
 **RAISE** — EU "CERN for AI"
 €107 M · Horizon Europe pilot · 19 countries
-<a href="https://research-and-innovation.ec.europa.eu/strategy/strategy-research-and-innovation/our-digital-future/european-ai-science-strategy/raise-resource-ai-science-europe_en" style="color:#22d3ee; font-size:0.82em;">ec.europa.eu → RAISE</a>
+<a href="https://research-and-innovation.ec.europa.eu/strategy/strategy-research-and-innovation/our-digital-future/european-ai-science-strategy/raise-resource-ai-science-europe_en" style="color:#22d3ee; font-size:0.80em;">ec.europa.eu → RAISE</a>
 :::
 
 ::: {.fragment .highlight-box style="font-size:0.76em; padding:0.55em 0.8em; margin-bottom:0;"}
 **RL4AA** — Workshop & challenge
 2026 edition: **Liverpool** · tutorials · open datasets
-<a href="https://rl4aa.github.io/" style="color:#22d3ee; font-size:0.82em;">rl4aa.github.io</a>
+<a href="https://rl4aa.github.io/" style="color:#22d3ee; font-size:0.80em;">rl4aa.github.io</a>
 :::
 
 :::
@@ -2062,13 +2062,13 @@ This is an appetizer, not a full menu. Foundation models (e.g. CERN's accelerato
 ::: {.fragment .highlight-box style="font-size:0.76em; padding:0.55em 0.8em; margin-bottom:0.45em;"}
 **GENESIS** — US DOE mission
 $293 M · 17 national laboratories · launched 2025
-<a href="https://www.energy.gov/undersecretaryforscience/genesis-mission/genesis-mission" style="color:#22d3ee; font-size:0.82em;">energy.gov → Genesis</a>
+<a href="https://www.energy.gov/undersecretaryforscience/genesis-mission/genesis-mission" style="color:#22d3ee; font-size:0.80em;">energy.gov → Genesis</a>
 :::
 
 ::: {.fragment .highlight-box style="font-size:0.76em; padding:0.55em 0.8em; margin-bottom:0;"}
 **AISSAI Hackathon** — Hands-on school
 **Oct 11–16 2026** · IN2P3 · open to all
-<a href="https://indico.in2p3.fr/event/39704/" style="color:#22d3ee; font-size:0.82em;">indico.in2p3.fr/event/39704</a>
+<a href="https://indico.in2p3.fr/event/39704/" style="color:#22d3ee; font-size:0.80em;">indico.in2p3.fr/event/39704</a>
 :::
 
 :::
@@ -2112,54 +2112,38 @@ All code is open and runnable on Colab.
 
 ## References & Further Reading
 
-::: {.col-left style="font-size: 0.58em;"}
+:::: {.columns style="margin-top:0.3em; gap:1.2em;"}
+::: {.column width="58%" style="font-size:0.58em; line-height:1.7;"}
 
-**Key papers**
+**Key papers — cited in this lecture**
 
-- Duris et al., *PRL* **124**, 124801 (2020) — Bayesian opt. at LCLS
-- Tennant et al., *PRAB* **23**, 114601 (2020) — SRF fault detection JLab
-- Kaiser et al., *PRAB* **27**, 054601 (2024) — Cheetah differentiable sim.
-- Ghribi et al., *EPN* **56**(1), 15 (2025) — KARA −30% energy
-- Edelen et al., *IEEE TNS* **63**, 878 (2016) — ML for accelerators survey
-- Leemann et al., *PRL* **123**, 194801 (2019) — model-independent ML at ALS
-- Frol et al., *IPAC* 2019 — BO for emittance minimisation
-- Hopfield, *PNAS* **79** (1982) — associative memory networks
-- Ackley, Hinton & Sejnowski, *Cognitive Science* **9**, 147 (1985) — Boltzmann machines
+Duris et al., *PRL* **124**, 124801 (2020) — BO at LCLS<br>
+Tennant et al., *PRAB* **23**, 114601 (2020) — SRF fault detection<br>
+Kaiser et al., *PRAB* **27**, 054601 (2024) — Cheetah simulator<br>
+Ghribi et al., *EPN* **56**(1), 15 (2025) — KARA −30% energy<br>
+Hopfield, *PNAS* **79** (1982) — associative memory
 
-**Living review**
-
-<a href="https://aghribi.github.io/acc-ml-living-review" style="color:#22d3ee;">aghribi.github.io/acc-ml-living-review</a> — continuously updated ML for accelerators
-
-:::
-
-::: {.col-right style="font-size: 0.68em;"}
-
-**RL4AA — Reinforcement Learning for Autonomous Accelerators**
-
-::: {.highlight-box style="padding: 0.5em 0.7em; margin-bottom: 0.4em;"}
-<a href="https://rl4aa.github.io/" style="color:#22d3ee; font-weight:600;">rl4aa.github.io</a> — workshops, tutorials, community
-
-[RL4AA 2026 Challenge →](https://github.com/RL4AA/rl4aa26-challenge)
-:::
-
-**This lecture — notebooks on Colab**
-
-::: {.highlight-box style="padding: 0.4em 0.7em; margin-bottom: 0.3em;"}
-[01 · RF Fault Detection](https://colab.research.google.com/github/aghribi/cas2026-ai-medical-accelerators/blob/main/notebooks/01_fault_detection/notebook.ipynb)
-:::
-
-::: {.highlight-box style="padding: 0.4em 0.7em; margin-bottom: 0.3em;"}
-[02 · Beam Tuning (BO + Cheetah)](https://colab.research.google.com/github/aghribi/cas2026-ai-medical-accelerators/blob/main/notebooks/02_beam_tuning/notebook.ipynb)
-:::
-
-::: {.highlight-box style="padding: 0.4em 0.7em;"}
-[03 · Surrogate Model (MLP)](https://colab.research.google.com/github/aghribi/cas2026-ai-medical-accelerators/blob/main/notebooks/03_surrogate_model/notebook.ipynb)
+::: {style="margin-top:0.6em;"}
+**Living review —** <a href="https://aghribi.github.io/acc-ml-living-review" style="color:#22d3ee;">aghribi.github.io/acc-ml-living-review</a>
 :::
 
 :::
+::: {.column width="40%" style="font-size:0.68em;"}
 
-::: {.clearfix}
+::: {.highlight-box style="padding:0.45em 0.7em; margin-bottom:0.35em;"}
+**Notebooks on Colab**<br>
+<a href="https://colab.research.google.com/github/aghribi/cas2026-ai-medical-accelerators/blob/main/notebooks/01_fault_detection/notebook.ipynb" style="color:#22d3ee;">01 · RF Fault Detection</a><br>
+<a href="https://colab.research.google.com/github/aghribi/cas2026-ai-medical-accelerators/blob/main/notebooks/02_beam_tuning/notebook.ipynb" style="color:#22d3ee;">02 · Beam Tuning</a><br>
+<a href="https://colab.research.google.com/github/aghribi/cas2026-ai-medical-accelerators/blob/main/notebooks/03_surrogate_model/notebook.ipynb" style="color:#22d3ee;">03 · Surrogate Model</a>
 :::
+
+::: {.highlight-box style="padding:0.45em 0.7em;"}
+**RL4AA community**<br>
+<a href="https://rl4aa.github.io/" style="color:#22d3ee;">rl4aa.github.io</a> — workshops · tutorials · challenge
+:::
+
+:::
+::::
 
 ---
 

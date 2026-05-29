@@ -28,15 +28,28 @@ MIN_DOMINANT_COL    = 52     # dominant column must be ≥ this %
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 def strip_code_blocks(text: str) -> str:
-    """Remove fenced code blocks (```...```) and speaker notes."""
+    """Remove fenced code blocks, speaker notes, overlays, and tables."""
     # Quarto fenced code blocks: ```{python} ... ``` or ``` ... ```
     text = re.sub(r"```[^\n]*\n.*?```", "", text, flags=re.DOTALL)
-    # Speaker notes: ::: notes ... :::
+    # Speaker notes
     text = re.sub(r":::\s*notes\b.*?:::", "", text, flags=re.DOTALL)
-    # Fragment overlay divs (concept callout / callout box) — intentional design elements
-    text = re.sub(r'<div class="fragment slide-callout-overlay">.*?</div>\s*</div>\s*</div>',
+    # Slide-ref footnotes — reference text, not slide prose
+    text = re.sub(r":::\s*\{\.slide-ref\}.*?:::", "", text, flags=re.DOTALL)
+    # Concept / callout overlay divs — intentional design elements, not slide prose
+    # Handle both 2-div (callout-box) and 3-4-div (concept-callout-box) nesting
+    text = re.sub(r'<div class="fragment slide-callout-overlay">.*?</div>(\s*</div>){1,3}',
                   "", text, flags=re.DOTALL)
+    # Markdown table rows  |...|  — reference content, not prose
+    text = re.sub(r"^\|.*\|$", "", text, flags=re.MULTILINE)
+    # URLs in <a href="..."> and bare links — inflate counts artificially
+    text = re.sub(r'href="[^"]*"', "", text)
+    text = re.sub(r"https?://\S+", "", text)
     return text
+
+def strip_div_markers(text: str) -> str:
+    """Strip fenced div markers (:::) and their attribute blocks.
+    Applied only during word counting — element detection still needs these markers."""
+    return re.sub(r"^:{2,}.*$", "", text, flags=re.MULTILINE)
 
 def strip_html_tags(text: str) -> str:
     return re.sub(r"<[^>]+>", " ", text)
@@ -50,14 +63,20 @@ def strip_markdown(text: str) -> str:
 
 def word_count(text: str) -> int:
     text = strip_code_blocks(text)
+    text = strip_div_markers(text)   # remove ::: markers only for word counting
     text = strip_html_tags(text)
     text = strip_markdown(text)
     return len(text.split())
 
 def extract_font_sizes(text: str) -> list[float]:
-    """Find all inline font-size:Xem values."""
-    hits = re.findall(r"font-size:\s*([\d.]+)em", text)
-    return [float(h) for h in hits]
+    """Find inline font-size:Xem values, excluding overlay/ref/section elements."""
+    # Strip overlays, slide-ref, section divider styles before checking
+    clean = re.sub(r'<div class="fragment slide-callout-overlay">.*?</div>(\s*</div>){1,3}',
+                   "", text, flags=re.DOTALL)
+    clean = re.sub(r':::\s*\{\.slide-ref\}.*?:::', "", clean, flags=re.DOTALL)
+    # Exclude section-divider / title font-size lines (values ≥ 1.1em are intentional headers)
+    hits = re.findall(r"font-size:\s*([\d.]+)em", clean)
+    return [float(h) for h in hits if float(h) < 1.1]
 
 def count_content_elements(text: str) -> int:
     """
