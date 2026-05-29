@@ -289,27 +289,6 @@ The Mark 1 Perceptron at Cornell learned to recognise patterns from photographs.
 
 ## AI winters and the deep learning renaissance
 
-:::: {.columns style="margin-top:0.2em; gap:1.2em;"}
-::: {.column width="36%"}
-
-::: {.fragment .highlight-box style="font-size:0.78em; margin-bottom:0.3em;"}
-**1969 — First winter**
-Minsky & Papert prove perceptron cannot solve XOR.
-:::
-
-::: {.fragment .highlight-box style="font-size:0.78em; margin-bottom:0.3em;"}
-**1986 — Backpropagation**
-Gradients through layers — the key mathematical unlock.
-:::
-
-::: {.fragment .key-result style="font-size:0.78em; margin:0.3em 0 0 0;"}
-**2012 — AlexNet** cuts ImageNet error by 10 pp.
-Same idea, scaled. Deep learning era begins.
-:::
-
-:::
-::: {.column width="62%"}
-
 ```{python}
 #| echo: false
 #| eval: true
@@ -359,15 +338,16 @@ for year, label, color, size in events:
     ))
 
 fig.update_layout(
-    height=310,
+    height=330,
+    autosize=True,
     paper_bgcolor="#0d1b2a", plot_bgcolor="#0d1b2a",
     xaxis=dict(range=[1938, 2026], showgrid=False,
                tickvals=[1943,1957,1969,1986,1995,2012,2017,2023],
                ticktext=["1943","1957","1969","1986","1995","2012","2017","2023"],
-               tickfont=dict(size=9, color="#64748b"),
+               tickfont=dict(size=10, color="#64748b"),
                tickangle=-45),
     yaxis=dict(visible=False, range=[0.1, 1.0]),
-    margin=dict(l=5, r=5, t=25, b=50),
+    margin=dict(l=5, r=5, t=25, b=55),
     showlegend=False,
     title=dict(text="70 years from threshold logic to large language models",
                font=dict(size=10, color="#475569"), x=0.5),
@@ -375,6 +355,24 @@ fig.update_layout(
 fig
 ```
 
+:::: {.columns style="margin-top:0.4em; gap:0.8em;"}
+::: {.column width="33%"}
+::: {.fragment .highlight-box style="font-size:0.76em;"}
+**1969 — First winter**
+Minsky & Papert prove perceptron cannot solve XOR.
+:::
+:::
+::: {.column width="33%"}
+::: {.fragment .highlight-box style="font-size:0.76em;"}
+**1986 — Backpropagation**
+Gradients through layers — the key mathematical unlock.
+:::
+:::
+::: {.column width="33%"}
+::: {.fragment .key-result style="font-size:0.76em;"}
+**2012 — AlexNet** cuts ImageNet error by 10 pp.
+Same idea, scaled. Deep learning era begins.
+:::
 :::
 ::::
 
@@ -988,7 +986,12 @@ fig
 
 ## AI arrives at accelerators
 
-::: {style="font-size: 0.62em;"}
+<style>
+.ai-milestones table { width: auto !important; margin: 0 auto !important; min-width: 88%; }
+.ai-milestones td, .ai-milestones th { padding: 0.45em 1.1em !important; }
+</style>
+
+::: {.ai-milestones style="font-size: 0.66em; margin-top: 0.4em;"}
 
 | Year | Facility | Approach | Impact |
 |------|----------|----------|--------|
@@ -1345,7 +1348,7 @@ fig
 ```
 
 ::: {style="text-align:center; margin-top:0.4em;"}
-[0.99]{.metric}<br>
+<span style="font-size:1.5em; font-weight:800; color:#22d3ee; line-height:1.1;">0.99</span><br>
 [ROC-AUC — threshold-independent fault detection]{.metric-label}
 :::
 
@@ -1532,7 +1535,7 @@ beam_out = segment.track(beam_in)
 
 ::: {.col-right}
 
-::: {.highlight-box}
+::: {.highlight-box style="font-size: 0.78em;"}
 **Why Cheetah?**
 
 - PyTorch module → **gradients flow** through the simulation
@@ -1540,7 +1543,7 @@ beam_out = segment.track(beam_in)
 - Same API whether virtual machine or real machine
 :::
 
-::: {.highlight-box style="margin-top: 0.8em; font-size: 0.78em;"}
+::: {.highlight-box style="margin-top: 0.8em; font-size: 0.72em;"}
 Baseline: σ_x = 1.00 mm · σ_x + σ_y = 4.83 mm (no quads)
 :::
 
@@ -1957,24 +1960,6 @@ EU AI Act (2024) classifies control-loop AI on clinical machines as <em>high-ris
 
 ## What comes next — advanced AI for accelerators
 
-:::: {.columns style="margin-top:0.3em; gap:1.5em;"}
-::: {.column width="36%"}
-
-::: {.fragment .highlight-box style="font-size:0.78em; margin-bottom:0.4em;"}
-**Foundation models** — pretrained on multi-facility data; fine-tune per machine in minutes.
-:::
-
-::: {.fragment .highlight-box style="font-size:0.78em; margin-bottom:0.4em;"}
-**Reinforcement learning** — closed-loop policy learned on the real machine. Live at ESRF, SNS, proton therapy.
-:::
-
-::: {.fragment .key-result style="font-size:0.78em; margin-top:0.1em;"}
-**Generative models** — diffusion / VAEs synthesise rare fault waveforms. Directly solves data scarcity.
-:::
-
-:::
-::: {.column width="62%"}
-
 ```{python}
 #| echo: false
 #| eval: true
@@ -1999,7 +1984,7 @@ for name, x, y, size, color in techs:
                     line=dict(color="rgba(255,255,255,0.25)", width=1.5)),
         text=[name],
         textposition="top center",
-        textfont=dict(size=10, color="#e2e8f0"),
+        textfont=dict(size=11, color="#e2e8f0"),
         showlegend=False,
     ))
 
@@ -2007,29 +1992,45 @@ fig.add_shape(type="rect", x0=6.5, x1=10, y0=8.5, y1=10,
               fillcolor="rgba(251,146,60,0.07)",
               line=dict(color="rgba(251,146,60,0.3)", width=1, dash="dot"))
 fig.add_annotation(x=8.25, y=9.8, text="In production now",
-    font=dict(size=9, color="#fb923c"), showarrow=False)
+    font=dict(size=10, color="#fb923c"), showarrow=False)
 
 fig.update_layout(
-    height=390,
+    height=360,
+    autosize=True,
     paper_bgcolor="#0d1b2a", plot_bgcolor="#0d1b2a",
     xaxis=dict(title="Readiness →", range=[1.5, 10.5],
                tickvals=[2, 4, 6, 8, 10],
                ticktext=["Concept", "Research", "Prototype", "Pilot", "Production"],
                gridcolor="#1e3048", showgrid=True,
                title_font=dict(size=11, color="#94a3b8"),
-               tickfont=dict(size=9, color="#64748b")),
+               tickfont=dict(size=10, color="#64748b")),
     yaxis=dict(title="Impact on medical accelerators →", range=[6.5, 10.2],
                tickvals=[7, 8, 9, 10],
                ticktext=["Moderate", "High", "Very high", "Transformative"],
                gridcolor="#1e3048", showgrid=True,
                title_font=dict(size=11, color="#94a3b8"),
-               tickfont=dict(size=9, color="#64748b")),
+               tickfont=dict(size=10, color="#64748b")),
     margin=dict(l=10, r=10, t=15, b=40),
     font=dict(color="#e2e8f0"),
 )
 fig
 ```
 
+:::: {.columns style="margin-top:0.4em; gap:0.8em;"}
+::: {.column width="33%"}
+::: {.fragment .highlight-box style="font-size:0.76em;"}
+**Foundation models** — pretrained on multi-facility data; fine-tune per machine in minutes.
+:::
+:::
+::: {.column width="33%"}
+::: {.fragment .highlight-box style="font-size:0.76em;"}
+**Reinforcement learning** — closed-loop policy on the real machine. Live at ESRF, SNS, proton therapy.
+:::
+:::
+::: {.column width="33%"}
+::: {.fragment .key-result style="font-size:0.76em;"}
+**Generative models** — diffusion / VAEs synthesise rare fault waveforms. Directly solves data scarcity.
+:::
 :::
 ::::
 
@@ -2041,34 +2042,50 @@ This is an appetizer, not a full menu. Foundation models (e.g. CERN's accelerato
 
 ## Stay connected — opportunities
 
-:::: {.columns style="margin-top:0.4em; gap:1em;"}
-::: {.column width="52%"}
+:::: {.columns style="margin-top:0.5em; gap:1.5em;"}
+::: {.column width="54%"}
 
-::: {.fragment .highlight-box style="font-size:0.76em; padding:0.55em 0.8em; margin-bottom:0.45em;"}
-**RAISE** — EU "CERN for AI"
-€107 M · Horizon Europe pilot · 19 countries
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="1"}
+**RAISE** — EU "CERN for AI" · €107 M · Horizon Europe · 19 countries
 <a href="https://research-and-innovation.ec.europa.eu/strategy/strategy-research-and-innovation/our-digital-future/european-ai-science-strategy/raise-resource-ai-science-europe_en" style="color:#22d3ee; font-size:0.80em;">ec.europa.eu → RAISE</a>
 :::
 
-::: {.fragment .highlight-box style="font-size:0.76em; padding:0.55em 0.8em; margin-bottom:0;"}
-**RL4AA** — Workshop & challenge
-2026 edition: **Liverpool** · tutorials · open datasets
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="2"}
+**RL4AA** — Workshop & challenge · 2026 edition: **Liverpool** · open datasets
 <a href="https://rl4aa.github.io/" style="color:#22d3ee; font-size:0.80em;">rl4aa.github.io</a>
 :::
 
-:::
-::: {.column width="46%"}
-
-::: {.fragment .highlight-box style="font-size:0.76em; padding:0.55em 0.8em; margin-bottom:0.45em;"}
-**GENESIS** — US DOE mission
-$293 M · 17 national laboratories · launched 2025
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="3"}
+**GENESIS** — US DOE AI mission · $293 M · 17 national laboratories · 2025
 <a href="https://www.energy.gov/undersecretaryforscience/genesis-mission/genesis-mission" style="color:#22d3ee; font-size:0.80em;">energy.gov → Genesis</a>
 :::
 
-::: {.fragment .highlight-box style="font-size:0.76em; padding:0.55em 0.8em; margin-bottom:0;"}
-**AISSAI Hackathon** — Hands-on school
-**Oct 11–16 2026** · IN2P3 · open to all
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em;" fragment-index="4"}
+**AISSAI Hackathon** — Hands-on school · **Oct 11–16 2026** · IN2P3 · open to all
 <a href="https://indico.in2p3.fr/event/39704/" style="color:#22d3ee; font-size:0.80em;">indico.in2p3.fr/event/39704</a>
+:::
+
+:::
+::: {.column width="44%"}
+
+::: {.fragment .current-visible style="text-align:center; padding:1.8em 0;" fragment-index="1"}
+<span style="font-size:2.4em; font-weight:800; color:#22d3ee; line-height:1.0;">€107M</span><br>
+<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">Horizon Europe 2025–2027<br>19 European countries</span>
+:::
+
+::: {.fragment .current-visible style="text-align:center; padding:1.8em 0;" fragment-index="2"}
+<span style="font-size:2.0em; font-weight:800; color:#22d3ee; line-height:1.2;">Liverpool<br>2026</span><br>
+<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">Tutorials · challenge · open datasets<br>rl4aa.github.io</span>
+:::
+
+::: {.fragment .current-visible style="text-align:center; padding:1.8em 0;" fragment-index="3"}
+<span style="font-size:2.4em; font-weight:800; color:#22d3ee; line-height:1.0;">$293M</span><br>
+<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">17 US national laboratories<br>DOE AI for Science, launched 2025</span>
+:::
+
+::: {.fragment .current-visible style="text-align:center; padding:1.8em 0;" fragment-index="4"}
+<span style="font-size:2.0em; font-weight:800; color:#22d3ee; line-height:1.2;">Oct 11–16<br>2026</span><br>
+<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">IN2P3 · open to all<br>indico.in2p3.fr/event/39704</span>
 :::
 
 :::

@@ -174,6 +174,13 @@ $code-bg:               rgba(34, 211, 238, 0.06);
 .reveal .fragment { opacity: 0.25; transition: opacity 0.3s; }
 .reveal .fragment.visible { opacity: 1; }
 
+// fade-in-then-semi-out: revealed items dim to 40% when no longer current
+.reveal .fragment.fade-in-then-semi-out.visible:not(.current-fragment) { opacity: 0.38; }
+
+// current-visible: invisible until active, invisible again once past
+.reveal .fragment.current-visible { opacity: 0; }
+.reveal .fragment.current-visible.current-fragment { opacity: 1; }
+
 // Overlays: completely invisible before triggered (not 25% tinted),
 // and never block navigation controls or touch taps even when visible.
 // (Reveal.js controls have z-index:12; overlay has z-index:25 — pointer-events:none prevents covering them)

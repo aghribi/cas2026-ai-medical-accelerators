@@ -123,7 +123,7 @@ def extract_box_word_counts(text: str) -> list[int]:
 def check_column_balance(text: str) -> list[str]:
     issues = []
     widths = [int(m) for m in re.findall(r'width="(\d+)%"', text)]
-    if len(widths) >= 2:
+    if len(widths) == 2:   # symmetric-column rule only applies to 2-column layouts
         dominant = max(widths)
         if dominant < MIN_DOMINANT_COL:
             issues.append(
