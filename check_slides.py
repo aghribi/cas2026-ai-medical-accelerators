@@ -37,7 +37,8 @@ def strip_code_blocks(text: str) -> str:
     text = re.sub(r":::\s*\{\.slide-ref\}.*?:::", "", text, flags=re.DOTALL)
     # Concept / callout overlay divs — intentional design elements, not slide prose
     # Handle both 2-div (callout-box) and 3-4-div (concept-callout-box) nesting
-    text = re.sub(r'<div class="fragment slide-callout-overlay">.*?</div>(\s*</div>){1,3}',
+    # Flexible match: allow extra attributes on the outer div (e.g. data-fragment-index)
+    text = re.sub(r'<div[^>]*class="[^"]*slide-callout-overlay[^"]*"[^>]*>.*?</div>(\s*</div>){1,3}',
                   "", text, flags=re.DOTALL)
     # Markdown table rows  |...|  — reference content, not prose
     text = re.sub(r"^\|.*\|$", "", text, flags=re.MULTILINE)
@@ -71,7 +72,7 @@ def word_count(text: str) -> int:
 def extract_font_sizes(text: str) -> list[float]:
     """Find inline font-size:Xem values, excluding overlay/ref/section elements."""
     # Strip overlays, slide-ref, section divider styles before checking
-    clean = re.sub(r'<div class="fragment slide-callout-overlay">.*?</div>(\s*</div>){1,3}',
+    clean = re.sub(r'<div[^>]*class="[^"]*slide-callout-overlay[^"]*"[^>]*>.*?</div>(\s*</div>){1,3}',
                    "", text, flags=re.DOTALL)
     clean = re.sub(r':::\s*\{\.slide-ref\}.*?:::', "", clean, flags=re.DOTALL)
     # Exclude section-divider / title font-size lines (values ≥ 1.1em are intentional headers)

@@ -47,6 +47,7 @@
 
   Reveal.on('ready',        function (e) { resizePlotsIn(e.currentSlide); });
   Reveal.on('slidechanged', function (e) { resizePlotsIn(e.currentSlide); });
+  Reveal.on('fragmentshown', function (e) { resizePlotsIn(e.fragment.closest('.reveal-slide, section')); });
   Reveal.on('resize',       function ()  {
     document.querySelectorAll('.js-plotly-plot').forEach(function (el) {
       Plotly.Plots.resize(el);
