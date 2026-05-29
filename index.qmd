@@ -670,6 +670,54 @@ Data · Features · Method selection · Pipeline
 
 ---
 
+## The ML pipeline — from data to inference
+
+<div style="display:flex; align-items:stretch; gap:0.2em; margin:0.7em 0 0.4em 0; width:100%;">
+<div class="pipe-box" data-pipe="1" style="border-color:#475569; background:rgba(71,85,105,0.12); --pipe-glow:rgba(100,116,139,0.45);">
+<div style="font-weight:700; font-size:0.80em; color:#64748b;">Raw Data</div>
+<div style="font-size:0.68em; color:#475569; margin-top:0.2em;">Waveforms · images<br>logs · set-points</div>
+</div>
+<div class="pipe-arrow">→</div>
+<div class="pipe-box" data-pipe="2" style="border-color:#3b82f6; background:rgba(59,130,246,0.10); --pipe-glow:rgba(59,130,246,0.45);">
+<div style="font-weight:700; font-size:0.80em; color:#3b82f6;">Pre-process</div>
+<div style="font-size:0.68em; color:#475569; margin-top:0.2em;">Clean · sync<br>normalise · resample</div>
+</div>
+<div class="pipe-arrow">→</div>
+<div class="pipe-box" data-pipe="3" style="border-color:#6366f1; background:rgba(99,102,241,0.10); --pipe-glow:rgba(99,102,241,0.45);">
+<div style="font-weight:700; font-size:0.80em; color:#6366f1;">Feature extract</div>
+<div style="font-size:0.68em; color:#475569; margin-top:0.2em;">FFT · Gaussian fit<br>statistics · domain</div>
+</div>
+<div class="pipe-arrow">→</div>
+<div class="pipe-box" data-pipe="4" style="border-color:#a78bfa; background:rgba(167,139,250,0.10); --pipe-glow:rgba(167,139,250,0.45);">
+<div style="font-weight:700; font-size:0.80em; color:#a78bfa;">Train &amp; validate</div>
+<div style="font-size:0.68em; color:#475569; margin-top:0.2em;">80/20 split<br>cross-val · AUC</div>
+</div>
+<div class="pipe-arrow">→</div>
+<div class="pipe-box" data-pipe="5" style="border-color:#22d3ee; background:rgba(34,211,238,0.10); --pipe-glow:rgba(34,211,238,0.45);">
+<div style="font-weight:700; font-size:0.80em; color:#22d3ee;">Deploy &amp; infer</div>
+<div style="font-size:0.68em; color:#475569; margin-top:0.2em;">Sub-ms response<br>monitoring · retrain</div>
+</div>
+</div>
+
+<div style="display:flex; gap:0.45em; margin-bottom:0.5em; width:100%;">
+<div class="pipe-uc" data-pipe="5"><div class="pipe-uc-title">UC1 · Fault detection</div><div class="pipe-uc-desc">IQ → autoencoder → alarm</div></div>
+<div class="pipe-uc" data-pipe="5"><div class="pipe-uc-title">UC2 · Beam tuning</div><div class="pipe-uc-desc">Quad → Cheetah → BO</div></div>
+<div class="pipe-uc" data-pipe="5"><div class="pipe-uc-title">UC3 · Surrogate</div><div class="pipe-uc-desc">5k Cheetah → MLP → 586×</div></div>
+</div>
+
+<div style="display:grid; min-height:2.2em; margin-top:0.4em;">
+<div class="fragment current-visible" data-pipe-highlight="1,2" data-fragment-index="1" style="grid-area:1/1; text-align:center; font-size:0.80em; color:#3b82f6; font-weight:600;">① Data quality &amp; preprocessing</div>
+<div class="fragment current-visible" data-pipe-highlight="3"   data-fragment-index="2" style="grid-area:1/1; text-align:center; font-size:0.80em; color:#6366f1; font-weight:600;">② Feature engineering</div>
+<div class="fragment current-visible" data-pipe-highlight="4"   data-fragment-index="3" style="grid-area:1/1; text-align:center; font-size:0.80em; color:#a78bfa; font-weight:600;">③ Model selection &amp; training</div>
+<div class="fragment current-visible" data-pipe-highlight="5"   data-fragment-index="4" style="grid-area:1/1; text-align:center; font-size:0.80em; color:#22d3ee; font-weight:600;">④ Deploy &amp; use cases 1–3</div>
+</div>
+
+::: notes
+Road-map slide. Step through the 4 highlights before diving into the content. Each fragment lights the section(s) you're about to teach.
+:::
+
+---
+
 ## Data quality — garbage in, garbage out
 
 ::: {style="display:flex; gap:0.35em; margin:0.15em 0 0.4em 0;"}
@@ -919,89 +967,6 @@ fig
 ::: {.slide-ref}
 ★ methods used in this lecture. Existing detail landscapes: anomaly detection → slide 14 · optimisation → slide 21 · surrogate → slide 27
 :::
-
----
-
-## The ML pipeline — from data to inference
-
-```{python}
-#| echo: false
-#| eval: true
-
-import plotly.graph_objects as go
-
-stages = [
-    ("Raw\nData",      "#475569", "Waveforms\nimages, logs\nset-points"),
-    ("Pre-\nprocess",  "#3b82f6", "Clean · sync\nnormalise\nresample"),
-    ("Feature\nextract","#6366f1", "FFT · Gaussian\nfit · statistics\ndomain stats"),
-    ("Train &\nvalidate","#a78bfa","80/20 split\ncross-val\nloss / AUC"),
-    ("Deploy\n& infer", "#22d3ee", "Sub-ms resp.\nmonitoring\nretraining"),
-]
-
-fig = go.Figure()
-
-bw, bh = 1.35, 0.72
-dx = 1.80
-
-for i, (label, color, sub) in enumerate(stages):
-    x0 = i * dx
-    xm = x0 + bw / 2
-    fig.add_shape(type="rect", x0=x0, x1=x0+bw, y0=-bh/2, y1=bh/2,
-        fillcolor=color, opacity=0.15, line=dict(color=color, width=2))
-    fig.add_annotation(x=xm, y=0.10, text=f"<b>{label}</b>",
-        showarrow=False, font=dict(size=13, color=color), align='center')
-    fig.add_annotation(x=xm, y=-0.24,
-        text=f"<span style='font-size:9px;color:#94a3b8;'>{sub}</span>",
-        showarrow=False, align='center')
-    if i < len(stages) - 1:
-        xa = x0 + bw + 0.02
-        xb = x0 + dx - 0.02
-        fig.add_annotation(x=xb, y=0, ax=xa, ay=0,
-            xref='x', yref='y', axref='x', ayref='y',
-            arrowhead=2, arrowsize=1.2, arrowwidth=2,
-            arrowcolor='rgba(34,211,238,0.6)', showarrow=True, text='')
-
-uc_data = [
-    ("#22d3ee", "UC1 · Fault detection",
-     "IQ waveforms → amplitude / phase\n→ autoencoder → reconstruction error → alarm"),
-    ("#22d3ee", "UC2 · Beam tuning",
-     "Quad settings → Cheetah sim\n→ BO acquisition → next proposal → evaluate"),
-    ("#22d3ee", "UC3 · Surrogate",
-     "5 000 Cheetah calls → normalise\n→ MLP (3-layer) → 586 × faster inference"),
-]
-
-n_uc = len(uc_data)
-total_w = (len(stages) - 1) * dx + bw
-uc_w = total_w / n_uc - 0.15
-y_top = -bh/2 - 0.18
-
-for k, (col, title, desc) in enumerate(uc_data):
-    x0_uc = k * (uc_w + 0.15)
-    xm_uc = x0_uc + uc_w / 2
-    fig.add_shape(type="rect", x0=x0_uc, x1=x0_uc+uc_w,
-        y0=y_top - 0.62, y1=y_top,
-        fillcolor="rgba(34,211,238,0.06)", layer="below",
-        line=dict(color="rgba(34,211,238,0.35)", width=1))
-    fig.add_annotation(x=xm_uc, y=y_top - 0.10,
-        text=f"<b style='color:#22d3ee;font-size:11px;'>{title}</b>",
-        showarrow=False, align='center')
-    fig.add_annotation(x=xm_uc, y=y_top - 0.36,
-        text=f"<span style='font-size:9px;color:#94a3b8;'>{desc}</span>",
-        showarrow=False, align='center')
-
-fig.update_layout(
-    height=490, autosize=True,
-    paper_bgcolor='#0d1b2a', plot_bgcolor='#0d1b2a',
-    xaxis=dict(showgrid=False, showticklabels=False, zeroline=False,
-        range=[-0.25, (len(stages)-1)*dx + bw + 0.25]),
-    yaxis=dict(showgrid=False, showticklabels=False, zeroline=False,
-        range=[-1.2, 0.55]),
-    margin=dict(t=10, b=5, l=5, r=5),
-    showlegend=False,
-    font=dict(color='#e2e8f0'),
-)
-fig
-```
 
 ---
 

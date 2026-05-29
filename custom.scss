@@ -317,3 +317,16 @@ $code-bg:               rgba(34, 211, 238, 0.06);
   color: #fbbf24;
 }
 
+// ── ML pipeline roadmap ───────────────────────────────────────────────────────
+.reveal .pipe-box {
+  flex: 1; padding: 0.5em 0.4em; border-radius: 8px; border: 2px solid;
+  text-align: center; transition: opacity 0.3s, box-shadow 0.3s;
+}
+.reveal .pipe-arrow { color: rgba(34,211,238,0.35); font-size:1.0em; align-self:center; flex-shrink:0; }
+.reveal .pipe-uc { flex:1; padding:0.3em 0.55em; border-radius:6px; border:1px solid rgba(34,211,238,0.28); background:rgba(34,211,238,0.04); transition: opacity 0.3s, box-shadow 0.3s; }
+.reveal .pipe-uc-title { font-size:0.66em; font-weight:600; color:#22d3ee; }
+.reveal .pipe-uc-desc { font-size:0.58em; color:#475569; margin-top:0.1em; }
+.reveal .pipe-box.pipe-dim, .reveal .pipe-uc.pipe-dim { opacity: 0.15; }
+.reveal .pipe-box.pipe-active { opacity:1; box-shadow:0 0 20px var(--pipe-glow, rgba(34,211,238,0.45)); filter:brightness(1.15); }
+.reveal .pipe-uc.pipe-active { opacity:1; box-shadow:0 0 12px rgba(34,211,238,0.35); }
+

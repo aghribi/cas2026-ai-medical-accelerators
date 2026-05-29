@@ -162,4 +162,31 @@
     dot.style.display = 'none';
   }, true);
 })();
+
+// ── ML pipeline stage highlighting ───────────────────────────────────────────
+(function () {
+  function applyPipeState(slide) {
+    if (!slide) return;
+    if (!slide.querySelector('.pipe-box')) return;
+    var active = slide.querySelector('.fragment.current-visible.current-fragment[data-pipe-highlight]');
+    var boxes = slide.querySelectorAll('.pipe-box, .pipe-uc');
+    if (!active) {
+      boxes.forEach(function(b){ b.classList.remove('pipe-dim','pipe-active'); });
+      return;
+    }
+    var pipes = active.getAttribute('data-pipe-highlight').split(',').map(function(s){return s.trim();});
+    boxes.forEach(function(b){
+      var n = b.getAttribute('data-pipe');
+      if (pipes.indexOf(n) !== -1) { b.classList.remove('pipe-dim'); b.classList.add('pipe-active'); }
+      else { b.classList.remove('pipe-active'); b.classList.add('pipe-dim'); }
+    });
+  }
+  Reveal.on('fragmentshown',  function(e){ var s=e.fragment.closest('section'); setTimeout(function(){applyPipeState(s);},0); });
+  Reveal.on('fragmenthidden', function(e){ var s=e.fragment.closest('section'); setTimeout(function(){applyPipeState(s);},0); });
+  Reveal.on('slidechanged', function(e){
+    if(e.previousSlide){ e.previousSlide.querySelectorAll('.pipe-box,.pipe-uc').forEach(function(b){b.classList.remove('pipe-dim','pipe-active');}); }
+    applyPipeState(e.currentSlide);
+  });
+  Reveal.on('ready', function(e){ applyPipeState(e.currentSlide); });
+})();
 </script>
