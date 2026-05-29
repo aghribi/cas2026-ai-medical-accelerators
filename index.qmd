@@ -289,43 +289,97 @@ The Mark 1 Perceptron at Cornell learned to recognise patterns from photographs.
 
 ## AI winters and the deep learning renaissance
 
-::: {.col-left}
+:::: {.columns style="margin-top:0.2em; gap:1.2em;"}
+::: {.column width="36%"}
 
-::: {.highlight-box}
-**1969 — Minsky & Papert**
-
-Proved the perceptron cannot solve XOR.
-Neural networks enter a decade-long *first winter*.
+::: {.fragment .highlight-box style="font-size:0.78em; margin-bottom:0.3em;"}
+**1969 — First winter**
+Minsky & Papert prove perceptron cannot solve XOR.
 :::
 
-::: {.highlight-box style="margin-top: 0.6em;"}
-**1986 — Rumelhart, Hinton, Williams**
-
-Backpropagation: multi-layer networks can learn any function.
-Second spring — then a second winter in the 1990s.
+::: {.fragment .highlight-box style="font-size:0.78em; margin-bottom:0.3em;"}
+**1986 — Backpropagation**
+Gradients through layers — the key mathematical unlock.
 :::
 
-:::
-
-::: {.col-right}
-
-::: {.key-result}
-**2012 — AlexNet** wins ImageNet by 10 percentage points.
-
-The current era of deep learning begins.
-:::
-
-::: {.key-result style="margin-top: 0.8em;"}
-From a single neuron in 1957 to GPT-4 in 2023 — the same mathematical idea, scaled and stacked.
+::: {.fragment .key-result style="font-size:0.78em; margin:0.3em 0 0 0;"}
+**2012 — AlexNet** cuts ImageNet error by 10 pp.
+Same idea, scaled. Deep learning era begins.
 :::
 
 :::
+::: {.column width="62%"}
 
-::: {.clearfix}
+```{python}
+#| echo: false
+#| eval: true
+
+import plotly.graph_objects as go
+
+events = [
+    (1943, "McCulloch\n& Pitts", "#475569", 10),
+    (1957, "Perceptron", "#22d3ee", 12),
+    (1969, "1st Winter\n(XOR)", "#f87171", 14),
+    (1974, "Backprop\n(Werbos)", "#94a3b8", 10),
+    (1986, "Backprop\npopularised", "#22d3ee", 14),
+    (1995, "2nd Winter\n(SVMs win)", "#f87171", 14),
+    (2006, "Deep Belief\nNets", "#94a3b8", 10),
+    (2012, "AlexNet\n★", "#fb923c", 18),
+    (2017, "Transformer", "#a78bfa", 14),
+    (2023, "GPT-4\nLLMs", "#fb923c", 16),
+]
+
+fig = go.Figure()
+
+# Winter shading
+for x0, x1 in [(1969, 1985), (1995, 2005)]:
+    fig.add_shape(type="rect", x0=x0, x1=x1, y0=0.3, y1=0.7,
+                  fillcolor="rgba(248,113,113,0.07)",
+                  line=dict(color="rgba(248,113,113,0.2)", width=1, dash="dot"))
+
+fig.add_annotation(x=1977, y=0.73, text="1st winter",
+    font=dict(size=9, color="#f87171"), showarrow=False)
+fig.add_annotation(x=2000, y=0.73, text="2nd winter",
+    font=dict(size=9, color="#f87171"), showarrow=False)
+
+# Timeline baseline
+fig.add_shape(type="line", x0=1940, x1=2026, y0=0.5, y1=0.5,
+              line=dict(color="#1e3a5a", width=2))
+
+for year, label, color, size in events:
+    fig.add_trace(go.Scatter(
+        x=[year], y=[0.5],
+        mode="markers+text",
+        marker=dict(size=size, color=color, opacity=0.9,
+                    line=dict(color="rgba(255,255,255,0.2)", width=1)),
+        text=[label],
+        textposition="top center" if year not in (1969, 1995) else "bottom center",
+        textfont=dict(size=9, color=color if color != "#475569" else "#64748b"),
+        showlegend=False,
+    ))
+
+fig.update_layout(
+    height=310,
+    paper_bgcolor="#0d1b2a", plot_bgcolor="#0d1b2a",
+    xaxis=dict(range=[1938, 2026], showgrid=False,
+               tickvals=[1943,1957,1969,1986,1995,2012,2017,2023],
+               ticktext=["1943","1957","1969","1986","1995","2012","2017","2023"],
+               tickfont=dict(size=9, color="#64748b"),
+               tickangle=-45),
+    yaxis=dict(visible=False, range=[0.1, 1.0]),
+    margin=dict(l=5, r=5, t=25, b=50),
+    showlegend=False,
+    title=dict(text="70 years from threshold logic to large language models",
+               font=dict(size=10, color="#475569"), x=0.5),
+)
+fig
+```
+
 :::
+::::
 
 ::: notes
-The Minsky-Papert result was a setback, but the real fix was the sigmoid activation function — a smooth, differentiable non-linearity that replaced the binary threshold. With a differentiable activation, gradients can flow back through multiple layers, making backpropagation tractable. A step function has zero gradient almost everywhere; you cannot train through it.
+The Minsky-Papert result was a setback — XOR requires a hidden layer, which the perceptron lacked. The real fix was the sigmoid: a smooth, differentiable activation that lets gradients flow backward through multiple layers. A step function has zero gradient almost everywhere. Backprop was actually derived by Werbos in 1974 but ignored; Rumelhart, Hinton & Williams popularised it in 1986. The second winter was driven by SVMs and kernel methods outperforming neural nets on small datasets. AlexNet won on GPUs — the compute unlock, not a conceptual breakthrough.
 :::
 
 ---
@@ -516,7 +570,7 @@ fig.add_annotation(x=-1.3, y=-1.1, text="energy<br>minimum",
     showarrow=True, ax=-38, ay=22,
     arrowcolor="#475569", arrowwidth=1.2)
 fig.update_layout(
-    height=330, autosize=True,
+    height=270, autosize=True,
     paper_bgcolor="#0d1b2a", plot_bgcolor="#0d1b2a",
     xaxis=dict(showgrid=False, showticklabels=False, zeroline=False),
     yaxis=dict(showgrid=False, showticklabels=False, zeroline=False),
@@ -531,29 +585,20 @@ fig
 :::
 ::: {.column width="44%"}
 
-::: {.highlight-box style="margin-bottom:0.2em; font-size:0.75em;"}
-**① Intuition — ball rolling into a valley**
-
-Memories are stored as **energy minima** (blue wells).
-Give a noisy or incomplete input → the network rolls
-downhill step by step → arrives at the nearest stored pattern.
+::: {.highlight-box style="margin-bottom:0.18em; font-size:0.73em;"}
+**① Ball in a valley** — memories are energy minima.
+Noisy input rolls downhill → arrives at nearest stored pattern.
 :::
 
-::: {.highlight-box style="margin-bottom:0.2em; font-size:0.75em;"}
-**② Mechanism — spin-by-spin update**
-
-$s_i \leftarrow \text{sign}(\sum_j w_{ij} s_j)$
+::: {.highlight-box style="margin-bottom:0.18em; font-size:0.73em;"}
+**② Spin update** — $s_i \leftarrow \text{sign}(\sum_j w_{ij} s_j)$
 
 Energy decreases at every step: **guaranteed convergence**.
-Weights $w_{ij} = \frac{1}{N}\sum_\mu \xi_i^\mu \xi_j^\mu$ encode the memories.
 :::
 
-::: {.key-result .fragment style="font-size:0.75em; margin:0.2em 0;"}
-**③ Limit — capacity ≈ 0.14 N patterns**
-
-N neurons → at most ~0.14N memories stored cleanly.
-Beyond this threshold retrieval fails **catastrophically**
-(a sharp phase transition, not a gradual degradation).
+::: {.key-result .fragment style="font-size:0.73em; margin:0.18em 0 0 0;"}
+**③ Capacity ≈ 0.14 N** — beyond this, retrieval fails
+**catastrophically** (sharp phase transition, not gradual).
 :::
 
 :::
@@ -1091,41 +1136,48 @@ fig
 
 ## The problem: rare faults, no labels
 
-::: {.col-left}
+:::: {.columns style="margin-top:0.2em; gap:1.5em;"}
+::: {.column width="42%"}
 
+::: {.highlight-box style="font-size:0.78em; margin-bottom:0.35em;"}
 Every RF pulse → one **IQ waveform** per cavity at ~1 kHz.
+Clinical machines are **safe by design** — faults are rare.
+:::
 
-- Clinical machines are **safe by design** → faults are rare
-- Supervised classifiers need thousands of fault examples per class
+::: {.highlight-box style="font-size:0.78em; margin-bottom:0.35em;"}
+Supervised classifiers need thousands of labelled fault examples per class — **unavailable** in clinical operation.
+:::
 
 ::: {.fragment}
-::: {.key-result style="margin-top: 0.6em;"}
-**Solution:** autoencoder on normal pulses only.
+::: {.key-result style="font-size:0.78em; margin-top:0.35em;"}
+**Solution:** train on normal pulses only.
 Anomaly score = reconstruction error.
 :::
 :::
 
 :::
+::: {.column width="56%"}
 
-::: {.col-right}
+::: {style="font-size:0.78em; font-weight:600; color:#22d3ee; margin-bottom:0.3em;"}
+Four fault classes — superconducting cavity
+:::
 
-**Four fault classes in a superconducting cavity:**
+| Class | Signature |
+|---|---|
+| **Normal** | Clean trapezoid · Q ≈ 0 |
+| **Quench** | Sudden drop mid flat-top |
+| **Detuning** | Off-resonance · large Q |
+| **Multipacting** | Oscillations on flat-top |
 
-- **Normal** — clean trapezoidal I, Q ≈ 0
-- **Quench** — sudden drop mid flat-top
-- **Detuning** — cavity off-resonance, large Q signal
-- **Multipacting** — oscillations on the flat-top
-
-::: {.fragment style="margin-top: 0.8em;"}
-::: {.highlight-box}
-No fault labels required for training.
+::: {.fragment}
+::: {.key-result style="font-size:0.78em; margin-top:0.5em;"}
+No fault labels needed for training.
 :::
 :::
 
 :::
+::::
 
-::: {.clearfix}
-:::
 
 ---
 
@@ -1858,35 +1910,37 @@ Federated learning: each site trains locally, shares only model updates — pres
 
 ## Open problems
 
-::: {.col-left}
+:::: {.columns style="margin-top:0.3em; gap:1em;"}
+::: {.column width="52%"}
 
-::: {.highlight-box style="margin-bottom: 0.5em;"}
-**Data scarcity** — faults are rare by design; transfer from research to clinical is unsolved.
+::: {.fragment .highlight-box style="font-size:0.78em; margin-bottom:0.35em;"}
+**⚗ Data scarcity**
+Faults are rare by design. Research→clinical transfer unsolved.
 :::
 
-::: {.highlight-box}
-**Cross-facility transfer** — a model from Centre A rarely works at Centre B; domain adaptation needed.
-:::
-
-:::
-
-::: {.col-right}
-
-::: {.highlight-box style="margin-bottom: 0.5em;"}
-**Explainability** — EU AI Act classifies control-loop AI as high risk; auditable decisions required.
-:::
-
-::: {.highlight-box}
-**Real-time integration** — embedding PyTorch into proprietary clinical systems (Varian, Elekta) is non-trivial.
+::: {.fragment .highlight-box style="font-size:0.78em; margin-bottom:0;"}
+**⚖ Explainability**
+EU AI Act: control-loop AI = high-risk. Auditable decisions required.
 :::
 
 :::
+::: {.column width="46%"}
 
-::: {.clearfix}
+::: {.fragment .highlight-box style="font-size:0.78em; margin-bottom:0.35em;"}
+**🔁 Cross-facility transfer**
+Model from Centre A rarely works at Centre B. Domain adaptation needed.
 :::
 
-::: {.key-result style="margin-top: 0.6em;"}
-Active research problems — not blockers. AI is already delivering value in clinical operations today.
+::: {.fragment .highlight-box style="font-size:0.78em; margin-bottom:0;"}
+**⚙ Real-time integration**
+Embedding PyTorch into Varian / Elekta systems is non-trivial.
+:::
+
+:::
+::::
+
+::: {.key-result style="font-size:0.78em; margin-top:0.55em;"}
+Active research — not blockers. AI delivers value in clinical operations **today**.
 :::
 
 <div class="fragment slide-callout-overlay">
@@ -1905,31 +1959,23 @@ EU AI Act (2024) classifies control-loop AI on clinical machines as <em>high-ris
 
 ## What comes next — advanced AI for accelerators
 
-:::: {.columns style="margin-top:0.25em; gap:1.5em;"}
-::: {.column width="38%"}
+:::: {.columns style="margin-top:0.3em; gap:1.5em;"}
+::: {.column width="36%"}
 
-::: {.fragment .highlight-box style="font-size:0.78em; margin-bottom:0.28em;"}
-**Foundation models** — large pretrained nets fine-tuned per facility; cross-machine transfer without retraining.
+::: {.fragment .highlight-box style="font-size:0.78em; margin-bottom:0.4em;"}
+**Foundation models** — pretrained on multi-facility data; fine-tune per machine in minutes.
 :::
 
-::: {.fragment .highlight-box style="font-size:0.78em; margin-bottom:0.28em;"}
-**PINNs** — beam dynamics equations embedded in the loss; physics constraints hold far from training data.
+::: {.fragment .highlight-box style="font-size:0.78em; margin-bottom:0.4em;"}
+**Reinforcement learning** — closed-loop policy learned on the real machine. Live at ESRF, SNS, proton therapy.
 :::
 
-::: {.fragment .highlight-box style="font-size:0.78em; margin-bottom:0.28em;"}
-**Transformers** — attention on beam time-series; handles non-stationary, correlated signals.
-:::
-
-::: {.fragment .highlight-box style="font-size:0.78em; margin-bottom:0.28em;"}
-**Reinforcement learning** — closed-loop policy; live at ESRF, SNS, proton therapy facilities.
-:::
-
-::: {.fragment .highlight-box style="font-size:0.78em; margin-bottom:0;"}
-**Generative models** — VAEs / diffusion synthesise fault waveforms; solves clinical-machine data scarcity.
+::: {.fragment .key-result style="font-size:0.78em; margin-top:0.1em;"}
+**Generative models** — diffusion / VAEs synthesise rare fault waveforms. Directly solves data scarcity.
 :::
 
 :::
-::: {.column width="60%"}
+::: {.column width="62%"}
 
 ```{python}
 #| echo: false
@@ -1997,45 +2043,38 @@ This is an appetizer, not a full menu. Foundation models (e.g. CERN's accelerato
 
 ## Stay connected — opportunities
 
-::: {style="display:flex; gap:0.55em; margin-top:0.3em;"}
-::: {.highlight-box style="flex:1; font-size:0.80em; padding:0.55em 0.75em; margin:0;"}
-**RAISE** — Resource for AI Science in Europe
+:::: {.columns style="margin-top:0.4em; gap:1em;"}
+::: {.column width="52%"}
 
-€107 M Horizon Europe pilot · launched Nov 2025
-Virtual institute — "CERN for AI" · 19 partner countries
-
-<a href="https://research-and-innovation.ec.europa.eu/strategy/strategy-research-and-innovation/our-digital-future/european-ai-science-strategy/raise-resource-ai-science-europe_en" style="color:#22d3ee; font-size:0.88em;">research-and-innovation.ec.europa.eu → RAISE</a>
+::: {.fragment .highlight-box style="font-size:0.76em; padding:0.55em 0.8em; margin-bottom:0.45em;"}
+**RAISE** — EU "CERN for AI"
+€107 M · Horizon Europe pilot · 19 countries
+<a href="https://research-and-innovation.ec.europa.eu/strategy/strategy-research-and-innovation/our-digital-future/european-ai-science-strategy/raise-resource-ai-science-europe_en" style="color:#22d3ee; font-size:0.82em;">ec.europa.eu → RAISE</a>
 :::
 
-::: {.highlight-box style="flex:1; font-size:0.80em; padding:0.55em 0.75em; margin:0;"}
-**GENESIS Mission** — US Dept. of Energy
-
-$293 M for AI × national science challenges
-17 DOE national laboratories · launched Nov 2025
-
-<a href="https://www.energy.gov/undersecretaryforscience/genesis-mission/genesis-mission" style="color:#22d3ee; font-size:0.88em;">energy.gov → Genesis Mission</a>
-:::
+::: {.fragment .highlight-box style="font-size:0.76em; padding:0.55em 0.8em; margin-bottom:0;"}
+**RL4AA** — Workshop & challenge
+2026 edition: **Liverpool** · tutorials · open datasets
+<a href="https://rl4aa.github.io/" style="color:#22d3ee; font-size:0.82em;">rl4aa.github.io</a>
 :::
 
-::: {style="display:flex; gap:0.55em; margin-top:0.55em;"}
-::: {.highlight-box style="flex:1; font-size:0.80em; padding:0.55em 0.75em; margin:0;"}
-**RL4AA** — Reinforcement Learning for Autonomous Accelerators
+:::
+::: {.column width="46%"}
 
-Annual workshop + challenge · 2026 edition: **Liverpool**
-Community hub: tutorials, datasets, open challenges
-
-<a href="https://rl4aa.github.io/" style="color:#22d3ee; font-size:0.88em;">rl4aa.github.io</a>
+::: {.fragment .highlight-box style="font-size:0.76em; padding:0.55em 0.8em; margin-bottom:0.45em;"}
+**GENESIS** — US DOE mission
+$293 M · 17 national laboratories · launched 2025
+<a href="https://www.energy.gov/undersecretaryforscience/genesis-mission/genesis-mission" style="color:#22d3ee; font-size:0.82em;">energy.gov → Genesis</a>
 :::
 
-::: {.highlight-box style="flex:1; font-size:0.80em; padding:0.55em 0.75em; margin:0;"}
-**AISSAI Hackathon** — AI for Particle Accelerators
-
-Hands-on school + hackathon · **Oct 11–16 2026**
-Organised at IN2P3 · open to students and researchers
-
-<a href="https://indico.in2p3.fr/event/39704/" style="color:#22d3ee; font-size:0.88em;">indico.in2p3.fr/event/39704</a>
+::: {.fragment .highlight-box style="font-size:0.76em; padding:0.55em 0.8em; margin-bottom:0;"}
+**AISSAI Hackathon** — Hands-on school
+**Oct 11–16 2026** · IN2P3 · open to all
+<a href="https://indico.in2p3.fr/event/39704/" style="color:#22d3ee; font-size:0.82em;">indico.in2p3.fr/event/39704</a>
 :::
+
 :::
+::::
 
 ::: notes
 RAISE: the full EU AI in Science strategy aims to double Horizon Europe AI funding to €3B/year, with RAISE as the flagship virtual institute. The €107M is the initial Horizon Europe pilot budget (WP26-27). GENESIS: the $293M is the DOE Request for Applications; an additional $320M was announced for AI infrastructure (American Science Cloud). RL4AA 2027 is not yet announced.
