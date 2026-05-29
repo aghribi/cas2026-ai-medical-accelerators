@@ -531,7 +531,7 @@ fig
 :::
 ::: {.column width="44%"}
 
-::: {.highlight-box style="margin-bottom:0.4em; font-size:0.75em;"}
+::: {.highlight-box style="margin-bottom:0.2em; font-size:0.75em;"}
 **① Intuition — ball rolling into a valley**
 
 Memories are stored as **energy minima** (blue wells).
@@ -539,7 +539,7 @@ Give a noisy or incomplete input → the network rolls
 downhill step by step → arrives at the nearest stored pattern.
 :::
 
-::: {.highlight-box style="margin-bottom:0.4em; font-size:0.75em;"}
+::: {.highlight-box style="margin-bottom:0.2em; font-size:0.75em;"}
 **② Mechanism — spin-by-spin update**
 
 $s_i \leftarrow \text{sign}(\sum_j w_{ij} s_j)$
@@ -548,7 +548,7 @@ Energy decreases at every step: **guaranteed convergence**.
 Weights $w_{ij} = \frac{1}{N}\sum_\mu \xi_i^\mu \xi_j^\mu$ encode the memories.
 :::
 
-::: {.key-result .fragment style="font-size:0.75em;"}
+::: {.key-result .fragment style="font-size:0.75em; margin:0.2em 0;"}
 **③ Limit — capacity ≈ 0.14 N patterns**
 
 N neurons → at most ~0.14N memories stored cleanly.
