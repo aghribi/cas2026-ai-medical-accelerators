@@ -82,7 +82,7 @@ AccML review: [aghribi.github.io/acc-ml-living-review](https://aghribi.github.io
 
 ::: {.col-right style="padding-top: 0.3em;"}
 
-::: {.highlight-box}
+::: {.fragment .highlight-box style="font-size:0.80em;"}
 **Three companion notebooks** — open on Colab now:
 
 - `01_fault_detection` — autoencoder on RF waveforms
@@ -215,12 +215,12 @@ Note the two "winters" (after 1969 and after the late 1980s) — periods when fu
 
 **Warren McCulloch** & **Walter Pitts** — first mathematical model of a neuron, mapping neural firing onto Boolean logic (1943).
 
-::: {style="font-size:0.76em; margin:0.4em 0; line-height:1.6;"}
+::: {.fragment style="font-size:0.76em; margin:0.4em 0; line-height:1.6;"}
 **How a neuron works:**
 
 - **Dendrites** collect incoming signals from neighbouring neurons
-- **Soma** (cell body) integrates them as a weighted sum $\sum w_i x_i$
-- A neuron **fires** if the sum exceeds a threshold θ, then sends the output down the **axon** to the next neurons
+- **Soma** integrates them as a weighted sum $\sum w_i x_i$
+- Neuron **fires** if the sum exceeds threshold θ → signal propagates down the **axon**
 :::
 
 :::
@@ -435,7 +435,7 @@ As accelerator physicists, we think in terms of Hamiltonians, phase spaces, and 
 ## Hopfield networks — neurons as spins
 
 :::: {.columns style="margin-top:0.2em;"}
-::: {.column width="50%"}
+::: {.column width="55%"}
 
 The same mathematics describes **Ising spins** and **neural networks**:
 
@@ -454,7 +454,7 @@ $$w_{ij} = \frac{1}{N}\sum_\mu \xi_i^\mu \xi_j^\mu$$
 :::
 
 :::
-::: {.column width="48%"}
+::: {.column width="43%"}
 
 ```{python}
 #| echo: false
@@ -654,25 +654,21 @@ Data · Features · Method selection · Pipeline
 ## Data quality — garbage in, garbage out
 
 ::: {style="display:flex; gap:0.35em; margin:0.15em 0 0.4em 0;"}
-::: {.highlight-box style="flex:1; padding:0.35em 0.55em; font-size:0.80em; margin:0;"}
+::: {.highlight-box style="flex:1; padding:0.35em 0.55em; font-size:0.78em; margin:0;"}
 **① Clean**
-
-Remove corrupted pulses, stuck sensors, dropouts
+Remove corrupted pulses, stuck sensors, dropouts.
 :::
-::: {.highlight-box style="flex:1; padding:0.35em 0.55em; font-size:0.80em; margin:0;"}
+::: {.fragment .highlight-box style="flex:1; padding:0.35em 0.55em; font-size:0.78em; margin:0;"}
 **② Synchronise**
-
-Align timestamps across RF, BPM, power supplies
+Align timestamps across RF, BPM, power supplies.
 :::
-::: {.highlight-box style="flex:1; padding:0.35em 0.55em; font-size:0.80em; margin:0;"}
+::: {.fragment .highlight-box style="flex:1; padding:0.35em 0.55em; font-size:0.78em; margin:0;"}
 **③ Normalise**
-
-Scale to [−1, 1]; prevents one channel dominating
+Scale to [−1, 1] — prevents one channel dominating.
 :::
-::: {.highlight-box style="flex:1; padding:0.35em 0.55em; font-size:0.80em; margin:0;"}
+::: {.fragment .highlight-box style="flex:1; padding:0.35em 0.55em; font-size:0.78em; margin:0;"}
 **④ Balance**
-
-SRF faults < 0.1 % of pulses; naïve model learns to ignore them
+SRF faults < 0.1 % of pulses — naïve model learns to ignore them.
 :::
 :::
 
@@ -994,17 +990,14 @@ fig
 
 ::: {style="font-size: 0.62em;"}
 
-| Year | Facility | AI approach | Impact |
-|------|----------|-------------|--------|
-| 1993 | CERN LEP | Neural network orbit correction | First ML system in live operation |
-| 2006–2012 | SLAC, DESY | SVMs, shallow networks — exploratory | Proof-of-concept studies, no production |
-| 2016 | Community | Edelen survey — 50+ ML papers reviewed | Revival of interest across labs |
-| 2018 | SLAC LCLS | Bayesian optimisation (BO) in production | −10% beam loss, ~50 machine evaluations |
-| 2019 | JLab CEBAF | Autoencoder on SRF IQ waveforms | Cavity fault detection — no fault labels needed |
-| 2021 | SLAC LCLS-II | Cheetah differentiable beam simulator | 10³–10⁵× faster than tracking codes |
-| 2022 | ESRF, SNS | Reinforcement learning for orbit/tune | Autonomous closed-loop beam control |
-| 2024 | KIT KARA | Anomaly detection + AI energy management | **−30% energy footprint** on real storage ring |
-| 2026 | 19 institutions | TwinRISE digital twin programme | Production digital twins for proton therapy |
+| Year | Facility | Approach | Impact |
+|------|----------|----------|--------|
+| 1993 | CERN LEP | Neural network orbit correction | First ML in live accelerator operation |
+| 2018 | SLAC LCLS | Bayesian optimisation in production | −10% beam loss · ~50 evaluations |
+| 2019 | JLab CEBAF | Autoencoder on SRF IQ waveforms | Fault detection without labels |
+| 2021 | SLAC LCLS-II | Cheetah differentiable simulator | 10³–10⁵× faster than tracking codes |
+| 2022 | ESRF, SNS | Reinforcement learning, orbit/tune | Autonomous closed-loop beam control |
+| 2024 | KIT KARA | Anomaly detection + energy management | **−30% energy footprint** on real ring |
 
 :::
 
@@ -1351,8 +1344,9 @@ fig.update_layout(barmode="overlay", height=360, autosize=True,
 fig
 ```
 
-::: {.key-result style="margin-top: 0.4em; font-size: 1.05em; text-align: center;"}
-**ROC-AUC > 0.99**
+::: {style="text-align:center; margin-top:0.4em;"}
+[0.99]{.metric}<br>
+[ROC-AUC — threshold-independent fault detection]{.metric-label}
 :::
 
 :::
@@ -1546,8 +1540,8 @@ beam_out = segment.track(beam_in)
 - Same API whether virtual machine or real machine
 :::
 
-::: {.key-result style="margin-top: 0.8em; font-size: 0.9em;"}
-σ_x = 1.00 mm (input beam) · σ_x + σ_y = 4.83 mm (no quads)
+::: {.highlight-box style="margin-top: 0.8em; font-size: 0.78em;"}
+Baseline: σ_x = 1.00 mm · σ_x + σ_y = 4.83 mm (no quads)
 :::
 
 :::
@@ -1855,8 +1849,16 @@ fig
 ::: {.clearfix}
 :::
 
-::: {.key-result style="margin-top: 0.4em; text-align: center; font-size: 1.05em;"}
-R² = 1.0000 · MAE = 0.001 mm · **586× speedup**
+::: {style="display:flex; gap:2.5em; justify-content:center; margin-top:0.45em;"}
+::: {style="text-align:center;"}
+[1.0000]{.metric}<br>[R²]{.metric-label}
+:::
+::: {style="text-align:center;"}
+[0.001 mm]{.metric}<br>[MAE]{.metric-label}
+:::
+::: {style="text-align:center;"}
+[586×]{.metric}<br>[speedup]{.metric-label}
+:::
 :::
 
 ---
@@ -1872,39 +1874,35 @@ R² = 1.0000 · MAE = 0.001 mm · **586× speedup**
 
 ## From surrogate to digital twin
 
-::: {.col-left}
+:::: {.columns style="margin-top:0.25em; gap:1.5em;"}
+::: {.column width="44%"}
 
-**Surrogate** answers:
-*"What does the simulation predict?"*
-
-**Digital twin** answers:
-*"What is my actual machine doing — right now?"*
-
-::: {.highlight-box style="margin-top: 0.8em;"}
-Digital twin = surrogate + live sensor data + continuous update loop
+::: {.highlight-box style="font-size:0.78em; margin-bottom:0.4em;"}
+**Surrogate** — *"What does the simulation predict?"*
 :::
 
-::: {.key-result style="margin-top: 0.8em;"}
-Applications: virtual commissioning · adaptive QA · cross-facility transfer
+::: {.fragment .key-result style="font-size:0.78em; margin-bottom:0.4em;"}
+**Digital twin** — *"What is my actual machine doing right now?"*
+Surrogate + live sensors + continuous update loop.
+:::
+
+::: {.fragment .highlight-box style="font-size:0.78em;"}
+**Applications:** virtual commissioning · adaptive QA · cross-facility transfer
 :::
 
 :::
+::: {.column width="54%"}
 
-::: {.col-right style="padding-top: 0.5em;"}
-
-::: {.key-result}
+::: {.fragment .key-result style="font-size:0.78em;"}
 **TwinRISE** (Horizon Europe 2026–2030)
 
-Federated digital twins for accelerators
-across **19 institutions** in **7 countries**
+Federated digital twins · **19 institutions** · **7 countries**
 
-Federated learning: each site trains locally, shares only model updates — preserves data sovereignty for clinical sites.
+Each site trains locally, shares only model updates — data sovereignty preserved.
 :::
 
 :::
-
-::: {.clearfix}
-:::
+::::
 
 ---
 
