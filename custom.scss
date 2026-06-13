@@ -62,6 +62,12 @@ $code-bg:               rgba(34, 211, 238, 0.06);
   font-size: 0.72em;
 }
 
+// Code in float columns: reduce further so long blocks stay on-slide
+.reveal .col-left pre,
+.reveal .col-right pre {
+  font-size: 0.56em;
+}
+
 // Remove reveal.js default top-margin on pre/cell so code aligns with
 // the first element of the right column (highlight-box or Plotly figure)
 .reveal .col-left > .cell,
@@ -194,6 +200,14 @@ $code-bg:               rgba(34, 211, 238, 0.06);
   pointer-events: none;
 }
 
+// ── Chapter slides — light background overrides ───────────────────────────────
+// Section-divider slides use #e2e8f0; heading must flip to dark (cyan is unreadable on light)
+.reveal section[data-background-color="#e2e8f0"] h1,
+.reveal section[data-background-color="#e2e8f0"] h2,
+.reveal section[data-background-color="#e2e8f0"] h3 {
+  color: #0f172a !important;
+}
+
 // ── Progress bar ──────────────────────────────────────────────────────────────
 .reveal .progress { color: #22d3ee; }
 
@@ -208,8 +222,8 @@ $code-bg:               rgba(34, 211, 238, 0.06);
   max-width: 100%;
 }
 
-// ── iframes — full height ─────────────────────────────────────────────────────
-.reveal iframe {
+// ── iframes — content only (not background layer) ────────────────────────────
+.reveal .slides iframe {
   display: block;
   border-radius: 6px;
 }
@@ -307,7 +321,7 @@ $code-bg:               rgba(34, 211, 238, 0.06);
   padding: 0.75em 1.3em 0.85em 1.3em;
 }
 
-// ── Lecture-focus highlight (yellow) for slide 12 ────────────────────────────
+// ── Lecture-focus highlight (yellow) — slide 12 boxes + slide 18 bullets ─────
 .reveal .highlight-box.lecture-highlight {
   background: rgba(251, 191, 36, 0.15) !important;
   border-color: #fbbf24 !important;
@@ -317,16 +331,11 @@ $code-bg:               rgba(34, 211, 238, 0.06);
   color: #fbbf24;
 }
 
-// ── ML pipeline roadmap ───────────────────────────────────────────────────────
-.reveal .pipe-box {
-  flex: 1; padding: 0.5em 0.4em; border-radius: 8px; border: 2px solid;
-  text-align: center; transition: opacity 0.3s, box-shadow 0.3s;
+// When #box-fault / #box-tuning / #box-surrogate are plain fragment divs (slide 18)
+.reveal .fragment.lecture-highlight.visible:not(.current-fragment) {
+  opacity: 1 !important;
 }
-.reveal .pipe-arrow { color: rgba(34,211,238,0.35); font-size:1.0em; align-self:center; flex-shrink:0; }
-.reveal .pipe-uc { flex:1; padding:0.3em 0.55em; border-radius:6px; border:1px solid rgba(34,211,238,0.28); background:rgba(34,211,238,0.04); transition: opacity 0.3s, box-shadow 0.3s; }
-.reveal .pipe-uc-title { font-size:0.66em; font-weight:600; color:#22d3ee; }
-.reveal .pipe-uc-desc { font-size:0.58em; color:#475569; margin-top:0.1em; }
-.reveal .pipe-box.pipe-dim, .reveal .pipe-uc.pipe-dim { opacity: 0.15; }
-.reveal .pipe-box.pipe-active { opacity:1; box-shadow:0 0 20px var(--pipe-glow, rgba(34,211,238,0.45)); filter:brightness(1.15); }
-.reveal .pipe-uc.pipe-active { opacity:1; box-shadow:0 0 12px rgba(34,211,238,0.35); }
+.reveal .fragment.lecture-highlight li {
+  color: #fbbf24 !important;
+}
 

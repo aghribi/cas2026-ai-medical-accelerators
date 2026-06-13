@@ -74,6 +74,71 @@
   });
 })();
 
+// ── Six-ways slide — full bar state machine ───────────────────────────────────
+// Bar states: 0 = invisible, 1 = dim cyan, 2 = bright cyan (current), 3 = amber (lecture focus)
+// Fragments run most→least mature: fragment 0 = Fault detection (top, bar 5)
+//                                   fragment 5 = Digital twins  (bottom, bar 0)
+// barIndex(fi) = N-1-fi reverses fragment index to chart bar index
+// Fragment 6 = invisible trigger that turns bars 3,4,5 amber
+(function () {
+  var SLIDE_ID    = 'six-ways-ai-helps-accelerators-today';
+  var N           = 6;
+  var INVIS       = 'rgba(0,0,0,0)';
+  var DIM_CYAN    = 'rgba(34,211,238,0.28)';
+  var BRIGHT_CYAN = 'rgba(34,211,238,0.85)';
+  var BRIGHT_YEL  = 'rgba(251,191,36,0.85)';
+  var YELLOW_BARS = [3, 4, 5];  // bar indices: Surrogate models, Beam tuning, Fault detection
+
+  var barStates   = Array(N).fill(0);
+  var currentFrag = -1;
+
+  function bi(fi) { return N - 1 - fi; }   // fragment index → bar index
+
+  function stateColor(s) {
+    if (s === 1) return DIM_CYAN;
+    if (s === 2) return BRIGHT_CYAN;
+    if (s === 3) return BRIGHT_YEL;
+    return INVIS;
+  }
+
+  function redraw(slide) {
+    var el = slide ? slide.querySelector('.js-plotly-plot') : null;
+    if (!el || !el._fullData || !el._fullData[0]) return;
+    Plotly.restyle(el, { 'marker.color': [barStates.map(stateColor)] });
+  }
+
+  Reveal.on('fragmentshown', function (e) {
+    var slide = e.fragment.closest && e.fragment.closest('section');
+    if (!slide || slide.id !== SLIDE_ID) return;
+    var fi = +(e.fragment.getAttribute('data-fragment-index') || 0);
+    if (fi < N) {
+      if (currentFrag >= 0) barStates[bi(currentFrag)] = 1;
+      barStates[bi(fi)] = 2;
+      currentFrag = fi;
+    } else {
+      YELLOW_BARS.forEach(function (i) { barStates[i] = 3; });
+    }
+    redraw(slide);
+  });
+
+  Reveal.on('fragmenthidden', function (e) {
+    var slide = e.fragment.closest && e.fragment.closest('section');
+    if (!slide || slide.id !== SLIDE_ID) return;
+    var fi = +(e.fragment.getAttribute('data-fragment-index') || 0);
+    if (fi >= N) {
+      // Going back from the trigger: restore yellow bars to cyan states
+      YELLOW_BARS.forEach(function (i) {
+        barStates[i] = (i === bi(currentFrag)) ? 2 : 1;
+      });
+    } else {
+      barStates[bi(fi)] = 0;
+      currentFrag = fi - 1;
+      if (currentFrag >= 0) barStates[bi(currentFrag)] = 2;
+    }
+    redraw(slide);
+  });
+})();
+
 // ── Laser pointer — hold Q (keyboard) or toggle button (tablet) ──────────────
 (function () {
   // Shared dot element
@@ -163,30 +228,4 @@
   }, true);
 })();
 
-// ── ML pipeline stage highlighting ───────────────────────────────────────────
-(function () {
-  function applyPipeState(slide) {
-    if (!slide) return;
-    if (!slide.querySelector('.pipe-box')) return;
-    var active = slide.querySelector('.fragment.current-visible.current-fragment[data-pipe-highlight]');
-    var boxes = slide.querySelectorAll('.pipe-box, .pipe-uc');
-    if (!active) {
-      boxes.forEach(function(b){ b.classList.remove('pipe-dim','pipe-active'); });
-      return;
-    }
-    var pipes = active.getAttribute('data-pipe-highlight').split(',').map(function(s){return s.trim();});
-    boxes.forEach(function(b){
-      var n = b.getAttribute('data-pipe');
-      if (pipes.indexOf(n) !== -1) { b.classList.remove('pipe-dim'); b.classList.add('pipe-active'); }
-      else { b.classList.remove('pipe-active'); b.classList.add('pipe-dim'); }
-    });
-  }
-  Reveal.on('fragmentshown',  function(e){ var s=e.fragment.closest('section'); setTimeout(function(){applyPipeState(s);},0); });
-  Reveal.on('fragmenthidden', function(e){ var s=e.fragment.closest('section'); setTimeout(function(){applyPipeState(s);},0); });
-  Reveal.on('slidechanged', function(e){
-    if(e.previousSlide){ e.previousSlide.querySelectorAll('.pipe-box,.pipe-uc').forEach(function(b){b.classList.remove('pipe-dim','pipe-active');}); }
-    applyPipeState(e.currentSlide);
-  });
-  Reveal.on('ready', function(e){ applyPipeState(e.currentSlide); });
-})();
 </script>

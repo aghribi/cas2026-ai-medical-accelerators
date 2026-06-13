@@ -144,11 +144,15 @@ AI can keep that machine reliable, efficient, and well-characterised.
 Unsupervised, sample-efficient, and physics-informed approaches are not just preferences — they are requirements.
 :::
 
-# A Brief History of AI {.section-divider background-color="#0a1520"}
+# A Brief History of AI {.section-divider background-color="#e2e8f0" data-background-transition="zoom"}
 
-::: {style="color: #22d3ee; font-size: 1.2em; margin-top: 0.6em;"}
+::: {style="color: #1e3a5f; font-size: 1.2em; margin-top: 0.6em;"}
 From the first neuron to the Nobel Prize in Physics
 :::
+
+---
+
+## From neuron to Nobel Prize (1943–2024)
 
 ```{python}
 #| echo: false
@@ -658,69 +662,444 @@ As accelerator physicists we already speak this language.
 The connection between SGD and Langevin dynamics was formalised by Welling & Teh (2011). The Boltzmann machine (Ackley, Hinton & Sejnowski 1985) is a literal physical model. Phase transitions in learning (grokking) are an active research topic since Power et al. (2022). These connections mean accelerator physicists are naturally equipped to understand ML at a deep level — the toolkit is the same.
 :::
 
-# Practical Foundations {.section-divider background-color="#0a1520"}
+# AI Arrives at Accelerators {.section-divider background-color="#e2e8f0" data-background-transition="zoom"}
 
-::: {style="color: #22d3ee; font-size: 1.6em; font-weight: 800; margin-top: 0.5em;"}
+::: {style="color: #1e3a5f; font-size: 1.6em; font-weight: 800; margin-top: 0.5em;"}
+30 years from research to production
+:::
+
+::: {style="font-size: 1em; color: #334155;"}
+Milestones · applications · landscape
+:::
+
+---
+
+## 30 years of AI at accelerators
+
+<style>
+.ai-milestones table { width: auto !important; margin: 0 auto !important; min-width: 88%; }
+.ai-milestones td, .ai-milestones th { padding: 0.45em 1.1em !important; }
+</style>
+
+::: {.ai-milestones style="font-size: 0.66em; margin-top: 0.4em;"}
+
+| Year | Facility | Approach | Impact |
+|------|----------|----------|--------|
+| 1993 | CERN LEP | Neural network orbit correction | First ML in live accelerator operation |
+| 2018 | SLAC LCLS | Bayesian optimisation in production | −10% beam loss · ~50 evaluations |
+| 2019 | JLab CEBAF | Autoencoder on SRF IQ waveforms | Fault detection without labels |
+| 2021 | SLAC LCLS-II | Cheetah differentiable simulator | 10³–10⁵× faster than tracking codes |
+| 2022 | ESRF, SNS | Reinforcement learning, orbit/tune | Autonomous closed-loop beam control |
+| 2024 | KIT KARA | Anomaly detection + energy management | **−30% energy footprint** on real ring |
+
+:::
+
+::: {.slide-ref}
+Edelen et al., *IEEE TNS* 63 (2016) · Duris et al., *PRL* 124 (2020) · Kaiser et al., *PRAB* 27 (2024) · Ghribi et al., *EPN* 56 (2025)
+:::
+
+::: notes
+30 years from first NNs to production AI systems. The key inflection point is 2019: BO in production at LCLS (Duris+2020), ML-based model-independent stabilisation at ALS (Leemann+2019, PRL 123:194801), differentiable simulation with Cheetah (Kaiser+2024, PRAB). KARA result is not a simulation — measured on the real machine.
+:::
+
+---
+
+## AI in accelerators — concrete results
+
+:::: {.columns}
+
+::: {.column width="40%"}
+
+::: {.fragment .fade-in-then-semi-out style="margin: 0.6em 0; font-size:0.84em;"}
+**Fault detection** — CEBAF autoencoders on SRF IQ signals: **95% recall**, sub-ms latency, fully unsupervised
+:::
+
+::: {.fragment .fade-in-then-semi-out style="margin: 0.6em 0; font-size:0.84em;"}
+**Beam tuning** — Bayesian optimisation at LCLS: setup time from hours to **≈50 evaluations**; RL at ESRF runs closed-loop
+:::
+
+::: {.fragment .fade-in-then-semi-out style="margin: 0.6em 0; font-size:0.84em;"}
+**Simulation** — Cheetah replaces MAD-X at **10⁵× speedup**; KARA AI cuts ring energy use by **−30%** on the live machine
+:::
+
+::: {.fragment .fade-in-then-semi-out style="margin: 0.6em 0; font-size:0.84em;"}
+**Optimisation toolboxes** — Badger (SLAC) and Geoff wrap BO/GP for any beamline; deployed at SLAC, CERN, DESY
+:::
+
+:::
+
+::: {.column width="60%"}
+
+```{python}
+#| echo: false
+#| eval: true
+
+import plotly.graph_objects as go
+
+labels  = ['Badger + Geoff<br>opt. toolboxes',
+           'KARA<br>energy AI', 'Cheetah<br>simulation',
+           'LCLS<br>beam setup', 'CEBAF<br>fault detection']
+metrics = ['multi-facility', '−30% energy', '10⁵× faster', '~50 evaluations', '95% recall']
+values  = [0.88, 0.72, 1.0, 0.86, 0.95]
+colors  = ['rgba(34,211,238,0.55)'] * 5
+
+fig = go.Figure(go.Bar(
+    y=labels, x=values,
+    orientation='h',
+    marker=dict(color=colors, line=dict(color='#22d3ee', width=1.2)),
+    text=metrics, textposition='outside',
+    textfont=dict(color='#22d3ee', size=12),
+    width=0.52,
+))
+fig.update_layout(
+    height=420, autosize=True,
+    paper_bgcolor='#0d1b2a', plot_bgcolor='#111f30',
+    font=dict(color='#e2e8f0', size=11),
+    xaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[0, 1.65]),
+    yaxis=dict(showgrid=False, tickfont=dict(size=11)),
+    margin=dict(l=110, r=130, t=20, b=10),
+    showlegend=False,
+)
+fig
+```
+
+:::
+
+::::
+
+::: {.slide-ref}
+Tennant et al., *PRAB* 23 (2020) · Duris et al., *PRL* 124 (2020) · Kaiser et al., *PRAB* 27 (2024) · Ghribi et al., *EPN* 56 (2025) · Zhang et al., *IPAC* 2022 (Badger)
+:::
+
+::: notes
+These are production results, not simulations. CEBAF (JLab) has been running autoencoder-based SRF triage since 2019. LCLS BO is the Duris+2020 PRL paper — real shots. KARA is the Ghribi+2025 EPN result with measured ring energy reduction. Badger (SLAC) and Geoff are open-source optimisation plugin frameworks that let operators swap algorithms (BO, Nelder-Mead, RL) without rewriting beamline code; both are in active production use at multiple facilities.
+:::
+
+---
+
+## {.no-footer background-iframe="https://aghribi.github.io/acc-ml-living-review/" background-interactive="true"}
+
+::: notes
+This living review covers all ML applications in accelerator physics — updated continuously. It is the map of what has been done and what is open. Bookmark it.
+:::
+
+---
+
+## Six ways AI helps accelerators today
+
+:::: {.columns}
+
+::: {.column width="40%"}
+::: {style="font-size:0.78em; line-height:1.6;"}
+
+::: {.fragment .fade-in-then-semi-out #box-fault}
+- **Fault detection** — classify anomalous events before interlocks trigger
+:::
+
+::: {.fragment .fade-in-then-semi-out #box-tuning}
+- **Beam tuning** — find optimal settings with minimal beam time (< 50 evaluations)
+:::
+
+::: {.fragment .fade-in-then-semi-out #box-surrogate}
+- **Surrogate models** — replace slow tracking codes (10³–10⁵× speedup)
+:::
+
+::: {.fragment .fade-in-then-semi-out}
+- **Predictive maintenance** — forecast failures before they occur
+:::
+
+::: {.fragment .fade-in-then-semi-out}
+- **Adaptive control** — online reinforcement learning in the control loop
+:::
+
+::: {.fragment .fade-in-then-semi-out}
+- **Digital twins** — live virtual model of the actual machine, continuously updated
+:::
+
+<span class="fragment" id="lecture-focus-trigger" style="display:inline-block;width:0;height:0;overflow:hidden;"></span>
+
+:::
+:::
+
+::: {.column width="60%"}
+
+```{python}
+#| echo: false
+#| eval: true
+
+import plotly.graph_objects as go
+
+# Bottom-to-top: Digital twins (bar 0, least mature) → Fault detection (bar 5, most mature)
+# Fragment index matches bar index: fragment 0 → bar 0, ..., fragment 5 → bar 5
+ways      = ['Digital twins', 'Adaptive<br>control', 'Pred.<br>maintenance',
+             'Surrogate<br>models', 'Beam<br>tuning', 'Fault<br>detection']
+readiness = [3.5, 4.5, 4.2, 6.2, 7.2, 7.8]
+# All bars start invisible — JS state machine drives colors
+colors    = ['rgba(0,0,0,0)'] * 6
+
+fig = go.Figure(go.Bar(
+    y=ways, x=readiness,
+    orientation='h',
+    marker=dict(color=colors, line=dict(color='rgba(255,255,255,0.08)', width=0.5)),
+    width=0.60,
+))
+fig.add_shape(type='line', x0=5.5, x1=5.5, y0=-0.5, y1=5.5,
+    line=dict(color='rgba(34,211,238,0.35)', width=1.2, dash='dot'))
+fig.add_annotation(x=5.5, y=5.8, text='in production →',
+    showarrow=False, font=dict(size=9, color='#22d3ee'), xanchor='left')
+
+fig.update_layout(
+    height=560, autosize=True,
+    paper_bgcolor='#0d1b2a', plot_bgcolor='#111f30',
+    font=dict(color='#e2e8f0', size=10),
+    xaxis=dict(
+        title='Deployment readiness',
+        range=[0, 9.5],
+        tickvals=[2, 4, 6, 8],
+        ticktext=['concept', 'validated', 'production', 'mature'],
+        showgrid=True, gridcolor='#1e3048', zeroline=False,
+    ),
+    yaxis=dict(showgrid=False, tickfont=dict(size=10.5)),
+    margin=dict(l=90, r=20, t=15, b=55),
+    showlegend=False,
+)
+fig
+```
+
+:::
+
+::::
+
+::: notes
+This lecture covers the first three in depth with runnable code.
+:::
+
+---
+
+## Choosing the right method
+
+```{python}
+#| echo: false
+#| eval: true
+
+import plotly.graph_objects as go
+
+# x: training data / evaluations needed (0 = very few → 3 = large dataset)
+# y: works without fault labels (1 = needs full labels → 5 = fully unsupervised)
+methods = [
+    ("Threshold rules",      0.05, 4.3, 20, "#475569", "bottom right"),
+    ("PCA / statistics",     0.30, 3.8, 20, "#64748b", "top right"),
+    ("Isolation Forest",     0.65, 3.4, 22, "#94a3b8", "bottom right"),
+    ("RL (online)",          0.90, 3.1, 24, "#fb923c", "bottom right"),
+    ("Bayesian Opt ★",       0.40, 4.1, 44, "#22d3ee", "top left"),
+    ("Autoencoder ★",        1.25, 4.6, 44, "#22d3ee", "top left"),
+    ("GP Surrogate",         1.70, 2.6, 24, "#60a5fa", "bottom right"),
+    ("SVM (supervised)",     1.35, 1.0, 22, "#94a3b8", "top right"),
+    ("MLP Surrogate ★",      2.45, 1.8, 44, "#22d3ee", "top right"),
+    ("Deep CNN / LSTM",      2.80, 1.2, 24, "#a78bfa", "top left"),
+    ("Transformer / LLM",    3.10, 0.7, 22, "#a78bfa", "bottom left"),
+]
+
+fig = go.Figure()
+
+fig.add_shape(type="rect", x0=-0.15, x1=1.65, y0=2.7, y1=5.2,
+    fillcolor="rgba(34,211,238,0.04)", layer="below",
+    line=dict(color="rgba(34,211,238,0.25)", width=1, dash="dot"))
+fig.add_annotation(x=0.75, y=5.05, text="<i>clinical-machine zone</i>",
+    showarrow=False, font=dict(size=10, color="#22d3ee"), opacity=0.6)
+
+for name, x, y, size, color, pos in methods:
+    is_pick = "★" in name
+    fig.add_trace(go.Scatter(
+        x=[x], y=[y], mode="markers+text",
+        marker=dict(size=size, color=color,
+            line=dict(color="#e2e8f0" if is_pick else "#0d1b2a",
+                      width=2.5 if is_pick else 1.5)),
+        text=[f"<b>{name}</b>" if is_pick else name],
+        textposition=pos,
+        textfont=dict(size=13 if is_pick else 8, color=color),
+        showlegend=False,
+    ))
+
+fig.update_layout(
+    height=490, autosize=True,
+    paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
+    font=dict(color="#e2e8f0", size=11),
+    xaxis=dict(
+        title="Training data / evaluations needed",
+        range=[-0.3, 3.5],
+        tickvals=[0.3, 1.5, 2.7],
+        ticktext=["Very few  (< 100)", "Moderate  (1 000s)", "Large  (> 10 000s)"],
+        showgrid=True, gridcolor="#1e3048", zeroline=False,
+    ),
+    yaxis=dict(
+        title="Works without fault labels",
+        range=[0.3, 5.4],
+        tickvals=[1, 2, 3, 4, 5],
+        ticktext=["Needs full<br>label set", "Needs partial<br>labels",
+                  "Semi-super-<br>vised", "Mostly<br>label-free", "Fully<br>unsupervised"],
+        showgrid=True, gridcolor="#1e3048", zeroline=False,
+    ),
+    margin=dict(l=110, r=30, t=15, b=70),
+)
+fig
+```
+
+::: {.slide-ref}
+★ methods used in this lecture. Existing detail landscapes: anomaly detection → slide 14 · optimisation → slide 21 · surrogate → slide 27
+:::
+
+# Practical Foundations {.section-divider background-color="#e2e8f0" data-background-transition="zoom"}
+
+::: {style="color: #1e3a5f; font-size: 1.6em; font-weight: 800; margin-top: 0.5em;"}
 From raw signals to trained model
 :::
 
-::: {style="font-size: 1em; color: #94a3b8;"}
+::: {style="font-size: 1em; color: #334155;"}
 Data · Features · Method selection · Pipeline
 :::
 
 ---
 
-## The ML pipeline — from data to inference
+## The ML pipeline — from data to inference {data-auto-animate=true}
 
-<div style="display:flex; align-items:stretch; gap:0.2em; margin:0.7em 0 0.4em 0; width:100%;">
-<div class="pipe-box" data-pipe="1" style="border-color:#475569; background:rgba(71,85,105,0.12); --pipe-glow:rgba(100,116,139,0.45);">
-<div style="font-weight:700; font-size:0.80em; color:#64748b;">Raw Data</div>
-<div style="font-size:0.68em; color:#475569; margin-top:0.2em;">Waveforms · images<br>logs · set-points</div>
+<div data-id="pipe-row" style="display:flex; align-items:stretch; gap:0.22em; margin-top:6em; width:100%;">
+<div data-id="p1" style="flex:1; padding:0.6em 0.3em; border-radius:8px; border:1.5px solid rgba(148,163,184,0.35); background:rgba(148,163,184,0.04); text-align:center;">
+<div style="font-weight:700; font-size:0.76em; color:#94a3b8;">Raw Data</div>
+<div style="font-size:0.62em; color:#475569; margin-top:0.25em; line-height:1.35;">Waveforms · images<br>logs · set-points</div>
 </div>
-<div class="pipe-arrow">→</div>
-<div class="pipe-box" data-pipe="2" style="border-color:#3b82f6; background:rgba(59,130,246,0.10); --pipe-glow:rgba(59,130,246,0.45);">
-<div style="font-weight:700; font-size:0.80em; color:#3b82f6;">Pre-process</div>
-<div style="font-size:0.68em; color:#475569; margin-top:0.2em;">Clean · sync<br>normalise · resample</div>
+<div data-id="a1" style="align-self:center; color:#64748b; font-size:1.15em; flex-shrink:0; padding:0 0.1em;">→</div>
+<div data-id="p2" style="flex:1; padding:0.6em 0.3em; border-radius:8px; border:1.5px solid rgba(148,163,184,0.35); background:rgba(148,163,184,0.04); text-align:center;">
+<div style="font-weight:700; font-size:0.76em; color:#94a3b8;">Pre-process</div>
+<div style="font-size:0.62em; color:#475569; margin-top:0.25em; line-height:1.35;">Clean · sync<br>normalise · resample</div>
 </div>
-<div class="pipe-arrow">→</div>
-<div class="pipe-box" data-pipe="3" style="border-color:#6366f1; background:rgba(99,102,241,0.10); --pipe-glow:rgba(99,102,241,0.45);">
-<div style="font-weight:700; font-size:0.80em; color:#6366f1;">Feature extract</div>
-<div style="font-size:0.68em; color:#475569; margin-top:0.2em;">FFT · Gaussian fit<br>statistics · domain</div>
+<div data-id="a2" style="align-self:center; color:#64748b; font-size:1.15em; flex-shrink:0; padding:0 0.1em;">→</div>
+<div data-id="p3" style="flex:1; padding:0.6em 0.3em; border-radius:8px; border:1.5px solid rgba(148,163,184,0.35); background:rgba(148,163,184,0.04); text-align:center;">
+<div style="font-weight:700; font-size:0.76em; color:#94a3b8;">Feature extract</div>
+<div style="font-size:0.62em; color:#475569; margin-top:0.25em; line-height:1.35;">FFT · Gaussian fit<br>statistics · domain</div>
 </div>
-<div class="pipe-arrow">→</div>
-<div class="pipe-box" data-pipe="4" style="border-color:#a78bfa; background:rgba(167,139,250,0.10); --pipe-glow:rgba(167,139,250,0.45);">
-<div style="font-weight:700; font-size:0.80em; color:#a78bfa;">Train &amp; validate</div>
-<div style="font-size:0.68em; color:#475569; margin-top:0.2em;">80/20 split<br>cross-val · AUC</div>
+<div data-id="a3" style="align-self:center; color:#64748b; font-size:1.15em; flex-shrink:0; padding:0 0.1em;">→</div>
+<div data-id="p4" style="flex:1; padding:0.6em 0.3em; border-radius:8px; border:1.5px solid rgba(148,163,184,0.35); background:rgba(148,163,184,0.04); text-align:center;">
+<div style="font-weight:700; font-size:0.76em; color:#94a3b8;">Train &amp; validate</div>
+<div style="font-size:0.62em; color:#475569; margin-top:0.25em; line-height:1.35;">80/20 split<br>cross-val · AUC</div>
 </div>
-<div class="pipe-arrow">→</div>
-<div class="pipe-box" data-pipe="5" style="border-color:#22d3ee; background:rgba(34,211,238,0.10); --pipe-glow:rgba(34,211,238,0.45);">
-<div style="font-weight:700; font-size:0.80em; color:#22d3ee;">Deploy &amp; infer</div>
-<div style="font-size:0.68em; color:#475569; margin-top:0.2em;">Sub-ms response<br>monitoring · retrain</div>
+<div data-id="a4" style="align-self:center; color:#64748b; font-size:1.15em; flex-shrink:0; padding:0 0.1em;">→</div>
+<div data-id="p5" style="flex:1; padding:0.6em 0.3em; border-radius:8px; border:1.5px solid rgba(148,163,184,0.35); background:rgba(148,163,184,0.04); text-align:center;">
+<div style="font-weight:700; font-size:0.76em; color:#94a3b8;">Deploy &amp; infer</div>
+<div style="font-size:0.62em; color:#475569; margin-top:0.25em; line-height:1.35;">Sub-ms response<br>monitoring · retrain</div>
 </div>
-</div>
-
-<div style="display:flex; gap:0.45em; margin-bottom:0.5em; width:100%;">
-<div class="pipe-uc" data-pipe="5"><div class="pipe-uc-title">UC1 · Fault detection</div><div class="pipe-uc-desc">IQ → autoencoder → alarm</div></div>
-<div class="pipe-uc" data-pipe="5"><div class="pipe-uc-title">UC2 · Beam tuning</div><div class="pipe-uc-desc">Quad → Cheetah → BO</div></div>
-<div class="pipe-uc" data-pipe="5"><div class="pipe-uc-title">UC3 · Surrogate</div><div class="pipe-uc-desc">5k Cheetah → MLP → 586×</div></div>
 </div>
 
-<div style="display:grid; min-height:2.2em; margin-top:0.4em;">
-<div class="fragment current-visible" data-pipe-highlight="1,2" data-fragment-index="1" style="grid-area:1/1; text-align:center; font-size:0.80em; color:#3b82f6; font-weight:600;">① Data quality &amp; preprocessing</div>
-<div class="fragment current-visible" data-pipe-highlight="3"   data-fragment-index="2" style="grid-area:1/1; text-align:center; font-size:0.80em; color:#6366f1; font-weight:600;">② Feature engineering</div>
-<div class="fragment current-visible" data-pipe-highlight="4"   data-fragment-index="3" style="grid-area:1/1; text-align:center; font-size:0.80em; color:#a78bfa; font-weight:600;">③ Model selection &amp; training</div>
-<div class="fragment current-visible" data-pipe-highlight="5"   data-fragment-index="4" style="grid-area:1/1; text-align:center; font-size:0.80em; color:#22d3ee; font-weight:600;">④ Deploy &amp; use cases 1–3</div>
+<div data-id="uc-row" style="display:flex; gap:0.35em; margin-top:2em; width:100%;">
+<div data-id="uc1" style="flex:1; padding:0.35em 0.5em; border-radius:6px; border:1px solid rgba(180,160,140,0.38); background:rgba(180,160,140,0.05);">
+<div style="font-size:0.65em; font-weight:600; color:#b0a090;">UC1 · Fault detection</div>
+<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">IQ waveforms → autoencoder → anomaly score</div>
+</div>
+<div data-id="uc2" style="flex:1; padding:0.35em 0.5em; border-radius:6px; border:1px solid rgba(180,160,140,0.38); background:rgba(180,160,140,0.05);">
+<div style="font-size:0.65em; font-weight:600; color:#b0a090;">UC2 · Beam tuning</div>
+<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">Quad settings → Cheetah → BO → proposal</div>
+</div>
+<div data-id="uc3" style="flex:1; padding:0.35em 0.5em; border-radius:6px; border:1px solid rgba(180,160,140,0.38); background:rgba(180,160,140,0.05);">
+<div style="font-size:0.65em; font-weight:600; color:#b0a090;">UC3 · Surrogate</div>
+<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">5 000 Cheetah calls → MLP → 586× speedup</div>
+</div>
 </div>
 
 ::: notes
-Road-map slide. Step through the 4 highlights before diving into the content. Each fragment lights the section(s) you're about to teach.
+Road-map — present the full pipeline, then step through the highlighted sections before diving into each topic.
 :::
 
 ---
 
-## Data quality — garbage in, garbage out
+## The ML pipeline — from data to inference {data-auto-animate=true}
 
-::: {style="display:flex; gap:0.35em; margin:0.15em 0 0.4em 0;"}
+<div data-id="pipe-row" style="display:flex; align-items:stretch; gap:0.22em; margin-top:6em; width:100%;">
+<div data-id="p1" style="flex:1; padding:0.6em 0.3em; border-radius:8px; border:2px solid #22d3ee; background:rgba(34,211,238,0.18); text-align:center; box-shadow:0 0 30px rgba(34,211,238,0.55);">
+<div style="font-weight:700; font-size:0.76em; color:#22d3ee;">Raw Data</div>
+<div style="font-size:0.62em; color:#94a3b8; margin-top:0.25em; line-height:1.35;">Waveforms · images<br>logs · set-points</div>
+</div>
+<div data-id="a1" style="align-self:center; color:#22d3ee; font-size:1.15em; flex-shrink:0; padding:0 0.1em;">→</div>
+<div data-id="p2" style="flex:1; padding:0.6em 0.3em; border-radius:8px; border:2px solid #22d3ee; background:rgba(34,211,238,0.18); text-align:center; box-shadow:0 0 30px rgba(34,211,238,0.55);">
+<div style="font-weight:700; font-size:0.76em; color:#22d3ee;">Pre-process</div>
+<div style="font-size:0.62em; color:#94a3b8; margin-top:0.25em; line-height:1.35;">Clean · sync<br>normalise · resample</div>
+</div>
+<div data-id="a2" style="align-self:center; color:#64748b; font-size:1.15em; flex-shrink:0; padding:0 0.1em; opacity:0.35;">→</div>
+<div data-id="p3" style="flex:1; padding:0.6em 0.3em; border-radius:8px; border:1.5px solid rgba(148,163,184,0.25); background:rgba(148,163,184,0.03); text-align:center; opacity:0.35;">
+<div style="font-weight:700; font-size:0.76em; color:#94a3b8;">Feature extract</div>
+<div style="font-size:0.62em; color:#475569; margin-top:0.25em; line-height:1.35;">FFT · Gaussian fit<br>statistics · domain</div>
+</div>
+<div data-id="a3" style="align-self:center; color:#64748b; font-size:1.15em; flex-shrink:0; padding:0 0.1em; opacity:0.35;">→</div>
+<div data-id="p4" style="flex:1; padding:0.6em 0.3em; border-radius:8px; border:1.5px solid rgba(148,163,184,0.25); background:rgba(148,163,184,0.03); text-align:center; opacity:0.35;">
+<div style="font-weight:700; font-size:0.76em; color:#94a3b8;">Train &amp; validate</div>
+<div style="font-size:0.62em; color:#475569; margin-top:0.25em; line-height:1.35;">80/20 split<br>cross-val · AUC</div>
+</div>
+<div data-id="a4" style="align-self:center; color:#64748b; font-size:1.15em; flex-shrink:0; padding:0 0.1em; opacity:0.35;">→</div>
+<div data-id="p5" style="flex:1; padding:0.6em 0.3em; border-radius:8px; border:1.5px solid rgba(148,163,184,0.25); background:rgba(148,163,184,0.03); text-align:center; opacity:0.35;">
+<div style="font-weight:700; font-size:0.76em; color:#94a3b8;">Deploy &amp; infer</div>
+<div style="font-size:0.62em; color:#475569; margin-top:0.25em; line-height:1.35;">Sub-ms response<br>monitoring · retrain</div>
+</div>
+</div>
+
+<div data-id="uc-row" style="display:flex; gap:0.35em; margin-top:2em; width:100%;">
+<div data-id="uc1" style="flex:1; padding:0.35em 0.5em; border-radius:6px; border:1px solid rgba(180,160,140,0.38); background:rgba(180,160,140,0.05); opacity:0.12;">
+<div style="font-size:0.65em; font-weight:600; color:#b0a090;">UC1 · Fault detection</div>
+<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">IQ waveforms → autoencoder → anomaly score</div>
+</div>
+<div data-id="uc2" style="flex:1; padding:0.35em 0.5em; border-radius:6px; border:1px solid rgba(180,160,140,0.38); background:rgba(180,160,140,0.05); opacity:0.12;">
+<div style="font-size:0.65em; font-weight:600; color:#b0a090;">UC2 · Beam tuning</div>
+<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">Quad settings → Cheetah → BO → proposal</div>
+</div>
+<div data-id="uc3" style="flex:1; padding:0.35em 0.5em; border-radius:6px; border:1px solid rgba(180,160,140,0.38); background:rgba(180,160,140,0.05); opacity:0.12;">
+<div style="font-size:0.65em; font-weight:600; color:#b0a090;">UC3 · Surrogate</div>
+<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">5 000 Cheetah calls → MLP → 586× speedup</div>
+</div>
+</div>
+
+<div data-id="cap" style="text-align:center; margin-top:0.6em; font-size:0.82em; font-weight:600; color:#22d3ee;">
+① Data quality &amp; preprocessing
+</div>
+
+::: notes
+Data quality and preprocessing — cleaning, synchronising, and normalising raw accelerator signals. This is what the next slides cover.
+:::
+
+---
+
+## {data-auto-animate=true}
+
+<div style="display:flex; gap:0.25em; width:28%; margin-top:0.4em;">
+<div data-id="p1" style="flex:1; padding:0.3em 0.2em; border-radius:6px; border:1px solid rgba(148,163,184,0.45); background:rgba(148,163,184,0.06); text-align:center;">
+<div style="font-weight:700; font-size:0.58em; color:#94a3b8;">Raw Data</div>
+<div style="font-size:0.46em; color:#475569; margin-top:0.2em; line-height:1.3;">Waveforms · images<br>logs · set-points</div>
+</div>
+<div data-id="a1" style="align-self:center; color:#64748b; font-size:0.85em; flex-shrink:0; padding:0 0.05em;">→</div>
+<div data-id="p2" style="flex:1; padding:0.3em 0.2em; border-radius:6px; border:1px solid rgba(148,163,184,0.45); background:rgba(148,163,184,0.06); text-align:center;">
+<div style="font-weight:700; font-size:0.58em; color:#94a3b8;">Pre-process</div>
+<div style="font-size:0.46em; color:#475569; margin-top:0.2em; line-height:1.3;">Clean · sync<br>normalise · resample</div>
+</div>
+</div>
+
+::: notes
+Pause here — let the two boxes land. Next press reveals the full data quality content.
+:::
+
+---
+
+## {data-auto-animate=true}
+
+<div style="display:flex; gap:0.25em; width:28%; margin-top:0.4em;">
+<div data-id="p1" style="flex:1; padding:0.3em 0.2em; border-radius:6px; border:1px solid rgba(148,163,184,0.45); background:rgba(148,163,184,0.06); text-align:center;">
+<div style="font-weight:700; font-size:0.58em; color:#94a3b8;">Raw Data</div>
+<div style="font-size:0.46em; color:#475569; margin-top:0.2em; line-height:1.3;">Waveforms · images<br>logs · set-points</div>
+</div>
+<div data-id="a1" style="align-self:center; color:#64748b; font-size:0.85em; flex-shrink:0; padding:0 0.05em;">→</div>
+<div data-id="p2" style="flex:1; padding:0.3em 0.2em; border-radius:6px; border:1px solid rgba(148,163,184,0.45); background:rgba(148,163,184,0.06); text-align:center;">
+<div style="font-weight:700; font-size:0.58em; color:#94a3b8;">Pre-process</div>
+<div style="font-size:0.46em; color:#475569; margin-top:0.2em; line-height:1.3;">Clean · sync<br>normalise · resample</div>
+</div>
+</div>
+
+::: {style="display:flex; gap:0.35em; margin:0.4em 0 0.35em 0;"}
 ::: {.highlight-box style="flex:1; padding:0.35em 0.55em; font-size:0.78em; margin:0;"}
 **① Clean**
 Remove corrupted pulses, stuck sensors, dropouts.
@@ -791,7 +1170,7 @@ fig.update_yaxes(showgrid=True, gridcolor='#1e3048', zeroline=True,
 fig.update_yaxes(range=[-1.15, 1.15], row=1, col=2)
 
 fig.update_layout(
-    height=360, autosize=True,
+    height=310, autosize=True,
     paper_bgcolor='#0d1b2a', plot_bgcolor='#111f30',
     font=dict(color='#e2e8f0', size=11),
     margin=dict(t=28, b=5, l=10, r=10),
@@ -808,7 +1187,83 @@ A model trained on bad data learns bad behaviour.<br>
 
 ---
 
-## Feature engineering — from 1 024 numbers to 3
+## {data-auto-animate=true}
+
+<div data-id="pipe-row" style="display:flex; align-items:stretch; gap:0.22em; margin-top:6em; width:100%;">
+<div data-id="p1" style="flex:1; padding:0.6em 0.3em; border-radius:8px; border:1.5px solid rgba(148,163,184,0.35); background:rgba(148,163,184,0.04); text-align:center;">
+<div style="font-weight:700; font-size:0.76em; color:#94a3b8;">Raw Data</div>
+<div style="font-size:0.62em; color:#475569; margin-top:0.25em; line-height:1.35;">Waveforms · images<br>logs · set-points</div>
+</div>
+<div data-id="a1" style="align-self:center; color:#64748b; font-size:1.15em; flex-shrink:0; padding:0 0.1em;">→</div>
+<div data-id="p2" style="flex:1; padding:0.6em 0.3em; border-radius:8px; border:1.5px solid rgba(148,163,184,0.35); background:rgba(148,163,184,0.04); text-align:center;">
+<div style="font-weight:700; font-size:0.76em; color:#94a3b8;">Pre-process</div>
+<div style="font-size:0.62em; color:#475569; margin-top:0.25em; line-height:1.35;">Clean · sync<br>normalise · resample</div>
+</div>
+<div data-id="a2" style="align-self:center; color:#64748b; font-size:1.15em; flex-shrink:0; padding:0 0.1em;">→</div>
+<div data-id="p3" style="flex:1; padding:0.6em 0.3em; border-radius:8px; border:2px solid #22d3ee; background:rgba(34,211,238,0.18); text-align:center; box-shadow:0 0 30px rgba(34,211,238,0.55);">
+<div style="font-weight:700; font-size:0.76em; color:#22d3ee;">Feature extract</div>
+<div style="font-size:0.62em; color:#94a3b8; margin-top:0.25em; line-height:1.35;">FFT · Gaussian fit<br>statistics · domain</div>
+</div>
+<div data-id="a3" style="align-self:center; color:#64748b; font-size:1.15em; flex-shrink:0; padding:0 0.1em; opacity:0.35;">→</div>
+<div data-id="p4" style="flex:1; padding:0.6em 0.3em; border-radius:8px; border:1.5px solid rgba(148,163,184,0.25); background:rgba(148,163,184,0.03); text-align:center; opacity:0.35;">
+<div style="font-weight:700; font-size:0.76em; color:#94a3b8;">Train &amp; validate</div>
+<div style="font-size:0.62em; color:#475569; margin-top:0.25em; line-height:1.35;">80/20 split<br>cross-val · AUC</div>
+</div>
+<div data-id="a4" style="align-self:center; color:#64748b; font-size:1.15em; flex-shrink:0; padding:0 0.1em; opacity:0.35;">→</div>
+<div data-id="p5" style="flex:1; padding:0.6em 0.3em; border-radius:8px; border:1.5px solid rgba(148,163,184,0.25); background:rgba(148,163,184,0.03); text-align:center; opacity:0.35;">
+<div style="font-weight:700; font-size:0.76em; color:#94a3b8;">Deploy &amp; infer</div>
+<div style="font-size:0.62em; color:#475569; margin-top:0.25em; line-height:1.35;">Sub-ms response<br>monitoring · retrain</div>
+</div>
+</div>
+
+<div style="display:flex; gap:0.35em; margin-top:2em; width:100%;">
+<div style="flex:1; padding:0.35em 0.5em; border-radius:6px; border:1px solid rgba(180,160,140,0.38); background:rgba(180,160,140,0.05);">
+<div style="font-size:0.65em; font-weight:600; color:#b0a090;">UC1 · Fault detection</div>
+<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">IQ waveforms → autoencoder → anomaly score</div>
+</div>
+<div style="flex:1; padding:0.35em 0.5em; border-radius:6px; border:1px solid rgba(180,160,140,0.38); background:rgba(180,160,140,0.05);">
+<div style="font-size:0.65em; font-weight:600; color:#b0a090;">UC2 · Beam tuning</div>
+<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">Quad settings → Cheetah → BO → proposal</div>
+</div>
+<div style="flex:1; padding:0.35em 0.5em; border-radius:6px; border:1px solid rgba(180,160,140,0.38); background:rgba(180,160,140,0.05);">
+<div style="font-size:0.65em; font-weight:600; color:#b0a090;">UC3 · Surrogate</div>
+<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">5 000 Cheetah calls → MLP → 586× speedup</div>
+</div>
+</div>
+
+<div style="text-align:center; margin-top:0.6em; font-size:0.82em; font-weight:600; color:#22d3ee;">
+② Feature engineering
+</div>
+
+::: notes
+You are here — feature extraction. p1 and p2 animate back from the top-left into the pipeline row.
+:::
+
+---
+
+## {data-auto-animate=true}
+
+<div style="display:flex; gap:0.25em; width:16%; margin-top:0.4em;">
+<div data-id="p3" style="flex:1; padding:0.3em 0.2em; border-radius:6px; border:1px solid rgba(148,163,184,0.45); background:rgba(148,163,184,0.06); text-align:center;">
+<div style="font-weight:700; font-size:0.58em; color:#94a3b8;">Feature extract</div>
+<div style="font-size:0.46em; color:#475569; margin-top:0.2em; line-height:1.3;">FFT · Gaussian fit<br>statistics · domain</div>
+</div>
+</div>
+
+::: notes
+p3 shrinks and flies to top-left. Everything else disappears. Next press reveals feature engineering content.
+:::
+
+---
+
+## {data-auto-animate=true}
+
+<div style="display:flex; gap:0.25em; width:16%; margin-top:0.4em;">
+<div data-id="p3" style="flex:1; padding:0.3em 0.2em; border-radius:6px; border:1px solid rgba(148,163,184,0.45); background:rgba(148,163,184,0.06); text-align:center;">
+<div style="font-weight:700; font-size:0.58em; color:#94a3b8;">Feature extract</div>
+<div style="font-size:0.46em; color:#475569; margin-top:0.2em; line-height:1.3;">FFT · Gaussian fit<br>statistics · domain</div>
+</div>
+</div>
 
 ```{python}
 #| echo: false
@@ -864,7 +1319,6 @@ fig.add_trace(go.Bar(
     showlegend=False,
 ), row=1, col=2)
 
-
 fig.update_xaxes(showgrid=True, gridcolor='#1e3048', zeroline=False,
     title_text="Time (ms)", row=1, col=1)
 fig.update_yaxes(showgrid=True, gridcolor='#1e3048', zeroline=False, row=1, col=1)
@@ -873,7 +1327,7 @@ fig.update_yaxes(showgrid=True, gridcolor='#1e3048', zeroline=False,
     range=[0, max(mean_amp, phase_std, fill_frac)*1.4], row=1, col=2)
 
 fig.update_layout(
-    height=390, autosize=True,
+    height=360, autosize=True,
     paper_bgcolor='#0d1b2a', plot_bgcolor='#111f30',
     font=dict(color='#e2e8f0', size=11),
     legend=dict(bgcolor='rgba(0,0,0,0)', font=dict(size=10), x=0.02, y=0.96),
@@ -895,7 +1349,231 @@ Good features = simpler models + better generalisation.<br>
 
 ---
 
-## Choosing the right method
+## {data-auto-animate=true}
+
+<div data-id="pipe-row" style="display:flex; align-items:stretch; gap:0.22em; margin-top:6em; width:100%;">
+<div data-id="p1" style="flex:1; padding:0.6em 0.3em; border-radius:8px; border:1.5px solid rgba(148,163,184,0.35); background:rgba(148,163,184,0.04); text-align:center;">
+<div style="font-weight:700; font-size:0.76em; color:#94a3b8;">Raw Data</div>
+<div style="font-size:0.62em; color:#475569; margin-top:0.25em; line-height:1.35;">Waveforms · images<br>logs · set-points</div>
+</div>
+<div data-id="a1" style="align-self:center; color:#64748b; font-size:1.15em; flex-shrink:0; padding:0 0.1em;">→</div>
+<div data-id="p2" style="flex:1; padding:0.6em 0.3em; border-radius:8px; border:1.5px solid rgba(148,163,184,0.35); background:rgba(148,163,184,0.04); text-align:center;">
+<div style="font-weight:700; font-size:0.76em; color:#94a3b8;">Pre-process</div>
+<div style="font-size:0.62em; color:#475569; margin-top:0.25em; line-height:1.35;">Clean · sync<br>normalise · resample</div>
+</div>
+<div data-id="a2" style="align-self:center; color:#64748b; font-size:1.15em; flex-shrink:0; padding:0 0.1em;">→</div>
+<div data-id="p3" style="flex:1; padding:0.6em 0.3em; border-radius:8px; border:1.5px solid rgba(148,163,184,0.35); background:rgba(148,163,184,0.04); text-align:center;">
+<div style="font-weight:700; font-size:0.76em; color:#94a3b8;">Feature extract</div>
+<div style="font-size:0.62em; color:#475569; margin-top:0.25em; line-height:1.35;">FFT · Gaussian fit<br>statistics · domain</div>
+</div>
+<div data-id="a3" style="align-self:center; color:#64748b; font-size:1.15em; flex-shrink:0; padding:0 0.1em;">→</div>
+<div data-id="p4" style="flex:1; padding:0.6em 0.3em; border-radius:8px; border:2px solid #22d3ee; background:rgba(34,211,238,0.18); text-align:center; box-shadow:0 0 30px rgba(34,211,238,0.55);">
+<div style="font-weight:700; font-size:0.76em; color:#22d3ee;">Train &amp; validate</div>
+<div style="font-size:0.62em; color:#94a3b8; margin-top:0.25em; line-height:1.35;">80/20 split<br>cross-val · AUC</div>
+</div>
+<div data-id="a4" style="align-self:center; color:#64748b; font-size:1.15em; flex-shrink:0; padding:0 0.1em; opacity:0.35;">→</div>
+<div data-id="p5" style="flex:1; padding:0.6em 0.3em; border-radius:8px; border:1.5px solid rgba(148,163,184,0.25); background:rgba(148,163,184,0.03); text-align:center; opacity:0.35;">
+<div style="font-weight:700; font-size:0.76em; color:#94a3b8;">Deploy &amp; infer</div>
+<div style="font-size:0.62em; color:#475569; margin-top:0.25em; line-height:1.35;">Sub-ms response<br>monitoring · retrain</div>
+</div>
+</div>
+
+<div style="display:flex; gap:0.35em; margin-top:2em; width:100%;">
+<div style="flex:1; padding:0.35em 0.5em; border-radius:6px; border:1px solid rgba(180,160,140,0.38); background:rgba(180,160,140,0.05);">
+<div style="font-size:0.65em; font-weight:600; color:#b0a090;">UC1 · Fault detection</div>
+<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">IQ waveforms → autoencoder → anomaly score</div>
+</div>
+<div style="flex:1; padding:0.35em 0.5em; border-radius:6px; border:1px solid rgba(180,160,140,0.38); background:rgba(180,160,140,0.05);">
+<div style="font-size:0.65em; font-weight:600; color:#b0a090;">UC2 · Beam tuning</div>
+<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">Quad settings → Cheetah → BO → proposal</div>
+</div>
+<div style="flex:1; padding:0.35em 0.5em; border-radius:6px; border:1px solid rgba(180,160,140,0.38); background:rgba(180,160,140,0.05);">
+<div style="font-size:0.65em; font-weight:600; color:#b0a090;">UC3 · Surrogate</div>
+<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">5 000 Cheetah calls → MLP → 586× speedup</div>
+</div>
+</div>
+
+<div style="text-align:center; margin-top:0.6em; font-size:0.82em; font-weight:600; color:#22d3ee;">
+③ Train &amp; validate
+</div>
+
+---
+
+## {data-auto-animate=true}
+
+<div style="display:flex; gap:0.25em; width:16%; margin-top:0.4em;">
+<div data-id="p4" style="flex:1; padding:0.3em 0.2em; border-radius:6px; border:1px solid rgba(148,163,184,0.45); background:rgba(148,163,184,0.06); text-align:center;">
+<div style="font-weight:700; font-size:0.58em; color:#94a3b8;">Train &amp; validate</div>
+<div style="font-size:0.46em; color:#475569; margin-top:0.2em; line-height:1.3;">80/20 split<br>cross-val · AUC</div>
+</div>
+</div>
+
+---
+
+## {data-auto-animate=true}
+
+<div style="display:flex; gap:0.25em; width:16%; margin-top:0.4em;">
+<div data-id="p4" style="flex:1; padding:0.3em 0.2em; border-radius:6px; border:1px solid rgba(148,163,184,0.45); background:rgba(148,163,184,0.06); text-align:center;">
+<div style="font-weight:700; font-size:0.58em; color:#94a3b8;">Train &amp; validate</div>
+<div style="font-size:0.46em; color:#475569; margin-top:0.2em; line-height:1.3;">80/20 split<br>cross-val · AUC</div>
+</div>
+</div>
+
+::: {style="display:flex; gap:0.35em; margin:0.4em 0 0.35em 0;"}
+::: {.highlight-box style="flex:1; padding:0.35em 0.55em; font-size:0.78em; margin:0;"}
+**① Split & stratify**
+80 % train / 20 % test — stratified to preserve the rare-fault rate (< 0.1 %).
+:::
+::: {.fragment .highlight-box style="flex:1; padding:0.35em 0.55em; font-size:0.78em; margin:0;"}
+**② Cross-validate**
+5-fold CV on training set — essential when labelled faults number in the hundreds.
+:::
+::: {.fragment .highlight-box style="flex:1; padding:0.35em 0.55em; font-size:0.78em; margin:0;"}
+**③ Metrics for imbalance**
+ROC-AUC · precision-recall · F1 — accuracy is misleading when 99.9 % of pulses are normal.
+:::
+:::
+
+```{python}
+#| echo: false
+#| eval: true
+
+import numpy as np
+import plotly.graph_objects as go
+
+np.random.seed(42)
+epochs = np.arange(1, 81)
+train_loss = 0.78 * np.exp(-epochs / 14) + 0.048 + 0.008 * np.random.randn(80)
+val_loss   = 0.80 * np.exp(-epochs / 17) + 0.068 + 0.012 * np.random.randn(80)
+val_loss[52:] += np.linspace(0, 0.025, 28)   # mild overfitting after early stop
+
+fig = go.Figure()
+fig.add_trace(go.Scatter(x=epochs, y=train_loss, name='Train loss',
+    line=dict(color='#60a5fa', width=1.8)))
+fig.add_trace(go.Scatter(x=epochs, y=val_loss, name='Validation loss',
+    line=dict(color='#22d3ee', width=1.8)))
+fig.add_vline(x=52, line_dash='dot', line_color='#fbbf24', opacity=0.75)
+fig.add_annotation(x=54, y=0.22, text='early stop', showarrow=False,
+    font=dict(color='#fbbf24', size=10), xanchor='left')
+
+fig.update_layout(
+    height=290, autosize=True,
+    paper_bgcolor='#0d1b2a', plot_bgcolor='#111f30',
+    font=dict(color='#e2e8f0', size=11),
+    legend=dict(bgcolor='rgba(0,0,0,0)', font=dict(size=10), x=0.65, y=0.95),
+    xaxis=dict(title='Epoch', showgrid=True, gridcolor='#1e3048', zeroline=False),
+    yaxis=dict(title='MSE loss', showgrid=True, gridcolor='#1e3048', zeroline=False),
+    margin=dict(t=10, b=45, l=60, r=15),
+)
+fig
+```
+
+<div class="fragment slide-callout-overlay">
+<div class="concept-callout-box">
+<div class="concept-callout-label">⚡&nbsp; Definition — Epoch</div>
+<div>
+One <strong>epoch</strong> = one complete forward + backward pass over every training sample.<br>
+<span style="font-size:0.88em; color:#94a3b8;">
+Example: 10 000 pulses, batch 32 → 313 weight updates per epoch.<br>
+Training halts when validation loss stops improving — here at epoch 52 (early stopping).
+</span>
+</div>
+</div>
+</div>
+
+<div class="fragment slide-callout-overlay">
+<div class="callout-box">
+Validate on data the model has never seen — and on faults it has never seen.<br>
+<span style="font-weight:400; font-size:0.82em; color:#94a3b8;">Temporal splits matter more than random splits in accelerator data.</span>
+</div>
+</div>
+
+---
+
+## {data-auto-animate=true}
+
+<div data-id="pipe-row" style="display:flex; align-items:stretch; gap:0.22em; margin-top:6em; width:100%;">
+<div data-id="p1" style="flex:1; padding:0.6em 0.3em; border-radius:8px; border:1.5px solid rgba(148,163,184,0.35); background:rgba(148,163,184,0.04); text-align:center;">
+<div style="font-weight:700; font-size:0.76em; color:#94a3b8;">Raw Data</div>
+<div style="font-size:0.62em; color:#475569; margin-top:0.25em; line-height:1.35;">Waveforms · images<br>logs · set-points</div>
+</div>
+<div data-id="a1" style="align-self:center; color:#64748b; font-size:1.15em; flex-shrink:0; padding:0 0.1em;">→</div>
+<div data-id="p2" style="flex:1; padding:0.6em 0.3em; border-radius:8px; border:1.5px solid rgba(148,163,184,0.35); background:rgba(148,163,184,0.04); text-align:center;">
+<div style="font-weight:700; font-size:0.76em; color:#94a3b8;">Pre-process</div>
+<div style="font-size:0.62em; color:#475569; margin-top:0.25em; line-height:1.35;">Clean · sync<br>normalise · resample</div>
+</div>
+<div data-id="a2" style="align-self:center; color:#64748b; font-size:1.15em; flex-shrink:0; padding:0 0.1em;">→</div>
+<div data-id="p3" style="flex:1; padding:0.6em 0.3em; border-radius:8px; border:1.5px solid rgba(148,163,184,0.35); background:rgba(148,163,184,0.04); text-align:center;">
+<div style="font-weight:700; font-size:0.76em; color:#94a3b8;">Feature extract</div>
+<div style="font-size:0.62em; color:#475569; margin-top:0.25em; line-height:1.35;">FFT · Gaussian fit<br>statistics · domain</div>
+</div>
+<div data-id="a3" style="align-self:center; color:#64748b; font-size:1.15em; flex-shrink:0; padding:0 0.1em;">→</div>
+<div data-id="p4" style="flex:1; padding:0.6em 0.3em; border-radius:8px; border:1.5px solid rgba(148,163,184,0.35); background:rgba(148,163,184,0.04); text-align:center;">
+<div style="font-weight:700; font-size:0.76em; color:#94a3b8;">Train &amp; validate</div>
+<div style="font-size:0.62em; color:#475569; margin-top:0.25em; line-height:1.35;">80/20 split<br>cross-val · AUC</div>
+</div>
+<div data-id="a4" style="align-self:center; color:#64748b; font-size:1.15em; flex-shrink:0; padding:0 0.1em;">→</div>
+<div data-id="p5" style="flex:1; padding:0.6em 0.3em; border-radius:8px; border:2px solid #22d3ee; background:rgba(34,211,238,0.18); text-align:center; box-shadow:0 0 30px rgba(34,211,238,0.55);">
+<div style="font-weight:700; font-size:0.76em; color:#22d3ee;">Deploy &amp; infer</div>
+<div style="font-size:0.62em; color:#94a3b8; margin-top:0.25em; line-height:1.35;">Sub-ms response<br>monitoring · retrain</div>
+</div>
+</div>
+
+<div style="display:flex; gap:0.35em; margin-top:2em; width:100%;">
+<div style="flex:1; padding:0.35em 0.5em; border-radius:6px; border:1px solid rgba(180,160,140,0.38); background:rgba(180,160,140,0.05);">
+<div style="font-size:0.65em; font-weight:600; color:#b0a090;">UC1 · Fault detection</div>
+<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">IQ waveforms → autoencoder → anomaly score</div>
+</div>
+<div style="flex:1; padding:0.35em 0.5em; border-radius:6px; border:1px solid rgba(180,160,140,0.38); background:rgba(180,160,140,0.05);">
+<div style="font-size:0.65em; font-weight:600; color:#b0a090;">UC2 · Beam tuning</div>
+<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">Quad settings → Cheetah → BO → proposal</div>
+</div>
+<div style="flex:1; padding:0.35em 0.5em; border-radius:6px; border:1px solid rgba(180,160,140,0.38); background:rgba(180,160,140,0.05);">
+<div style="font-size:0.65em; font-weight:600; color:#b0a090;">UC3 · Surrogate</div>
+<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">5 000 Cheetah calls → MLP → 586× speedup</div>
+</div>
+</div>
+
+<div style="text-align:center; margin-top:0.6em; font-size:0.82em; font-weight:600; color:#22d3ee;">
+④ Deploy &amp; infer
+</div>
+
+---
+
+## {data-auto-animate=true}
+
+<div style="display:flex; gap:0.25em; width:16%; margin-top:0.4em;">
+<div data-id="p5" style="flex:1; padding:0.3em 0.2em; border-radius:6px; border:1px solid rgba(148,163,184,0.45); background:rgba(148,163,184,0.06); text-align:center;">
+<div style="font-weight:700; font-size:0.58em; color:#94a3b8;">Deploy &amp; infer</div>
+<div style="font-size:0.46em; color:#475569; margin-top:0.2em; line-height:1.3;">Sub-ms response<br>monitoring · retrain</div>
+</div>
+</div>
+
+---
+
+## {data-auto-animate=true}
+
+<div style="display:flex; gap:0.25em; width:16%; margin-top:0.4em;">
+<div data-id="p5" style="flex:1; padding:0.3em 0.2em; border-radius:6px; border:1px solid rgba(148,163,184,0.45); background:rgba(148,163,184,0.06); text-align:center;">
+<div style="font-weight:700; font-size:0.58em; color:#94a3b8;">Deploy &amp; infer</div>
+<div style="font-size:0.46em; color:#475569; margin-top:0.2em; line-height:1.3;">Sub-ms response<br>monitoring · retrain</div>
+</div>
+</div>
+
+::: {style="display:flex; gap:0.35em; margin:0.4em 0 0.35em 0;"}
+::: {.highlight-box style="flex:1; padding:0.35em 0.55em; font-size:0.78em; margin:0;"}
+**① Latency budget**
+LINAC at 100 Hz → 10 ms per pulse. Inference must complete in < 1 ms to leave headroom.
+:::
+::: {.fragment .highlight-box style="flex:1; padding:0.35em 0.55em; font-size:0.78em; margin:0;"}
+**② Export &amp; serve**
+ONNX / TorchScript → deterministic runtime, no Python overhead, embeddable in EPICS/TANGO.
+:::
+::: {.fragment .highlight-box style="flex:1; padding:0.35em 0.55em; font-size:0.78em; margin:0;"}
+**③ Monitor &amp; retrain**
+Track anomaly rate and input distributions. Trigger retraining when drift exceeds threshold.
+:::
+:::
 
 ```{python}
 #| echo: false
@@ -903,155 +1581,50 @@ Good features = simpler models + better generalisation.<br>
 
 import plotly.graph_objects as go
 
-# x: training data / evaluations needed (0 = very few → 3 = large dataset)
-# y: works without fault labels (1 = needs full labels → 5 = fully unsupervised)
-methods = [
-    ("Threshold rules",      0.05, 4.3, 22, "#475569", "top right"),
-    ("PCA / statistics",     0.30, 3.8, 22, "#64748b", "bottom right"),
-    ("Isolation Forest",     0.65, 3.4, 24, "#94a3b8", "bottom right"),
-    ("RL (online)",          0.90, 3.1, 26, "#fb923c", "top right"),
-    ("Bayesian Opt ★",       0.40, 4.1, 44, "#22d3ee", "bottom left"),
-    ("Autoencoder ★",        1.25, 4.6, 44, "#22d3ee", "top left"),
-    ("GP Surrogate",         1.70, 2.6, 26, "#60a5fa", "bottom right"),
-    ("SVM (supervised)",     1.35, 1.0, 24, "#94a3b8", "bottom right"),
-    ("MLP Surrogate ★",      2.45, 1.8, 44, "#22d3ee", "top right"),
-    ("Deep CNN / LSTM",      2.80, 1.2, 28, "#a78bfa", "bottom right"),
-    ("Transformer / LLM",    3.10, 0.7, 26, "#a78bfa", "top left"),
-]
+models    = ['Threshold<br>rule', 'Autoencoder<br>(ONNX)', 'GP<br>Surrogate', 'Transformer<br>(full)']
+latencies = [0.01, 0.18, 2.4, 14.0]
+colors    = ['#94a3b8', '#22d3ee', '#60a5fa', '#a78bfa']
 
 fig = go.Figure()
-
-fig.add_shape(type="rect", x0=-0.15, x1=1.65, y0=2.7, y1=5.2,
-    fillcolor="rgba(34,211,238,0.04)", layer="below",
-    line=dict(color="rgba(34,211,238,0.25)", width=1, dash="dot"))
-fig.add_annotation(x=0.75, y=5.05, text="<i>clinical-machine zone</i>",
-    showarrow=False, font=dict(size=10, color="#22d3ee"), opacity=0.6)
-
-for name, x, y, size, color, pos in methods:
-    is_pick = "★" in name
-    fig.add_trace(go.Scatter(
-        x=[x], y=[y], mode="markers+text",
-        marker=dict(size=size, color=color,
-            line=dict(color="#e2e8f0" if is_pick else "#0d1b2a",
-                      width=2.5 if is_pick else 1.5)),
-        text=[f"<b>{name}</b>" if is_pick else name],
-        textposition=pos,
-        textfont=dict(size=13 if is_pick else 10, color=color),
-        showlegend=False,
-    ))
+fig.add_trace(go.Bar(
+    x=models, y=latencies,
+    marker_color=colors,
+    text=[f'{v} ms' for v in latencies],
+    textposition='outside',
+    textfont=dict(color='#e2e8f0', size=12),
+))
+fig.add_hline(y=10, line_dash='dot', line_color='#fbbf24', opacity=0.8,
+    annotation_text='  10 ms budget (100 Hz LINAC)',
+    annotation_font=dict(color='#fbbf24', size=10),
+    annotation_position='top left')
 
 fig.update_layout(
-    height=490, autosize=True,
-    paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
-    font=dict(color="#e2e8f0", size=11),
-    xaxis=dict(
-        title="Training data / evaluations needed",
-        range=[-0.3, 3.5],
-        tickvals=[0.3, 1.5, 2.7],
-        ticktext=["Very few  (< 100)", "Moderate  (1 000s)", "Large  (> 10 000s)"],
-        showgrid=True, gridcolor="#1e3048", zeroline=False,
-    ),
-    yaxis=dict(
-        title="Works without fault labels",
-        range=[0.3, 5.4],
-        tickvals=[1, 2, 3, 4, 5],
-        ticktext=["Needs full<br>label set", "Needs partial<br>labels",
-                  "Semi-super-<br>vised", "Mostly<br>label-free", "Fully<br>unsupervised"],
-        showgrid=True, gridcolor="#1e3048", zeroline=False,
-    ),
-    margin=dict(l=110, r=30, t=15, b=70),
+    height=290, autosize=True,
+    paper_bgcolor='#0d1b2a', plot_bgcolor='#111f30',
+    font=dict(color='#e2e8f0', size=11),
+    xaxis=dict(showgrid=False, zeroline=False),
+    yaxis=dict(title='Inference latency (ms)', type='log',
+               showgrid=True, gridcolor='#1e3048', zeroline=False),
+    margin=dict(t=10, b=10, l=70, r=15),
+    showlegend=False,
 )
 fig
 ```
 
-::: {.slide-ref}
-★ methods used in this lecture. Existing detail landscapes: anomaly detection → slide 14 · optimisation → slide 21 · surrogate → slide 27
-:::
+<div class="fragment slide-callout-overlay">
+<div class="callout-box">
+A model in a notebook is not a deployed model.<br>
+<span style="font-weight:400; font-size:0.82em; color:#94a3b8;">Latency, reliability and drift monitoring are engineering problems.</span>
+</div>
+</div>
 
----
+# Use Case 1 {.section-divider background-color="#e2e8f0" data-background-transition="zoom"}
 
-## AI arrives at accelerators
-
-<style>
-.ai-milestones table { width: auto !important; margin: 0 auto !important; min-width: 88%; }
-.ai-milestones td, .ai-milestones th { padding: 0.45em 1.1em !important; }
-</style>
-
-::: {.ai-milestones style="font-size: 0.66em; margin-top: 0.4em;"}
-
-| Year | Facility | Approach | Impact |
-|------|----------|----------|--------|
-| 1993 | CERN LEP | Neural network orbit correction | First ML in live accelerator operation |
-| 2018 | SLAC LCLS | Bayesian optimisation in production | −10% beam loss · ~50 evaluations |
-| 2019 | JLab CEBAF | Autoencoder on SRF IQ waveforms | Fault detection without labels |
-| 2021 | SLAC LCLS-II | Cheetah differentiable simulator | 10³–10⁵× faster than tracking codes |
-| 2022 | ESRF, SNS | Reinforcement learning, orbit/tune | Autonomous closed-loop beam control |
-| 2024 | KIT KARA | Anomaly detection + energy management | **−30% energy footprint** on real ring |
-
-:::
-
-::: {.slide-ref}
-Edelen et al., *IEEE TNS* 63 (2016) · Duris et al., *PRL* 124 (2020) · Kaiser et al., *PRAB* 27 (2024) · Ghribi et al., *EPN* 56 (2025)
-:::
-
-::: notes
-30 years from first NNs to production AI systems. The key inflection point is 2019: BO in production at LCLS (Duris+2020), ML-based model-independent stabilisation at ALS (Leemann+2019, PRL 123:194801), differentiable simulation with Cheetah (Kaiser+2024, PRAB). KARA result is not a simulation — measured on the real machine.
-:::
-
----
-
-## {.no-footer background-iframe="https://aghribi.github.io/acc-ml-living-review" background-interactive="true"}
-
-::: notes
-This living review covers all ML applications in accelerator physics — updated continuously. It is the map of what has been done and what is open. Bookmark it.
-:::
-
----
-
-## Six ways AI helps accelerators today
-
-::: {.fragment .fade-in}
-::: {.highlight-box #box-fault style="margin: 0.35em 0; padding: 0.45em 0.9em; font-size:0.85em; line-height:1.6;"}
-**Fault detection** — classify anomalous events before interlocks trigger
-:::
-:::
-::: {.fragment .fade-in}
-::: {.highlight-box #box-tuning style="margin: 0.35em 0; padding: 0.45em 0.9em; font-size:0.85em; line-height:1.6;"}
-**Beam tuning** — find optimal settings with minimal beam time (< 50 evaluations)
-:::
-:::
-::: {.fragment .fade-in}
-::: {.highlight-box #box-surrogate style="margin: 0.35em 0; padding: 0.45em 0.9em; font-size:0.85em; line-height:1.6;"}
-**Surrogate models** — replace slow tracking codes (10³–10⁵× speedup)
-:::
-:::
-::: {.fragment .fade-in}
-::: {.highlight-box style="margin: 0.35em 0; padding: 0.45em 0.9em; font-size:0.85em; line-height:1.6;"}
-**Predictive maintenance** — forecast failures before they occur
-:::
-:::
-::: {.fragment .fade-in}
-::: {.highlight-box style="margin: 0.35em 0; padding: 0.45em 0.9em; font-size:0.85em; line-height:1.6;"}
-**Adaptive control** — online reinforcement learning in the control loop
-:::
-:::
-::: {.fragment .fade-in #lecture-focus-trigger}
-::: {.highlight-box style="margin: 0.35em 0; padding: 0.45em 0.9em; font-size:0.85em; line-height:1.6;"}
-**Digital twins** — live virtual model of the actual machine, continuously updated
-:::
-:::
-
-::: notes
-This lecture covers the first three in depth with runnable code.
-:::
-
-# Use Case 1 {.section-divider background-color="#0a1520"}
-
-::: {style="color: #22d3ee; font-size: 1.6em; font-weight: 800; margin-top: 0.5em;"}
+::: {style="color: #1e3a5f; font-size: 1.6em; font-weight: 800; margin-top: 0.5em;"}
 RF Fault Detection
 :::
 
-::: {style="font-size: 1em; color: #94a3b8;"}
+::: {style="font-size: 1em; color: #334155;"}
 Autoencoders on cavity IQ waveforms · Notebook 01
 :::
 
@@ -1370,13 +1943,13 @@ Sweep the decision threshold from 0 to 1. At each value, plot <strong>True Posit
         style="border-radius:6px; border:1px solid #22d3ee; background:#fff;">
 </iframe>
 
-# Use Case 2 {.section-divider background-color="#0a1520"}
+# Use Case 2 {.section-divider background-color="#e2e8f0" data-background-transition="zoom"}
 
-::: {style="color: #22d3ee; font-size: 1.6em; font-weight: 800; margin-top: 0.5em;"}
+::: {style="color: #1e3a5f; font-size: 1.6em; font-weight: 800; margin-top: 0.5em;"}
 Beam Tuning with Bayesian Optimisation
 :::
 
-::: {style="font-size: 1em; color: #94a3b8;"}
+::: {style="font-size: 1em; color: #334155;"}
 Cheetah · differentiable accelerator simulation · Notebook 02
 :::
 
@@ -1422,7 +1995,7 @@ for name, logx, y, size, color, pos in methods:
 fig.add_annotation(x=1.6, y=4.35, text="← best quadrant",
     showarrow=False, font=dict(size=10, color="#fbbf24"), xanchor="left")
 fig.add_annotation(x=4.95, y=0.85,
-    text="† RL: best for sequential online control (not single-shot optimisation) — Emma+2018, Kain+2020",
+    text="† RL: best for sequential online control, not single-shot optimisation",
     showarrow=False, font=dict(size=9, color="#64748b"), xanchor="right")
 
 fig.update_layout(
@@ -1445,7 +2018,7 @@ fig
 ```
 
 ::: {.slide-ref}
-Duris et al., *PRL* 124 (2020) · Frol et al., *IPAC* (2019)
+Duris et al., *PRL* 124 (2020) · Frol et al., *IPAC* (2019) · Emma et al., *Nat. Mach. Int.* 1 (2019) · Kain et al., *Phys. Rev. Res.* 2 (2020)
 :::
 
 ---
@@ -1646,13 +2219,13 @@ Far from data → wide variance → explore. Near data → narrow → exploit. P
         style="border-radius:6px; border:1px solid #22d3ee; background:#fff;">
 </iframe>
 
-# Use Case 3 {.section-divider background-color="#0a1520"}
+# Use Case 3 {.section-divider background-color="#e2e8f0" data-background-transition="zoom"}
 
-::: {style="color: #22d3ee; font-size: 1.6em; font-weight: 800; margin-top: 0.5em;"}
+::: {style="color: #1e3a5f; font-size: 1.6em; font-weight: 800; margin-top: 0.5em;"}
 Surrogate Models
 :::
 
-::: {style="font-size: 1em; color: #94a3b8;"}
+::: {style="font-size: 1em; color: #334155;"}
 Replacing tracking codes with neural networks · Notebook 03
 :::
 
@@ -1925,19 +2498,23 @@ Tracks actual machine state in real time.
 ::: {.column width="54%"}
 
 ::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="1"}
-**⚗ Data scarcity** — faults rare, labels unavailable.
-:::
-
-::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="2"}
 **⚖ Explainability** — EU AI Act: control-loop AI = high-risk.
 :::
 
-::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="3"}
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="2"}
 **🔁 Cross-facility transfer** — Centre A model ≠ Centre B.
 :::
 
-::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em;" fragment-index="4"}
-**⚙ Real-time integration** — PyTorch into Varian / Elekta.
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="3"}
+**🔌 Agnostic integration** — deploy one model into EPICS, TANGO or DOOCS in < 1 ms; vendor-neutral adapter layer.
+:::
+
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="4"}
+**🗂 Data & model standards** — no shared schema across facilities; FAIR ML models still missing.
+:::
+
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em;" fragment-index="5"}
+**🤖 Agentic orchestration** — LLM agents coordinating multiple AI subsystems; emerging architecture.
 :::
 
 :::
@@ -1946,23 +2523,28 @@ Tracks actual machine state in real time.
 <div style="display:grid;">
 
 ::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.5em 0;" fragment-index="1"}
-<span style="font-size:1.6em; font-weight:800; color:#22d3ee; line-height:1.2;">Rare by design</span><br>
-<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">&lt;0.1% fault rate · &lt;100 labelled examples</span>
-:::
-
-::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.5em 0;" fragment-index="2"}
 <span style="font-size:1.4em; font-weight:800; color:#fbbf24; line-height:1.2;">EU AI Act 2024</span><br>
 <span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;"><strong style="color:#fbbf24;">High-risk</strong> class · SHAP / LIME audit</span>
 :::
 
-::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.5em 0;" fragment-index="3"}
+::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.5em 0;" fragment-index="2"}
 <span style="font-size:1.6em; font-weight:800; color:#22d3ee; line-height:1.2;">A → B gap</span><br>
 <span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">Few-shot domain adaptation: active research</span>
 :::
 
-::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.5em 0;" fragment-index="4"}
-<span style="font-size:1.6em; font-weight:800; color:#22d3ee; line-height:1.2;">&lt;1 ms</span><br>
-<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">RF loop latency · vendor certification ongoing</span>
+::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.2em 0;" fragment-index="3"}
+<span style="font-size:1.4em; font-weight:800; color:#22d3ee; line-height:1.2;">EPICS · TANGO · DOOCS</span><br>
+<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">&lt; 1 ms inference · vendor-neutral adapter<br>certification pipeline: active design work</span>
+:::
+
+::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.2em 0;" fragment-index="4"}
+<span style="font-size:1.4em; font-weight:800; color:#22d3ee; line-height:1.2;">FAIR + ONNX</span><br>
+<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">Findable, Accessible, Interoperable, Reusable<br>ML-Exchange · open model registry emerging</span>
+:::
+
+::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.2em 0;" fragment-index="5"}
+<span style="font-size:1.4em; font-weight:800; color:#22d3ee; line-height:1.2;">Multi-agent</span><br>
+<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">Fault-detect + tune + optimise, orchestrated<br>LLM planner → specialist ML tools</span>
 :::
 
 </div>
@@ -1974,7 +2556,7 @@ Tracks actual machine state in real time.
 Active research — AI delivers value **today**.
 :::
 
-<div class="fragment slide-callout-overlay" data-fragment-index="5">
+<div class="fragment slide-callout-overlay" data-fragment-index="6">
 <div class="concept-callout-box">
 <div class="concept-callout-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-0.15em;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Concept — Explainability (XAI)</div>
 <div>
@@ -2084,9 +2666,14 @@ This is an appetizer, not a full menu. Foundation models (e.g. CERN's accelerato
 <a href="https://www.energy.gov/undersecretaryforscience/genesis-mission/genesis-mission" style="color:#22d3ee; font-size:0.80em;">energy.gov → Genesis</a>
 :::
 
-::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em;" fragment-index="4"}
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="4"}
 **AISSAI Hackathon** — Hands-on school · **Oct 11–16 2026** · IN2P3 · open to all
 <a href="https://indico.in2p3.fr/event/39704/" style="color:#22d3ee; font-size:0.80em;">indico.in2p3.fr/event/39704</a>
+:::
+
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em;" fragment-index="5"}
+**ARTIFACT** — European network · AI for accelerator physics & medical applications · open membership
+<a href="https://artifact-network.org" style="color:#22d3ee; font-size:0.80em;">artifact-network.org</a>
 :::
 
 :::
@@ -2112,6 +2699,11 @@ This is an appetizer, not a full menu. Foundation models (e.g. CERN's accelerato
 ::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.8em 0;" fragment-index="4"}
 <span style="font-size:2.0em; font-weight:800; color:#22d3ee; line-height:1.2;">Oct 11–16<br>2026</span><br>
 <span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">IN2P3 · open to all<br>indico.in2p3.fr/event/39704</span>
+:::
+
+::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.8em 0;" fragment-index="5"}
+<span style="font-size:1.6em; font-weight:800; color:#22d3ee; line-height:1.2;">artifact-network.org</span><br>
+<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">European open network · accelerator physics &amp; medical AI<br>Working groups · shared datasets · open to all</span>
 :::
 
 </div>
