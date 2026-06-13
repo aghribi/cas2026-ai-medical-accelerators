@@ -62,16 +62,26 @@ Welcome. This lecture covers AI applied to the machine — the accelerator — n
 
 ::: {.col-left}
 
-| Time | Section |
-|-----:|---------|
-| 0–3 min | Scope & context |
-| 3–12 min | A brief history of AI |
-| 12–24 min | **Use case 1** — RF fault detection |
-| 24–35 min | **Use case 2** — Beam tuning |
-| 35–47 min | **Use case 3** — Surrogate models |
-| 47–52 min | Digital twins & open problems |
-| 52–57 min | What's next · Opportunities |
-| 57–60 min | Q&A |
+::: {style="font-size:0.82em; line-height:1.8;"}
+
+**Part 1 &nbsp;—&nbsp; Introduction**
+
+::: {style="margin-left:1.2em; color:#94a3b8;"}
+Context &nbsp;·&nbsp; Brief history of AI &nbsp;·&nbsp; AI through the physicist lens
+:::
+
+**Part 2 &nbsp;—&nbsp; AI in accelerators**
+
+::: {style="margin-left:1.2em; color:#94a3b8;"}
+A 30 years dive &nbsp;·&nbsp; Practical foundations
+Practical applications &nbsp;·&nbsp; Future directions & opportunities
+:::
+
+::: {style="color:#475569; margin-top:0.6em;"}
+Summary &nbsp;·&nbsp; References
+:::
+
+:::
 
 ::: {style="margin-top: 0.6em; font-size: 0.75em; color: #94a3b8; line-height: 1.8;"}
 <a href="https://github.com/aghribi/cas2026-ai-medical-accelerators" style="color:#94a3b8;"><svg class="gh-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>aghribi/cas2026-ai-medical-accelerators</a>
@@ -96,7 +106,32 @@ AccML review: [aghribi.github.io/acc-ml-living-review](https://aghribi.github.io
 :::
 
 ::: notes
+Time guide —
+Part 1 (0–12 min): context 0–3 · AI history 3–12.
+Part 2 (12–57 min): 30 years review 12–15 · practical foundations 15–22 · use case 1 22–33 · use case 2 33–44 · use case 3 44–52 · future directions 52–57.
+Summary & Q&A: 57–60.
+
 Three live notebooks. The code you will see on the slides is the code in those notebooks. Everything is runnable on Google Colab from your phone right now — no installation needed.
+:::
+
+---
+
+## {.no-footer background-color="#0d1b2a"}
+
+::: {style="margin-top: 3em; text-align: center;"}
+::: {style="color: #475569; font-size: 0.6em; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.5em;"}
+Part 1
+:::
+::: {style="color: #e2e8f0; font-size: 2.2em; font-weight: 700;"}
+Introduction
+:::
+::: {style="color: #94a3b8; font-size: 0.72em; margin-top: 1em; line-height: 2;"}
+Context &nbsp;·&nbsp; Brief history of AI &nbsp;·&nbsp; AI through the physicist lens
+:::
+:::
+
+::: notes
+0–12 min. Three sub-sections: scope and clinical context; a compact history from the McCulloch-Pitts neuron (1943) to the Nobel Prize in Physics (2024); then the physics–ML bridge (Hopfield, statistical mechanics, Langevin dynamics).
 :::
 
 ---
@@ -386,6 +421,22 @@ The Minsky-Papert result was a setback — XOR requires a hidden layer, which th
 
 ---
 
+# AI Through the Physicist Lens {.section-divider background-color="#e2e8f0" data-background-transition="zoom"}
+
+::: {style="color: #1e3a5f; font-size: 1.6em; font-weight: 800; margin-top: 0.5em;"}
+Energy, spins, and statistical mechanics
+:::
+
+::: {style="font-size: 1em; color: #334155;"}
+Hopfield networks · Boltzmann machines · the physics–ML bridge
+:::
+
+::: notes
+~8–12 min. Hopfield networks as spin glass systems, the Ising connection, statistical mechanics of learning, SGD as Langevin dynamics. The point: accelerator physicists are not outsiders in ML — the toolkit is the same. Keep brisk.
+:::
+
+---
+
 ## Physics at the core of AI
 
 <div style="position:absolute; top:0.2em; right:0.4em; z-index:10; display:flex; gap:0.7em;">
@@ -662,14 +713,35 @@ As accelerator physicists we already speak this language.
 The connection between SGD and Langevin dynamics was formalised by Welling & Teh (2011). The Boltzmann machine (Ackley, Hinton & Sejnowski 1985) is a literal physical model. Phase transitions in learning (grokking) are an active research topic since Power et al. (2022). These connections mean accelerator physicists are naturally equipped to understand ML at a deep level — the toolkit is the same.
 :::
 
-# AI Arrives at Accelerators {.section-divider background-color="#e2e8f0" data-background-transition="zoom"}
+## {.no-footer background-color="#0d1b2a"}
+
+::: {style="margin-top: 3em; text-align: center;"}
+::: {style="color: #475569; font-size: 0.6em; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.5em;"}
+Part 2
+:::
+::: {style="color: #e2e8f0; font-size: 2.2em; font-weight: 700;"}
+AI in accelerators
+:::
+::: {style="color: #94a3b8; font-size: 0.7em; margin-top: 1em; line-height: 2.2;"}
+A 30 years dive &nbsp;·&nbsp; Practical foundations
+Practical applications &nbsp;·&nbsp; Future directions & opportunities
+:::
+:::
+
+::: notes
+12–57 min. The core of the lecture: (1) a 30-year milestone dive through ML at accelerators; (2) the six AI application categories and the ML pipeline; (3) three hands-on use cases with live Python notebooks; (4) digital twins; (5) open problems and outlook.
+:::
+
+---
+
+# A 30 Years Dive in AI for Accelerators {.section-divider background-color="#e2e8f0" data-background-transition="zoom"}
 
 ::: {style="color: #1e3a5f; font-size: 1.6em; font-weight: 800; margin-top: 0.5em;"}
-30 years from research to production
+From research curiosity to operational tool
 :::
 
 ::: {style="font-size: 1em; color: #334155;"}
-Milestones · applications · landscape
+Milestones · concrete results · living review
 :::
 
 ---
@@ -1618,6 +1690,22 @@ A model in a notebook is not a deployed model.<br>
 </div>
 </div>
 
+# Practical Applications {.section-divider background-color="#e2e8f0" data-background-transition="zoom"}
+
+::: {style="color: #1e3a5f; font-size: 1.6em; font-weight: 800; margin-top: 0.5em;"}
+Three use cases · Three live notebooks
+:::
+
+::: {style="font-size: 0.95em; color: #334155; margin-top: 0.5em; line-height: 1.9;"}
+Use case 1 — RF fault detection &nbsp;·&nbsp; Use case 2 — Beam tuning &nbsp;·&nbsp; Use case 3 — Surrogate models
+:::
+
+::: notes
+Three back-to-back use cases, each self-contained. Same structure: problem → method → result → notebook. Companion notebooks are open on Colab.
+:::
+
+---
+
 # Use Case 1 {.section-divider background-color="#e2e8f0" data-background-transition="zoom"}
 
 ::: {style="color: #1e3a5f; font-size: 1.6em; font-weight: 800; margin-top: 0.5em;"}
@@ -2489,6 +2577,18 @@ Tracks actual machine state in real time.
 
 :::
 ::::
+
+---
+
+# Future Directions & Opportunities {.section-divider background-color="#e2e8f0" data-background-transition="zoom"}
+
+::: {style="color: #1e3a5f; font-size: 1.6em; font-weight: 800; margin-top: 0.5em;"}
+Open problems · What comes next · Community
+:::
+
+::: notes
+~47–60 min. Open research problems framed as accelerator-physics questions; advanced AI directions (RL, generative models, foundation models); and the community/funding ecosystem.
+:::
 
 ---
 
