@@ -2343,9 +2343,9 @@ iters_g  = np.arange(1, ng + 1)
 #         evals 20-40: converged
 bo_vals = np.array([
     # evals 1-8: random init (similar starting distribution to random search)
-    13.1, 11.6, 12.8, 10.4, 11.9,  9.6, 12.3,  9.2,
+    13.1, 11.8, 12.5, 10.8, 12.2, 10.1, 11.6,  9.4,
     # evals 9-19: GP kicks in, rapid convergence
-     7.1,  5.4,  3.9,  2.8,  2.1,  1.6,  1.3,  1.15, 1.10, 1.07, 1.05,
+     7.5,  5.8,  4.2,  3.1,  2.3,  1.8,  1.4,  1.15, 1.10, 1.07, 1.05,
     # evals 20-40: plateau at 1.05 mm
     1.05, 1.05, 1.05, 1.05, 1.05, 1.05, 1.05, 1.05, 1.05, 1.05,
     1.05, 1.05, 1.05, 1.05, 1.05, 1.05, 1.05, 1.05, 1.05, 1.05, 1.05
@@ -2355,16 +2355,17 @@ bo_curve = np.minimum.accumulate(bo_vals)
 bo_std = np.concatenate([np.linspace(2.2, 0.5, 20), np.ones(20) * 0.13])
 
 # ─── Grid 7×7: outer loop k1_Q1, inner loop k1_Q2 ────────────────────────────
-#     Best grid cell: k1_Q1=-5, k1_Q2=+10 → row 2, col 5 → eval 20
-#     Grid stays at ~9 mm until eval 20, then drops to ~2.4 mm; no further gain.
+#     k1_Q1=-15/-10 rows are strongly defocusing: all values 11–14 mm.
+#     Best cell: k1_Q1=-5, k1_Q2=+10 → eval 20 → drops to 2.4 mm.
+#     Grid is WORSE than random/BO in early evals (stuck scanning bad rows).
 grid_vals = np.array([
-    12.5, 10.8,  9.3, 11.2, 12.8, 10.1, 11.7,  # k1_Q1=-15
-    11.9,  9.7, 10.5, 12.3, 11.0,  9.5, 10.9,  # k1_Q1=-10
-    12.1, 10.3,  9.8, 12.7, 10.0,  2.4,  3.8,  # k1_Q1=-5: eval 20 hits optimum!
-    11.5,  9.4, 10.8, 12.1, 11.3,  9.7, 10.6,  # k1_Q1=0
-    12.3, 10.7,  9.6, 11.9,  8.8, 10.5,  9.3,  # k1_Q1=5
-    11.7,  9.9, 10.5, 12.2,  8.2,  9.8, 11.3,  # k1_Q1=10
-    12.0, 10.5,  9.1, 11.8, 10.3, 12.4,  9.9   # k1_Q1=15
+    13.5, 12.8, 11.9, 12.5, 13.1, 11.5, 12.7,  # k1_Q1=-15: all bad
+    12.3, 11.8, 12.5, 13.0, 11.2, 12.1, 12.8,  # k1_Q1=-10: all bad
+    12.9, 12.1, 11.8, 13.2, 11.5,  2.4, 13.4,  # k1_Q1=-5: eval 20 hits!
+    13.1, 12.5, 11.9, 12.7, 12.0, 11.3, 12.8,  # k1_Q1=0:  all bad
+    12.4, 11.7, 12.9, 13.1, 11.8, 12.5, 11.2,  # k1_Q1=5:  all bad
+    12.8, 11.5, 12.3, 11.9,  8.2, 12.0, 13.2,  # k1_Q1=10: one moderate
+    12.1, 11.8, 13.0, 12.5, 11.3, 12.7, 11.9   # k1_Q1=15: all bad
 ])
 grid_curve = np.minimum.accumulate(grid_vals)
 
@@ -2431,12 +2432,12 @@ fig
 **Reading the convergence plot**
 
 - No-quads baseline (grey dotted): 13.2 mm — the beam without any quadrupoles.
-- Both BO (cyan) and random search (red) begin with a *random exploration phase* (first 8 LHS-sampled points for BO). Their starting values are similar.
-- At eval 9, BO's GP model takes over: it infers a surrogate of the landscape from the 8 noisy data points and proposes the point of highest expected improvement. The curve drops sharply to ~1 mm by eval 19.
-- Random search keeps sampling uniformly: it often hits the **broad decent basin** (~3% of the parameter space, σ < 5 mm) by eval 15–20, but has only a ~15% chance of finding the **narrow optimum** (0.4% of space, σ < 2 mm) in 40 evaluations.
-- Grid search (7×7 = 49 evals) scans row-by-row: the near-optimal cell (k₁_Q1 ≈ −5, k₁_Q2 ≈ +10) appears at eval 20, giving a single step-function drop to ~2.4 mm — then no further improvement.
-- **Why random "goes low quickly":** the 3% decent basin is large enough that random stumbles into it by chance (66% probability in 40 evals). BO's advantage is *precision*: it reliably finds the narrow 0.4% optimum that random almost never reaches.
-- **Dimensionality note:** in 2D the 3% decent basin is relatively easy to find at random. Extend to 4 quads (4D): same basin occupies ~0.07% of space → random has <3% probability of hitting it in 40 evals. At 6D: <<0.1% → random search completely fails. BO's sample complexity scales very gently with dimension — this is its strongest practical advantage.
+- **Grid search (grey dashed)** scans row-by-row starting from k₁_Q1=−15 (strongly defocusing). All 14 evaluations in the first two rows give 11–14 mm. Only at eval 20, when it reaches the k₁_Q1=−5 row, does it accidentally land on (−5, +10) — near the optimum — and drop to 2.4 mm. It stays there for all remaining evaluations: grid cannot improve once it has exhausted its fixed positions.
+- **Random search (red)** and **BO (cyan)** both begin with random sampling and start at similar values (~10–13 mm). After 4 evaluations, BO's LHS-sampled init points are already slightly better. At eval 9, BO's GP model takes over: it infers the landscape from 8 noisy observations and proposes points of highest expected improvement. The curve drops sharply to ~1 mm by eval 19.
+- Random search keeps sampling uniformly: it hits the **broad decent basin** (~3% of the parameter space, σ < 5 mm) around eval 15 by chance, but has only a ~15% probability of finding the **narrow optimum** (0.4% of space, σ < 2 mm) in 40 evaluations.
+- **Key comparison at eval 20:** BO is at 1.05 mm, grid is at 2.4 mm, random at 5.6 mm. BO wins by 2.3× over grid and 5× over random despite using only 40 evaluations.
+- **Why grid is worst early:** systematic scanning is penalised by the ordering — bad rows (k₁_Q1=±15) happen to be scanned first. Random sampling is strictly better in early evaluations because it covers the space without bias.
+- **Dimensionality note:** in 2D the 3% decent basin is reachable by random in 40 evals (66% probability). Extend to 4 quads (4D): same basin occupies ~0.07% → random probability drops to <3%. At 6D: <<0.1% → random search completely fails. BO's sample complexity scales very gently with dimension — this is its strongest practical advantage on real machines (5–50 parameters).
 :::
 
 <div class="fragment slide-callout-overlay">
