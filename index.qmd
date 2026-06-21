@@ -837,10 +837,10 @@ Milestones · concrete results · living review
 
 | Year | Facility | Approach | Impact |
 |------|----------|----------|--------|
-| 1993 | CERN LEP | Neural network orbit correction | First ML in live accelerator operation |
+| 1992–94 | Ion source · storage rings | Adaptive NN control (Mead+92); NN orbit correction (Bozoki & Friedman 94) | First ML for accelerator control |
 | 2018 | SLAC LCLS | Bayesian optimisation in production | −10% beam loss · ~50 evaluations |
-| 2019 | JLab CEBAF | Autoencoder on SRF IQ waveforms | Fault detection without labels |
-| 2021 | SLAC LCLS-II | Cheetah differentiable simulator | 10³–10⁵× faster than tracking codes |
+| 2019 | JLab CEBAF | ML on SRF cavity waveforms | Cavity-fault detection at scale |
+| 2021 | DESY / KIT | Cheetah differentiable simulator | 10³–10⁵× faster than tracking codes |
 | 2022 | ESRF, SNS | Reinforcement learning, orbit/tune | Autonomous closed-loop beam control |
 | 2024 | KIT KARA | Anomaly detection + energy management | **−30% energy footprint** on real ring |
 
@@ -851,7 +851,7 @@ Edelen et al., *IEEE TNS* 63 (2016) · Duris et al., *PRL* 124 (2020) · Kaiser 
 :::
 
 ::: notes
-30 years from first NNs to production AI systems. The key inflection point is 2019: BO in production at LCLS (Duris+2020), ML-based model-independent stabilisation at ALS (Leemann+2019, PRL 123:194801), differentiable simulation with Cheetah (Kaiser+2024, PRAB). KARA result is not a simulation — measured on the real machine.
+30 years from first NNs to production AI systems. The earliest applications are Mead et al. (1992, adaptive NN control of an ion source) and Bozoki & Friedman (1994, NN orbit correction in storage rings) — then two dormant decades limited by compute, before project funding revived the field around 2016 (Edelen+2016). The key inflection point is 2019: BO in production at LCLS (Duris+2020), ML-based model-independent stabilisation at ALS (Leemann+2019, PRL 123:194801), differentiable simulation with Cheetah (Kaiser+2024, PRAB). KARA result is not a simulation — measured on the real machine.
 :::
 
 ---
@@ -2292,7 +2292,7 @@ After 2 m drift: σ_x = 3.7 mm/plane · σ_x + σ_y = 13.2 mm (no quads)
 
 ---
 
-## BO finds focus in 40 evaluations
+## BO finds focus in tens of evaluations
 
 ::: {.col-left style="padding-top:0.9em;"}
 
@@ -2434,8 +2434,8 @@ fig
 - No-quads baseline (grey dotted): 13.2 mm — the beam without any quadrupoles.
 - **Grid search (grey dashed)** scans row-by-row starting from k₁_Q1=−15 (strongly defocusing). All 14 evaluations in the first two rows give 11–14 mm. Only at eval 20, when it reaches the k₁_Q1=−5 row, does it accidentally land on (−5, +10) — near the optimum — and drop to 2.4 mm. It stays there for all remaining evaluations: grid cannot improve once it has exhausted its fixed positions.
 - **Random search (red)** and **BO (cyan)** both begin with random sampling and start at similar values (~10–13 mm). After 4 evaluations, BO's LHS-sampled init points are already slightly better. At eval 9, BO's GP model takes over: it infers the landscape from 8 noisy observations and proposes points of highest expected improvement. The curve drops sharply to ~1 mm by eval 19.
-- Random search keeps sampling uniformly: it hits the **broad decent basin** (~3% of the parameter space, σ < 5 mm) around eval 15 by chance, but has only a ~15% probability of finding the **narrow optimum** (0.4% of space, σ < 2 mm) in 40 evaluations.
-- **Key comparison at eval 20:** BO is at 1.05 mm, grid is at 2.4 mm, random at 5.6 mm. BO wins by 2.3× over grid and 5× over random despite using only 40 evaluations.
+- Random search keeps sampling uniformly: it hits the **broad decent basin** (~3.6% of the parameter space, σ < 5 mm) around eval 15 by chance, but has only a ~8% probability of finding the **narrow optimum** (0.2% of space, σ < 2 mm) in 40 random evaluations.
+- **Key comparison at eval 20:** on this representative run BO (~1 mm) is already ahead of grid (2.4 mm) and random (5.6 mm) — BO converges faster early. But averaged over 8 random seeds the *final* values are a statistical tie in 2D: **BO 2.20 ± 0.56 mm vs grid 2.36 ± 0.06 mm** (random 5.17 ± 2.17 mm), with the 4% measurement-noise floor preventing any method from reaching the 0.80 mm noiseless optimum. BO's decisive advantage is dimensional scaling (below), not the 2D endpoint.
 - **Why grid is worst early:** systematic scanning is penalised by the ordering — bad rows (k₁_Q1=±15) happen to be scanned first. Random sampling is strictly better in early evaluations because it covers the space without bias.
 - **Dimensionality note:** in 2D the 3% decent basin is reachable by random in 40 evals (66% probability). Extend to 4 quads (4D): same basin occupies ~0.07% → random probability drops to <3%. At 6D: <<0.1% → random search completely fails. BO's sample complexity scales very gently with dimension — this is its strongest practical advantage on real machines (5–50 parameters).
 :::
@@ -2976,7 +2976,7 @@ RAISE: the full EU AI in Science strategy aims to double Horizon Europe AI fundi
 | | Tool | Key result |
 |---|---|---|
 | **RF fault detection** | Autoencoder (unsupervised) | ROC-AUC > 0.99, no fault labels |
-| **Beam tuning** | Bayesian opt. + Cheetah | −10% spot size, 40 evaluations |
+| **Beam tuning** | Bayesian opt. + Cheetah | 13.2→2.2 mm, ~60 noisy evals, scales to high-D |
 | **Surrogate model** | MLP, Tanh, normalised I/O | R²=1.00, **586× speedup** |
 
 ::: {.col-left style="margin-top: 0.8em;"}
