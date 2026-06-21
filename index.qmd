@@ -841,7 +841,7 @@ Milestones · concrete results · living review
 | 2018 | SLAC LCLS | Bayesian optimisation in production | −10% beam loss · ~50 evaluations |
 | 2019 | JLab CEBAF | ML on SRF cavity waveforms | Cavity-fault detection at scale |
 | 2021 | DESY / KIT | Cheetah differentiable simulator | 10³–10⁵× faster than tracking codes |
-| 2022 | ESRF, SNS | Reinforcement learning, orbit/tune | Autonomous closed-loop beam control |
+| 2020–23 | CERN · DESY | Reinforcement learning for control & tuning | Autonomous closed-loop control |
 | 2024 | KIT KARA | Anomaly detection + energy management | **−30% energy footprint** on real ring |
 
 :::
@@ -851,7 +851,7 @@ Edelen et al., *IEEE TNS* 63 (2016) · Duris et al., *PRL* 124 (2020) · Kaiser 
 :::
 
 ::: notes
-30 years from first NNs to production AI systems. The earliest applications are Mead et al. (1992, adaptive NN control of an ion source) and Bozoki & Friedman (1994, NN orbit correction in storage rings) — then two dormant decades limited by compute, before project funding revived the field around 2016 (Edelen+2016). The key inflection point is 2019: BO in production at LCLS (Duris+2020), ML-based model-independent stabilisation at ALS (Leemann+2019, PRL 123:194801), differentiable simulation with Cheetah (Kaiser+2024, PRAB). KARA result is not a simulation — measured on the real machine.
+30 years from first NNs to production AI systems. The earliest applications are Mead et al. (1992, adaptive NN control of an ion source) and Bozoki & Friedman (1994, NN orbit correction in storage rings) — then two dormant decades limited by compute, before project funding revived the field around 2016 (Edelen+2016). The key inflection point is 2019: BO in production at LCLS (Duris+2020), ML-based model-independent stabilisation at ALS (Leemann+2019, PRL 123:194801), differentiable simulation with Cheetah (Kaiser+2024, PRAB). Reinforcement learning entered control with sample-efficient RL at CERN (Kain+2020, PRAB 23:124801) and online RL+BO tuning at DESY (Kaiser+2023). KARA result is not a simulation — measured on the real machine.
 :::
 
 ---
@@ -867,7 +867,7 @@ Edelen et al., *IEEE TNS* 63 (2016) · Duris et al., *PRL* 124 (2020) · Kaiser 
 :::
 
 ::: {.fragment .fade-in-then-semi-out style="margin: 0.6em 0; font-size:0.84em;"}
-**Beam tuning** — Bayesian optimisation at LCLS: setup time from hours to **≈50 evaluations**; RL at ESRF runs closed-loop
+**Beam tuning** — Bayesian optimisation at LCLS: setup time from hours to **≈50 evaluations**; RL at CERN/DESY runs closed-loop
 :::
 
 ::: {.fragment .fade-in-then-semi-out style="margin: 0.6em 0; font-size:0.84em;"}
@@ -2884,7 +2884,7 @@ fig
 :::
 ::: {.column width="33%"}
 ::: {.fragment .highlight-box style="font-size:0.76em;"}
-**Reinforcement learning** — closed-loop policy on the real machine. Live at ESRF, SNS, proton therapy.
+**Reinforcement learning** — closed-loop policy on the real machine. Demonstrated at CERN and DESY.
 :::
 :::
 ::: {.column width="33%"}
@@ -2895,7 +2895,7 @@ fig
 ::::
 
 ::: notes
-This is an appetizer, not a full menu. Foundation models (e.g. CERN's accelerator-specific LLM prototypes), PINNs (several groups at SNS and ESS), and RL (Emma+2018, Kain+2020, Hirlaender+2020) are all active research directions with published results. The key message: the gap between today's lecture and the frontier is smaller than students often assume. Bubble position is schematic — readiness is illustrative, not a formal TRL score.
+This is an appetizer, not a full menu. Foundation models (e.g. CERN's accelerator-specific LLM prototypes), PINNs (several groups at SNS and ESS), and RL (Kain+2020, Hirlaender+2020) are all active research directions with published results. The key message: the gap between today's lecture and the frontier is smaller than students often assume. Bubble position is schematic — readiness is illustrative, not a formal TRL score.
 :::
 
 ---
