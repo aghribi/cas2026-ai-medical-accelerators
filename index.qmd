@@ -2186,7 +2186,7 @@ fig
 ```
 
 ::: {.slide-ref}
-Duris et al., *PRL* 124 (2020) · Frol et al., *IPAC* (2019) · Emma et al., *Nat. Mach. Int.* 1 (2019) · Kain et al., *Phys. Rev. Accel. Beams* 23 (2020)
+Duris et al., *PRL* 124 (2020) · Roussel et al., *PRAB* 27 (2024) · Emma et al., *Nat. Mach. Int.* 1 (2019) · Kain et al., *Phys. Rev. Accel. Beams* 23 (2020)
 :::
 
 ---
@@ -2218,7 +2218,7 @@ $n$ correctors × $k$ quads → high-dimensional space that grows exponentially 
 :::
 
 ::: {.key-result .fragment style="margin-top: 0.8em;"}
-Demonstrated at AWAKE (CERN), FLASH (DESY), and clinical proton therapy centres.
+Demonstrated in production at SLAC LCLS and across light sources, FELs, and linacs (Duris 2020; Roussel et al. 2024).
 :::
 
 :::
@@ -2433,7 +2433,7 @@ fig
 
 - No-quads baseline (grey dotted): 13.2 mm — the beam without any quadrupoles.
 - **Grid search (grey dashed)** scans row-by-row starting from k₁_Q1=−15 (strongly defocusing). All 14 evaluations in the first two rows give 11–14 mm. Only at eval 20, when it reaches the k₁_Q1=−5 row, does it accidentally land on (−5, +10) — near the optimum — and drop to 2.4 mm. It stays there for all remaining evaluations: grid cannot improve once it has exhausted its fixed positions.
-- **Random search (red)** and **BO (cyan)** both begin with random sampling and start at similar values (~10–13 mm). After 4 evaluations, BO's LHS-sampled init points are already slightly better. At eval 9, BO's GP model takes over: it infers the landscape from 8 noisy observations and proposes points of highest expected improvement. The curve drops sharply to ~1 mm by eval 19.
+- **Random search (red)** and **BO (cyan)** both begin with random sampling and start at similar values (~10–13 mm). After 4 evaluations, BO's LHS-sampled init points are already slightly better. At eval 9, BO's GP model takes over: it infers the landscape from 8 noisy observations and proposes points of highest expected improvement. The curve drops sharply to ~2.2 mm by eval 19.
 - Random search keeps sampling uniformly: it hits the **broad decent basin** (~3.6% of the parameter space, σ < 5 mm) around eval 15 by chance, but has only a ~8% probability of finding the **narrow optimum** (0.2% of space, σ < 2 mm) in 40 random evaluations.
 - **Key comparison at eval 20:** on this representative run BO (~1 mm) is already ahead of grid (2.4 mm) and random (5.6 mm) — BO converges faster early. But averaged over 8 random seeds the *final* values are a statistical tie in 2D: **BO 2.20 ± 0.56 mm vs grid 2.36 ± 0.06 mm** (random 5.17 ± 2.17 mm), with the 4% measurement-noise floor preventing any method from reaching the 0.80 mm noiseless optimum. BO's decisive advantage is dimensional scaling (below), not the 2D endpoint.
 - **Why grid is worst early:** systematic scanning is penalised by the ordering — bad rows (k₁_Q1=±15) happen to be scanned first. Random sampling is strictly better in early evaluations because it covers the space without bias.
@@ -3009,6 +3009,7 @@ All code is open and runnable on Colab.
 **Key papers — cited in this lecture**
 
 Duris et al., *PRL* **124**, 124801 (2020) — BO at LCLS<br>
+Roussel et al., *PRAB* **27**, 084801 (2024) — BO algorithms review<br>
 Tennant et al., *PRAB* **23**, 114601 (2020) — SRF fault detection<br>
 Kaiser et al., *PRAB* **27**, 054601 (2024) — Cheetah simulator<br>
 Ghribi et al., *EPN* **56**(1), 15 (2025) — KARA −30% energy<br>
