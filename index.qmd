@@ -838,9 +838,9 @@ Milestones · concrete results · living review
 | Year | Facility | Approach | Impact |
 |------|----------|----------|--------|
 | 1992–94 | Ion source · storage rings | Adaptive NN control (Mead+92); NN orbit correction (Bozoki & Friedman 94) | First ML for accelerator control |
-| 2018 | SLAC LCLS | Bayesian optimisation in production | −10% beam loss · ~50 evaluations |
-| 2019 | JLab CEBAF | ML on SRF cavity waveforms | Cavity-fault detection at scale |
-| 2021 | DESY / KIT | Cheetah differentiable simulator | 10³–10⁵× faster than tracking codes |
+| 2020 | SLAC LCLS | Bayesian optimisation in production | setup hours → ~tens of evaluations |
+| 2020 | JLab CEBAF | ML on SRF cavity waveforms | Cavity-fault classification |
+| 2024 | DESY / KIT | Cheetah differentiable simulator | 10³–10⁵× faster than tracking codes |
 | 2020–23 | CERN · DESY | Reinforcement learning for control & tuning | Autonomous closed-loop control |
 | 2024 | KIT KARA | Anomaly detection + energy management | **−30% energy footprint** on real ring |
 
@@ -851,7 +851,7 @@ Edelen et al., *IEEE TNS* 63 (2016) · Duris et al., *PRL* 124 (2020) · Kaiser 
 :::
 
 ::: notes
-30 years from first NNs to production AI systems. The earliest applications are Mead et al. (1992, adaptive NN control of an ion source) and Bozoki & Friedman (1994, NN orbit correction in storage rings) — then two dormant decades limited by compute, before project funding revived the field around 2016 (Edelen+2016). The key inflection point is 2019: BO in production at LCLS (Duris+2020), ML-based model-independent stabilisation at ALS (Leemann+2019, PRL 123:194801), differentiable simulation with Cheetah (Kaiser+2024, PRAB). Reinforcement learning entered control with sample-efficient RL at CERN (Kain+2020, PRAB 23:124801) and online RL+BO tuning at DESY (Kaiser+2023). KARA result is not a simulation — measured on the real machine.
+30 years from first NNs to production AI systems. The earliest applications are Mead et al. (1992, adaptive NN control of an ion source) and Bozoki & Friedman (1994, NN orbit correction in storage rings) — then two dormant decades limited by compute, before project funding revived the field around 2016 (Edelen+2016). By 2020, BO was in production at LCLS (Duris+2020), with ML-based model-independent stabilisation demonstrated at ALS (Leemann+2019, PRL 123:194801) and differentiable simulation via Cheetah (Kaiser+2024, PRAB). Reinforcement learning entered control with sample-efficient RL at CERN (Kain+2020, PRAB 23:124801) and online RL+BO tuning at DESY (Kaiser+2023). KARA result is not a simulation — measured on the real machine.
 :::
 
 ---
@@ -1153,7 +1153,7 @@ Data · Features · Method selection · Pipeline
 </div>
 <div data-id="uc3" style="flex:1; padding:0.35em 0.5em; border-radius:6px; border:1px solid rgba(180,160,140,0.38); background:rgba(180,160,140,0.05);">
 <div style="font-size:0.65em; font-weight:600; color:#b0a090;">UC3 · Surrogate</div>
-<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">5 000 Cheetah calls → MLP → 586× speedup</div>
+<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">5 000 Cheetah calls → MLP → 641× speedup</div>
 </div>
 </div>
 
@@ -1203,7 +1203,7 @@ Road-map — present the full pipeline, then step through the highlighted sectio
 </div>
 <div data-id="uc3" style="flex:1; padding:0.35em 0.5em; border-radius:6px; border:1px solid rgba(180,160,140,0.38); background:rgba(180,160,140,0.05); opacity:0.12;">
 <div style="font-size:0.65em; font-weight:600; color:#b0a090;">UC3 · Surrogate</div>
-<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">5 000 Cheetah calls → MLP → 586× speedup</div>
+<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">5 000 Cheetah calls → MLP → 641× speedup</div>
 </div>
 </div>
 
@@ -1379,7 +1379,7 @@ A model trained on bad data learns bad behaviour.<br>
 </div>
 <div style="flex:1; padding:0.35em 0.5em; border-radius:6px; border:1px solid rgba(180,160,140,0.38); background:rgba(180,160,140,0.05);">
 <div style="font-size:0.65em; font-weight:600; color:#b0a090;">UC3 · Surrogate</div>
-<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">5 000 Cheetah calls → MLP → 586× speedup</div>
+<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">5 000 Cheetah calls → MLP → 641× speedup</div>
 </div>
 </div>
 
@@ -1541,7 +1541,7 @@ Good features = simpler models + better generalisation.<br>
 </div>
 <div style="flex:1; padding:0.35em 0.5em; border-radius:6px; border:1px solid rgba(180,160,140,0.38); background:rgba(180,160,140,0.05);">
 <div style="font-size:0.65em; font-weight:600; color:#b0a090;">UC3 · Surrogate</div>
-<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">5 000 Cheetah calls → MLP → 586× speedup</div>
+<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">5 000 Cheetah calls → MLP → 641× speedup</div>
 </div>
 </div>
 
@@ -1682,7 +1682,7 @@ Validate on data the model has never seen — and on faults it has never seen.<b
 </div>
 <div style="flex:1; padding:0.35em 0.5em; border-radius:6px; border:1px solid rgba(180,160,140,0.38); background:rgba(180,160,140,0.05);">
 <div style="font-size:0.65em; font-weight:600; color:#b0a090;">UC3 · Surrogate</div>
-<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">5 000 Cheetah calls → MLP → 586× speedup</div>
+<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">5 000 Cheetah calls → MLP → 641× speedup</div>
 </div>
 </div>
 
@@ -2035,7 +2035,7 @@ Normal → low · Faults → high
 ```{python}
 # Train on NORMAL pulses only
 X_normal = X_train[y_train == 0]
-for epoch in range(40):
+for epoch in range(50):
     for (batch,) in loader:
         loss = ((batch - model(batch))**2).mean()
         optimizer.zero_grad()
@@ -2082,7 +2082,7 @@ fig
 ```
 
 ::: {style="text-align:center; margin-top:0.4em;"}
-<span style="font-size:1.5em; font-weight:800; color:#22d3ee; line-height:1.1;">0.99</span><br>
+<span style="font-size:1.5em; font-weight:800; color:#22d3ee; line-height:1.1;">1.000</span><br>
 [ROC-AUC — threshold-independent fault detection]{.metric-label}
 :::
 
@@ -2186,7 +2186,7 @@ fig
 ```
 
 ::: {.slide-ref}
-Duris et al., *PRL* 124 (2020) · Frol et al., *IPAC* (2019) · Emma et al., *Nat. Mach. Int.* 1 (2019) · Kain et al., *Phys. Rev. Res.* 2 (2020)
+Duris et al., *PRL* 124 (2020) · Frol et al., *IPAC* (2019) · Emma et al., *Nat. Mach. Int.* 1 (2019) · Kain et al., *Phys. Rev. Accel. Beams* 23 (2020)
 :::
 
 ---
@@ -2282,7 +2282,7 @@ beam_out = segment.track(beam_in)
 :::
 
 ::: {.highlight-box style="margin-top: 0.8em; font-size: 0.72em;"}
-After 2 m drift: σ_x = 3.7 mm/plane · σ_x + σ_y = 13.2 mm (no quads)
+At screen, no quads: σ_x + σ_y = 13.2 mm (6.6 mm/plane)
 :::
 
 :::
@@ -2315,7 +2315,7 @@ result = gp_minimize(
     func=objective,
     dimensions=[Real(-15.0, 15.0, name="k1_Q1"),
                 Real(-15.0, 15.0, name="k1_Q2")],
-    n_calls=40, n_initial_points=8,
+    n_calls=60, n_initial_points=12,
     acq_func="EI", noise=NOISE**2,
 )
 # → best: ~1.0 mm  (vs 13.2 mm no quads — 13× improvement)
@@ -2339,16 +2339,16 @@ iters_g  = np.arange(1, ng + 1)
 
 # Explicit representative curves reflecting real notebook results.
 # ─── BO: first 8 evals = random LHS init (same policy as random search) ──────
-#         evals 9-19: GP model guides → rapid descent to ~1.05 mm
-#         evals 20-40: converged
+#         evals 9-19: GP model guides → rapid descent to ~2.2 mm
+#         evals 20-40: converged (8-seed mean 2.20 ± 0.56 mm)
 bo_vals = np.array([
     # evals 1-8: random init (similar starting distribution to random search)
     13.1, 11.8, 12.5, 10.8, 12.2, 10.1, 11.6,  9.4,
     # evals 9-19: GP kicks in, rapid convergence
-     7.5,  5.8,  4.2,  3.1,  2.3,  1.8,  1.4,  1.15, 1.10, 1.07, 1.05,
-    # evals 20-40: plateau at 1.05 mm
-    1.05, 1.05, 1.05, 1.05, 1.05, 1.05, 1.05, 1.05, 1.05, 1.05,
-    1.05, 1.05, 1.05, 1.05, 1.05, 1.05, 1.05, 1.05, 1.05, 1.05, 1.05
+     7.5,  5.8,  4.4,  3.4,  2.8,  2.5,  2.35, 2.28, 2.24, 2.21, 2.20,
+    # evals 20-40: plateau at ~2.2 mm
+    2.20, 2.20, 2.20, 2.20, 2.20, 2.20, 2.20, 2.20, 2.20, 2.20,
+    2.20, 2.20, 2.20, 2.20, 2.20, 2.20, 2.20, 2.20, 2.20, 2.20, 2.20
 ])
 bo_curve = np.minimum.accumulate(bo_vals)
 # UQ band (±1σ across 8 seeds)
@@ -2408,7 +2408,7 @@ fig.add_trace(go.Scatter(
 fig.add_trace(go.Scatter(x=iters, y=bo_curve, name="Bayesian opt. ± 1σ",
     line=dict(color="#22d3ee", width=3)))
 
-fig.add_annotation(x=39, y=0.70, text="~1.0 mm",
+fig.add_annotation(x=39, y=1.5, text="~2.2 mm",
     font=dict(color="#22d3ee", size=13), showarrow=False)
 
 fig.update_layout(height=460, autosize=True,
@@ -2571,9 +2571,9 @@ import plotly.graph_objects as go
 
 methods = ["TraceWin<br>(1 call)", "G4beamline<br>(1 call)",
            "Cheetah<br>(1 000 calls)", "Surrogate<br>(1 000 calls)"]
-times = [60_000, 600_000, 371, 0.6]
+times = [60_000, 600_000, 770, 1.2]
 colors = ["#64748b", "#475569", "#f87171", "#22d3ee"]
-labels = ["1 min", "10 min", "371 ms", "0.6 ms"]
+labels = ["1 min", "10 min", "770 ms", "1.2 ms"]
 
 fig = go.Figure(go.Bar(
     x=methods, y=times, marker_color=colors,
@@ -2668,7 +2668,7 @@ fig
 [0.001 mm]{.metric}<br>[MAE]{.metric-label}
 :::
 ::: {style="text-align:center;"}
-[586×]{.metric}<br>[speedup]{.metric-label}
+[641×]{.metric}<br>[speedup]{.metric-label}
 :::
 :::
 
@@ -2690,7 +2690,7 @@ fig
 
 ::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="1"}
 **Surrogate** — trained offline to mimic the simulator.
-Inference in **0.6 ms** vs. 1–10 min per call.
+Inference in **1.2 µs** vs. 1–10 min per call.
 :::
 
 ::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="2"}
@@ -2708,8 +2708,8 @@ Tracks actual machine state in real time.
 <div style="display:grid;">
 
 ::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.8em 0;" fragment-index="1"}
-<span style="font-size:2.4em; font-weight:800; color:#22d3ee; line-height:1.0;">586×</span><br>
-<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">Surrogate speedup vs. Cheetah<br>0.6 ms/call · error &lt; 1% in domain</span>
+<span style="font-size:2.4em; font-weight:800; color:#22d3ee; line-height:1.0;">641×</span><br>
+<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">Surrogate speedup vs. Cheetah<br>1.2 µs/call · error &lt; 1% in domain</span>
 :::
 
 ::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.5em 0;" fragment-index="2"}
@@ -2975,9 +2975,9 @@ RAISE: the full EU AI in Science strategy aims to double Horizon Europe AI fundi
 
 | | Tool | Key result |
 |---|---|---|
-| **RF fault detection** | Autoencoder (unsupervised) | ROC-AUC > 0.99, no fault labels |
+| **RF fault detection** | Autoencoder (unsupervised) | ROC-AUC = 1.000, no fault labels |
 | **Beam tuning** | Bayesian opt. + Cheetah | 13.2→2.2 mm, ~60 noisy evals, scales to high-D |
-| **Surrogate model** | MLP, Tanh, normalised I/O | R²=1.00, **586× speedup** |
+| **Surrogate model** | MLP, Tanh, normalised I/O | R²=1.00, **641× speedup** |
 
 ::: {.col-left style="margin-top: 0.8em;"}
 ::: {.key-result}
