@@ -2095,7 +2095,7 @@ fig
 <div class="concept-callout-box">
 <div class="concept-callout-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-0.15em;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Concept — ROC-AUC</div>
 <div>
-Sweep the decision threshold from 0 to 1. At each value, plot <strong>True Positive Rate</strong> (sensitivity) vs <strong>False Positive Rate</strong> (1 − specificity).<br>
+Sweep the decision threshold across the full score range. At each value, plot <strong>True Positive Rate</strong> (sensitivity) vs <strong>False Positive Rate</strong> (1 − specificity).<br>
 <strong>AUC</strong> = area under that curve. &emsp;AUC 0.5 → random classifier &emsp;AUC 1.0 → perfect separation.<br>
 <span style="color:#94a3b8; font-size:0.92em;">Threshold-independent — essential when fault rate &lt; 0.1 %: no fixed threshold is meaningful across operating conditions.</span>
 </div>
