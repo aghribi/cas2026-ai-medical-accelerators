@@ -863,7 +863,7 @@ Edelen et al., *IEEE TNS* 63 (2016) · Duris et al., *PRL* 124 (2020) · Kaiser 
 ::: {.column width="40%"}
 
 ::: {.fragment .fade-in-then-semi-out style="margin: 0.6em 0; font-size:0.84em;"}
-**Fault detection** — CEBAF autoencoders on SRF IQ signals: **95% recall**, sub-ms latency, fully unsupervised
+**Fault detection** — CEBAF: ML-based SRF cavity-fault classification in production since ~2019 (Tennant et al. 2020)
 :::
 
 ::: {.fragment .fade-in-then-semi-out style="margin: 0.6em 0; font-size:0.84em;"}
@@ -891,7 +891,7 @@ import plotly.graph_objects as go
 labels  = ['Badger + Geoff<br>opt. toolboxes',
            'KARA<br>energy AI', 'Cheetah<br>simulation',
            'LCLS<br>beam setup', 'CEBAF<br>fault detection']
-metrics = ['multi-facility', '−30% energy', '10⁵× faster', '~50 evaluations', '95% recall']
+metrics = ['multi-facility', '−30% energy', '10⁵× faster', '~50 evaluations', 'production ML triage']
 values  = [0.88, 0.72, 1.0, 0.86, 0.95]
 colors  = ['rgba(34,211,238,0.55)'] * 5
 
@@ -924,7 +924,7 @@ Tennant et al., *PRAB* 23 (2020) · Duris et al., *PRL* 124 (2020) · Kaiser et 
 :::
 
 ::: notes
-These are production results, not simulations. CEBAF (JLab) has been running autoencoder-based SRF triage since 2019. LCLS BO is the Duris+2020 PRL paper — real shots. KARA is the Ghribi+2025 EPN result with measured ring energy reduction. Badger (SLAC) and Geoff are open-source optimisation plugin frameworks that let operators swap algorithms (BO, Nelder-Mead, RL) without rewriting beamline code; both are in active production use at multiple facilities.
+These are production results, not simulations. CEBAF (JLab) has run ML-based SRF cavity-fault classification in production since ~2019 (Tennant et al. 2020 is a supervised classifier study; the unsupervised autoencoder in the live-demo notebook is our own illustration, not the CEBAF system). LCLS BO is the Duris+2020 PRL paper — real shots. KARA is the Ghribi+2025 EPN result with measured ring energy reduction. Badger (SLAC) and Geoff are open-source optimisation plugin frameworks that let operators swap algorithms (BO, Nelder-Mead, RL) without rewriting beamline code; both are in active production use at multiple facilities.
 :::
 
 ---
@@ -1153,7 +1153,7 @@ Data · Features · Method selection · Pipeline
 </div>
 <div data-id="uc3" style="flex:1; padding:0.35em 0.5em; border-radius:6px; border:1px solid rgba(180,160,140,0.38); background:rgba(180,160,140,0.05);">
 <div style="font-size:0.65em; font-weight:600; color:#b0a090;">UC3 · Surrogate</div>
-<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">5 000 Cheetah calls → MLP → 641× speedup</div>
+<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">5 000 Cheetah calls → MLP → ~600× speedup</div>
 </div>
 </div>
 
@@ -1203,7 +1203,7 @@ Road-map — present the full pipeline, then step through the highlighted sectio
 </div>
 <div data-id="uc3" style="flex:1; padding:0.35em 0.5em; border-radius:6px; border:1px solid rgba(180,160,140,0.38); background:rgba(180,160,140,0.05); opacity:0.12;">
 <div style="font-size:0.65em; font-weight:600; color:#b0a090;">UC3 · Surrogate</div>
-<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">5 000 Cheetah calls → MLP → 641× speedup</div>
+<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">5 000 Cheetah calls → MLP → ~600× speedup</div>
 </div>
 </div>
 
@@ -1379,7 +1379,7 @@ A model trained on bad data learns bad behaviour.<br>
 </div>
 <div style="flex:1; padding:0.35em 0.5em; border-radius:6px; border:1px solid rgba(180,160,140,0.38); background:rgba(180,160,140,0.05);">
 <div style="font-size:0.65em; font-weight:600; color:#b0a090;">UC3 · Surrogate</div>
-<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">5 000 Cheetah calls → MLP → 641× speedup</div>
+<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">5 000 Cheetah calls → MLP → ~600× speedup</div>
 </div>
 </div>
 
@@ -1541,7 +1541,7 @@ Good features = simpler models + better generalisation.<br>
 </div>
 <div style="flex:1; padding:0.35em 0.5em; border-radius:6px; border:1px solid rgba(180,160,140,0.38); background:rgba(180,160,140,0.05);">
 <div style="font-size:0.65em; font-weight:600; color:#b0a090;">UC3 · Surrogate</div>
-<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">5 000 Cheetah calls → MLP → 641× speedup</div>
+<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">5 000 Cheetah calls → MLP → ~600× speedup</div>
 </div>
 </div>
 
@@ -1682,7 +1682,7 @@ Validate on data the model has never seen — and on faults it has never seen.<b
 </div>
 <div style="flex:1; padding:0.35em 0.5em; border-radius:6px; border:1px solid rgba(180,160,140,0.38); background:rgba(180,160,140,0.05);">
 <div style="font-size:0.65em; font-weight:600; color:#b0a090;">UC3 · Surrogate</div>
-<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">5 000 Cheetah calls → MLP → 641× speedup</div>
+<div style="font-size:0.56em; color:#475569; margin-top:0.1em;">5 000 Cheetah calls → MLP → ~600× speedup</div>
 </div>
 </div>
 
@@ -2316,9 +2316,10 @@ result = gp_minimize(
     dimensions=[Real(-15.0, 15.0, name="k1_Q1"),
                 Real(-15.0, 15.0, name="k1_Q2")],
     n_calls=60, n_initial_points=12,
-    acq_func="EI", noise=NOISE**2,
+    acq_func="EI", noise=(NOISE*3e-3)**2,   # noise scaled to the metre-valued objective
 )
-# → best: ~1.0 mm  (vs 13.2 mm no quads — 13× improvement)
+# → ~2.2 mm (8-seed mean) vs 13.2 mm untuned — a ~6× reduction
+#   (noiseless optimum 0.8 mm; the 4% readout noise sets the ~2 mm floor)
 ```
 
 :::
@@ -2668,7 +2669,7 @@ fig
 [0.001 mm]{.metric}<br>[MAE]{.metric-label}
 :::
 ::: {style="text-align:center;"}
-[641×]{.metric}<br>[speedup]{.metric-label}
+[~600×]{.metric}<br>[speedup]{.metric-label}
 :::
 :::
 
@@ -2708,7 +2709,7 @@ Tracks actual machine state in real time.
 <div style="display:grid;">
 
 ::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.8em 0;" fragment-index="1"}
-<span style="font-size:2.4em; font-weight:800; color:#22d3ee; line-height:1.0;">641×</span><br>
+<span style="font-size:2.4em; font-weight:800; color:#22d3ee; line-height:1.0;">~600×</span><br>
 <span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">Surrogate speedup vs. Cheetah<br>1.2 µs/call · error &lt; 1% in domain</span>
 :::
 
@@ -2906,7 +2907,7 @@ This is an appetizer, not a full menu. Foundation models (e.g. CERN's accelerato
 ::: {.column width="54%"}
 
 ::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="1"}
-**RAISE** — EU "CERN for AI" · €107 M · Horizon Europe · 19 countries
+**RAISE** — EU "CERN for AI": Resource for AI in Science in Europe · virtual institute · €107 M · Horizon Europe
 <a href="https://research-and-innovation.ec.europa.eu/strategy/strategy-research-and-innovation/our-digital-future/european-ai-science-strategy/raise-resource-ai-science-europe_en" style="color:#22d3ee; font-size:0.80em;">ec.europa.eu → RAISE</a>
 :::
 
@@ -2937,7 +2938,7 @@ This is an appetizer, not a full menu. Foundation models (e.g. CERN's accelerato
 
 ::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.8em 0;" fragment-index="1"}
 <span style="font-size:2.4em; font-weight:800; color:#22d3ee; line-height:1.0;">€107M</span><br>
-<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">Horizon Europe 2025–2027<br>19 European countries</span>
+<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">Horizon Europe 2025–2027<br>Resource for AI in Science in Europe</span>
 :::
 
 ::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.8em 0;" fragment-index="2"}
@@ -2977,7 +2978,7 @@ RAISE: the full EU AI in Science strategy aims to double Horizon Europe AI fundi
 |---|---|---|
 | **RF fault detection** | Autoencoder (unsupervised) | ROC-AUC = 1.000, no fault labels |
 | **Beam tuning** | Bayesian opt. + Cheetah | 13.2→2.2 mm, ~60 noisy evals, scales to high-D |
-| **Surrogate model** | MLP, Tanh, normalised I/O | R²=1.00, **641× speedup** |
+| **Surrogate model** | MLP, Tanh, normalised I/O | R²=1.00, **~600× speedup** |
 
 ::: {.col-left style="margin-top: 0.8em;"}
 ::: {.key-result}
