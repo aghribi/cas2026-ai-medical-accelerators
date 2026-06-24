@@ -10,7 +10,7 @@ format:
     transition: slide
     background-transition: fade
     highlight-style: github-dark
-    code-line-numbers: false
+    code-line-numbers: true
     width: 1280
     height: 720
     margin: 0.05
@@ -106,12 +106,12 @@ AccML review: [aghribi.github.io/acc-ml-living-review](https://aghribi.github.io
 :::
 
 ::: notes
-Time guide —
-Part 1 (0–12 min): context 0–3 · AI history 3–12.
-Part 2 (12–57 min): 30 years review 12–15 · practical foundations 15–22 · use case 1 22–33 · use case 2 33–44 · use case 3 44–52 · future directions 52–57.
-Summary & Q&A: 57–60.
+Time plan — 50 min talk + 10 min Q&A. Hard-stop the talk at 50 to protect questions.
+Part 1 (0–10): intro & scope 0–2.5 · what AI is/isn't 2.5–4 · history 4–7 · physicist lens 7–10.
+Part 2 (10–47.5): 30-years dive 10–13 · foundations 13–18 · UC1 18–27 · UC2 27–36 · UC3 36–43 · future directions 43–47.5.
+Summary 47.5–50 · Q&A 50–60.
 
-Three live notebooks. The code you will see on the slides is the code in those notebooks. Everything is runnable on Google Colab from your phone right now — no installation needed.
+Three live notebooks — the code on the slides is the code in those notebooks, all runnable on Colab right now, no installation. A glossary of acronyms is at the very end, just before the backup slides.
 :::
 
 ---
@@ -137,9 +137,12 @@ Three live notebooks. The code you will see on the slides is the code in those n
 - Radiobiology · Regulatory certification
 :::
 
-::: {.key-result style="margin-top:0.8em; font-size:0.80em;"}
-The beam that treats the patient must be produced by a machine that works.
-AI can keep that machine reliable, efficient, and well-characterised.
+::: {style="font-size:0.62em; color:#64748b; font-style:italic; margin-top:0.45em;"}
+→ covered in the companion lecture *"AI — the medical side"*.
+:::
+
+::: {style="font-size:0.62em; color:#64748b; margin-top:0.5em;"}
+A **glossary** of acronyms is at the end of the deck, before the backup slides.
 :::
 
 :::
@@ -213,13 +216,73 @@ Context &nbsp;·&nbsp; Brief history of AI &nbsp;·&nbsp; AI through the physici
 :::
 
 ::: notes
-0–12 min. Three sub-sections: scope and clinical context; a compact history from the McCulloch-Pitts neuron (1943) to the Nobel Prize in Physics (2024); then the physics–ML bridge (Hopfield, statistical mechanics, Langevin dynamics).
+0–10 min. Four beats: what AI is and isn't (scope the field honestly); a compact history from the McCulloch-Pitts neuron (1943) to the 2024 Nobel Prize in Physics; then the physics–ML bridge (Hopfield as collective behaviour, statistical mechanics, Langevin dynamics). Keep it brisk — the applied payload is Part 2.
+:::
+
+---
+
+## What AI is — and isn't
+
+:::: {.columns style="margin-top:0.2em; gap:1.2em;"}
+::: {.column width="60%"}
+
+<div style="padding:0.8em; border:2px solid #475569; border-radius:14px; background:rgba(71,85,105,0.06);">
+<div style="font-size:0.62em; font-weight:700; color:#94a3b8; text-transform:uppercase; letter-spacing:0.08em;">Artificial Intelligence</div>
+<div style="font-size:0.56em; color:#64748b; margin:0.15em 0 0.5em;">symbolic logic · expert systems · search &amp; planning</div>
+
+<div style="padding:0.7em; border:2px solid #60a5fa; border-radius:12px; background:rgba(96,165,250,0.07);">
+<div style="font-size:0.60em; font-weight:700; color:#60a5fa; text-transform:uppercase; letter-spacing:0.08em;">Machine Learning</div>
+<div style="font-size:0.54em; color:#94a3b8; margin:0.15em 0 0.5em;">classical ML (SVM · RF · kNN) · probabilistic models · <span style="color:#fbbf24;">★ Bayesian opt. / GP</span></div>
+
+<div style="padding:0.6em; border:2px solid #22d3ee; border-radius:10px; background:rgba(34,211,238,0.10);">
+<div style="font-size:0.58em; font-weight:700; color:#22d3ee; text-transform:uppercase; letter-spacing:0.08em;">Neural networks · Deep learning</div>
+<div style="font-size:0.54em; color:#cbd5e1; margin-top:0.15em; line-height:1.5;">
+<span style="color:#fbbf24;">★ autoencoders</span> · <span style="color:#fbbf24;">★ MLP surrogates</span> · CNN / Transformer · deep RL · generative (VAE · diffusion · LLM)
+</div>
+</div>
+
+<div style="font-size:0.46em; color:#fbbf24; margin-top:0.55em; line-height:1.45;">★ Our <strong>BO/GP</strong> tool lives in this ring — classical ML, <strong>not a neural network</strong>: &ldquo;AI&rdquo; ≠ &ldquo;deep learning&rdquo;.</div>
+
+</div>
+</div>
+
+:::
+::: {.column width="40%"}
+
+::: {.highlight-box style="font-size:0.74em;"}
+**Demystified today — with live code**
+
+- ★ Autoencoder — fault detection
+- ★ Bayesian opt. / GP — beam tuning
+- ★ MLP surrogate — fast beam physics
+:::
+
+::: {style="font-size:0.66em; color:#94a3b8; margin-top:0.6em; line-height:1.6;"}
+**Not covered here:** symbolic AI · LLMs &amp; agents · generative models — touched only in *future directions*.
+:::
+
+::: {.key-result style="margin-top:0.6em; font-size:0.66em;"}
+**Match the method to your data** — how much you have, and whether it is labelled — not to the hype.
+:::
+
+:::
+::::
+
+::: {.clearfix}
+:::
+
+::: notes
+~1.5 min, and the scope-setting slide for the whole lecture. The nested rings are the standard containment view — AI contains machine learning, which contains neural networks and deep learning — but read them as a physicist: each ring is a broader hypothesis class. The point to make explicitly, because it is the common misconception: AI is much wider than deep learning. Symbolic AI, expert systems, and search dominated the field for decades; LLMs and agents are a current frontier we only touch in the futures section. What this lecture builds and demystifies, with runnable code, are the three starred methods — and crucially one of them, Bayesian optimisation with Gaussian processes, is classical probabilistic ML, not a neural network at all. So even our own three use cases span two rings, not one. Everything else on this map is real AI we are deliberately not covering today.
 :::
 
 # A Brief History of AI {.section-divider background-color="#e2e8f0" data-background-transition="zoom"}
 
 ::: {style="color: #1e3a5f; font-size: 1.2em; margin-top: 0.6em;"}
 From the first neuron to the Nobel Prize in Physics
+:::
+
+::: notes
+~9 minutes on history. The arc is deliberate: 1943 first mathematical neuron → 2024 Nobel Prize in Physics. The goal is not completeness but to make one point land — this is an 80-year-old, physics-rooted field, and its two "winters" teach healthy scepticism about hype cycles. Keep it brisk; the payoff is the physicist-lens section after.
 :::
 
 ---
@@ -315,6 +378,10 @@ Note the two "winters" (after 1969 and after the late 1980s) — periods when fu
 
 ::: {.slide-ref}
 McCulloch & Pitts (1943). A logical calculus of the ideas immanent in nervous activity. *Bull. Math. Biophysics* 5, 115–133.
+:::
+
+::: notes
+The starting point. McCulloch (a neurophysiologist) and Pitts (a logician) showed a neuron can be modelled as a threshold logic gate: take a weighted sum of inputs and fire if it exceeds a threshold θ. Two things to stress. First, the biological-to-mathematical mapping — dendrites are the inputs, the soma performs the weighted summation, the axon carries the output. Second, and crucially, the weights here are fixed by hand: there is no learning yet. Learning is what Rosenblatt adds on the next slide. So this is the architecture of a neuron without the ability to adapt.
 :::
 
 ---
@@ -462,8 +529,6 @@ Same idea, scaled. Deep learning era begins.
 The Minsky-Papert result was a setback — XOR requires a hidden layer, which the perceptron lacked. The real fix was the sigmoid: a smooth, differentiable activation that lets gradients flow backward through multiple layers. A step function has zero gradient almost everywhere. Backprop was actually derived by Werbos in 1974 but ignored; Rumelhart, Hinton & Williams popularised it in 1986. The second winter was driven by SVMs and kernel methods outperforming neural nets on small datasets. AlexNet won on GPUs — the compute unlock, not a conceptual breakthrough.
 :::
 
----
-
 # AI Through the Physicist Lens {.section-divider background-color="#e2e8f0" data-background-transition="zoom"}
 
 ::: {style="color: #1e3a5f; font-size: 1.6em; font-weight: 800; margin-top: 0.5em;"}
@@ -533,6 +598,10 @@ As accelerator physicists, we think in terms of Hamiltonians, phase spaces, and 
 :::: {.columns style="margin-top:0.2em;"}
 ::: {.column width="55%"}
 
+::: {style="font-size:0.72em; color:#22d3ee; border-left:3px solid rgba(34,211,238,0.5); padding:0.2em 0.6em; margin-bottom:0.4em;"}
+**A collective-effects view:** a beam's coherent modes emerge from *pairwise particle interactions*; a Hopfield memory emerges from *pairwise neuron couplings*. Both are many-body systems governed by an energy function.
+:::
+
 The same mathematics describes **Ising spins** and **neural networks**:
 
 ::: {style="font-size:0.80em; line-height:1.5;"}
@@ -542,11 +611,6 @@ The same mathematics describes **Ising spins** and **neural networks**:
 | Coupling $J_{ij}$ | Synaptic weight $w_{ij}$ |
 | $E = -\tfrac{1}{2}\sum J_{ij}s_is_j$ | Same Hamiltonian |
 | Ground state | Stored memory |
-:::
-
-::: {style="margin-top:0.5em; font-size:0.80em;"}
-**Hebbian learning** — to store pattern $\xi^\mu$:
-$$w_{ij} = \frac{1}{N}\sum_\mu \xi_i^\mu \xi_j^\mu$$
 :::
 
 :::
@@ -592,6 +656,11 @@ fig
 Red = −1 (spin ↓) · Cyan = +1 (spin ↑)
 :::
 
+::: {style="margin-top:0.5em; font-size:0.72em; border-top:1px solid rgba(148,163,184,0.2); padding-top:0.4em;"}
+**Hebbian learning** — to store pattern $\xi^\mu$:
+$$w_{ij} = \frac{1}{N}\sum_\mu \xi_i^\mu \xi_j^\mu$$
+:::
+
 :::
 ::::
 
@@ -600,6 +669,8 @@ Hopfield, J.J. (1982). Neural networks and physical systems with emergent collec
 :::
 
 ::: notes
+**Lead with the collective-effects framing (this is the hook for our audience):** as accelerator physicists we never reason about one particle — we reason about the *collective* behaviour of the whole beam, where coherent modes, instabilities, and space-charge effects emerge from the pairwise interactions between particles, and the whole thing is governed by a Hamiltonian. A Hopfield network is the same kind of object: many simple units (neurons/spins), pairwise couplings, and a global energy whose minima are the interesting states. The difference is only what the minima *mean* — for a magnet, an ordered phase; for the network, a stored memory. So this is not a borrowed metaphor; it is the same many-body bookkeeping we already do for beams, applied to computation.
+
 **The table — Ising model and Hopfield network side by side:**
 
 The Ising model (Lenz 1920, Ising 1925) was invented to describe ferromagnetism. Every iron atom carries a magnetic moment (a spin) that can point up (+1) or down (−1). Neighbouring atoms interact: when both spins are aligned the energy is lower, so the system tends towards alignment. The total energy is E = −½ Σ_{ij} J_{ij} s_i s_j. In equilibrium the system sits at the minimum-energy configuration — all spins aligned (ferromagnet).
@@ -618,152 +689,6 @@ To store P patterns ξ^1, ξ^2, ..., ξ^P (each a binary vector of ±1), you set
 **The figure — two heatmaps:**
 - Left: the letter "H" encoded as a 10×10 grid. Cyan pixels = +1 (spin ↑), red pixels = −1 (spin ↓). This is the stored memory ξ.
 - Right: the same pattern with 28% of pixels randomly flipped. This is a corrupted or partial input given to the network at retrieval time. Despite 28% noise, the network converges back to the clean "H". That is content-addressable memory: query with a fragment, retrieve the whole.
-:::
-
----
-
-## Hopfield — memory retrieval and capacity
-
-:::: {.columns style="margin-top:0.3em; gap:1.5em;"}
-::: {.column width="54%"}
-
-::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="1"}
-**① Ball in a valley** — memories are energy minima.
-Noisy input rolls downhill → arrives at nearest stored pattern.
-:::
-
-::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="2"}
-**② Spin update** — $s_i \leftarrow \text{sign}(\sum_j w_{ij} s_j)$
-Energy decreases at every step: **guaranteed convergence**.
-:::
-
-::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em;" fragment-index="3"}
-**③ Capacity ≈ 0.14 N** — beyond this, retrieval fails **catastrophically** (sharp phase transition, not gradual).
-:::
-
-:::
-::: {.column width="44%"}
-
-<div style="display:grid;">
-
-::: {.fragment .current-visible style="grid-area:1/1;" fragment-index="1"}
-
-```{python}
-#| echo: false
-#| eval: true
-
-import numpy as np
-import plotly.graph_objects as go
-
-x = np.linspace(-2.5, 2.5, 90)
-y = np.linspace(-2.5, 2.5, 90)
-X, Y = np.meshgrid(x, y)
-
-E = (
-    - 2.2 * np.exp(-2.2*((X - 1.3)**2 + (Y - 1.1)**2))
-    - 2.2 * np.exp(-2.2*((X + 1.3)**2 + (Y + 1.1)**2))
-    + 0.28*(X**2 + Y**2)
-)
-
-fig = go.Figure()
-fig.add_trace(go.Contour(
-    z=E, x=x, y=y,
-    colorscale=[[0,"#0a2040"],[0.4,"#1a3a6f"],[0.75,"#22d3ee"],[1,"#f87171"]],
-    contours=dict(showlabels=False, coloring='fill'),
-    showscale=False, ncontours=22, opacity=0.9,
-))
-fig.add_trace(go.Scatter(
-    x=[1.3, -1.3], y=[1.1, -1.1], mode="markers+text",
-    marker=dict(color="#fbbf24", size=14, symbol="star"),
-    text=["Memory 1", "Memory 2"],
-    textposition=["top right", "bottom left"],
-    textfont=dict(size=10, color="#fbbf24"),
-    showlegend=False,
-))
-tx = [0.35, 0.60, 0.88, 1.10, 1.25, 1.30]
-ty = [0.05, 0.30, 0.62, 0.88, 1.03, 1.10]
-fig.add_trace(go.Scatter(
-    x=tx, y=ty, mode="lines+markers",
-    line=dict(color="#fb923c", width=2.5),
-    marker=dict(color="#fb923c", size=7),
-    showlegend=False,
-))
-fig.add_annotation(x=0.35, y=0.05, text="Noisy / partial input",
-    font=dict(size=9, color="#fb923c"),
-    showarrow=True, ax=-45, ay=28,
-    arrowcolor="#fb923c", arrowwidth=1.5)
-fig.add_annotation(x=0.88, y=0.62, text="each update:<br>energy ↓",
-    font=dict(size=8.5, color="#fb923c"), showarrow=False,
-    xanchor="left", bgcolor="rgba(13,27,42,0.7)")
-fig.add_annotation(x=1.3, y=1.1, text="recalled<br>memory",
-    font=dict(size=9, color="#fbbf24"),
-    showarrow=True, ax=38, ay=-28,
-    arrowcolor="#fbbf24", arrowwidth=1.5)
-fig.add_annotation(x=-1.3, y=-1.1, text="energy<br>minimum",
-    font=dict(size=8.5, color="#94a3b8"),
-    showarrow=True, ax=-38, ay=22,
-    arrowcolor="#475569", arrowwidth=1.2)
-fig.update_layout(
-    height=270, autosize=True,
-    paper_bgcolor="#0d1b2a", plot_bgcolor="#0d1b2a",
-    xaxis=dict(showgrid=False, showticklabels=False, zeroline=False),
-    yaxis=dict(showgrid=False, showticklabels=False, zeroline=False),
-    margin=dict(l=5, r=5, t=28, b=5),
-    font=dict(color="#e2e8f0"),
-    title=dict(text="Network state space — stored memories = energy minima",
-               font=dict(size=10, color="#94a3b8"), x=0.5, y=0.99),
-)
-fig
-```
-
-:::
-
-::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.5em 0.5em;" fragment-index="2"}
-<div style="font-size:1.1em; color:#22d3ee; font-weight:700; margin-bottom:0.5em; font-family:monospace;">
-s<sub>i</sub> ← sign(Σ w<sub>ij</sub> s<sub>j</sub>)
-</div>
-<div style="font-size:0.72em; color:#94a3b8; line-height:1.6;">
-Hebb rule · ΔE ≤ 0 per step<br>
-<span style="color:#fbbf24;">Same physics as spin relaxation</span>
-</div>
-:::
-
-::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.8em 0;" fragment-index="3"}
-<span style="font-size:2.4em; font-weight:800; color:#22d3ee; line-height:1.0;">0.14 N</span><br>
-<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">Capacity limit · recall error: 0 → 50%</span>
-:::
-
-</div>
-
-:::
-::::
-
-::: {.slide-ref}
-Amit, Gutfreund & Sompolinsky (1985). Storing infinite numbers of patterns in a spin-glass model. *PRL* 55, 1530.
-:::
-
-::: notes
-**① The contour plot — energy landscape:**
-
-The axes are abstract coordinates in the space of all possible network states. Each point (x, y) represents one possible configuration of all N neurons (not a physical position in space). The colour encodes energy: dark blue = low energy (stable valley), cyan/red = high energy (ridge or hill). This is the exact same object as a potential-energy surface in chemical physics or a free-energy landscape in statistical mechanics.
-
-The two yellow stars are the two stored memories — they are energy minima, like two wells. The orange trajectory shows how a noisy or partial input (starting far from either star) evolves: at every step the network updates one neuron in the direction that lowers energy, rolling downhill until it reaches the nearest well (Memory 1). This is particle-in-a-potential dynamics, except the "particle" is the entire network state and the "force" is the discrete spin update rule.
-
-**② The spin update — s_i ← sign(Σ_j w_{ij} s_j):**
-
-To update neuron i: collect all inputs from other neurons j, each weighted by w_{ij}. If the weighted sum is positive, set s_i = +1; if negative, set s_i = −1. That is the only operation. One can prove (Hopfield 1982) that ΔE ≤ 0 at every such update, because E = −½ Σ_{ij} w_{ij} s_i s_j and w is symmetric. The network is guaranteed to reach a local minimum in at most 2^N steps, and in practice much faster. This is identical in structure to spin relaxation in an Ising magnet at zero temperature.
-
-**③ What is 0.14N and why that number?**
-
-Storage capacity: if you try to store P patterns in an N-neuron Hopfield network, does retrieval work? The weight matrix W = (1/N) Σ_μ ξ^μ (ξ^μ)^T stores patterns as energy minima. When you retrieve pattern ξ^1, all the other (P−1) patterns contribute "cross-talk" noise — their outer products generate random spurious fields that push neurons in the wrong direction. This noise scales as √(P/N) per neuron.
-
-Define the load parameter α = P/N (patterns per neuron). As you add more patterns, the noise grows. At some critical α_c the noise overwhelms the signal and retrieval fails.
-
-Amit, Gutfreund & Sompolinsky (PRL 1985) computed α_c using the replica method — the same analytical tool used in spin-glass theory to average over disorder in disordered magnets. The result is α_c ≈ 0.138. This is NOT a simple estimate; it requires computing a free energy functional with replicated fields and taking the replica-symmetric saddle point. The number 0.138 has the same status as, say, the critical temperature of the 3D Ising model: it emerges from a non-trivial field-theoretic calculation, not from a scaling argument.
-
-**Why catastrophic failure?** Because the transition at α_c is first-order (discontinuous). Below α_c: recall error ≈ 0 (perfect retrieval). At α_c: the error jumps discontinuously to ~0.5 (random noise — no better than chance). There is no gradual degradation regime. You either retrieve the memory perfectly or you get garbage. This is fundamentally different from, say, a noisy amplifier that degrades smoothly. The underlying reason is the same as why first-order magnetic phase transitions show a discontinuous jump in magnetisation: the free-energy landscape switches between two distinct structures.
-
-Practical implication: a 1000-neuron Hopfield network can reliably store at most ~138 patterns. More patterns: the retrieval is not just worse, it is completely broken.
 :::
 
 ---
@@ -790,7 +715,9 @@ As accelerator physicists we already speak this language.
 :::
 
 ::: notes
-The connection between SGD and Langevin dynamics was formalised by Welling & Teh (2011). The Boltzmann machine (Ackley, Hinton & Sejnowski 1985) is a literal physical model. Phase transitions in learning (grokking) are an active research topic since Power et al. (2022). These connections mean accelerator physicists are naturally equipped to understand ML at a deep level — the toolkit is the same.
+**Spend ~10 s here — point, don't read.** One sentence: every column is a physics concept the audience already owns, re-labelled for ML — the cleanest being "SGD ≈ Langevin dynamics." Then move on; come back to any row only if asked.
+
+Reference detail for questions: the SGD–Langevin connection was formalised by Welling & Teh (2011). The Boltzmann machine (Ackley, Hinton & Sejnowski 1985) is a literal physical model. Phase transitions in learning (grokking) are an active topic since Power et al. (2022). The deeper Hopfield capacity/retrieval material is now in the backup section if a question goes there.
 :::
 
 ## {.no-footer background-color="#0d1b2a"}
@@ -812,8 +739,6 @@ Practical applications &nbsp;·&nbsp; Future directions & opportunities
 12–57 min. The core of the lecture: (1) a 30-year milestone dive through ML at accelerators; (2) the six AI application categories and the ML pipeline; (3) three hands-on use cases with live Python notebooks; (4) digital twins; (5) open problems and outlook.
 :::
 
----
-
 # A 30 Years Dive in AI for Accelerators {.section-divider background-color="#e2e8f0" data-background-transition="zoom"}
 
 ::: {style="color: #1e3a5f; font-size: 1.6em; font-weight: 800; margin-top: 0.5em;"}
@@ -822,6 +747,10 @@ From research curiosity to operational tool
 
 ::: {style="font-size: 1em; color: #334155;"}
 Milestones · concrete results · living review
+:::
+
+::: notes
+~3 minutes. The message: AI at accelerators is not new — the first neural-network control work was 1992–94. Then two largely dormant decades, limited by compute, before the field reignited around 2016. End on the KARA −30% energy result, because it is measured on a real ring, not a simulation — proof that this is operational, not just a research curiosity.
 :::
 
 ---
@@ -862,20 +791,20 @@ Edelen et al., *IEEE TNS* 63 (2016) · Duris et al., *PRL* 124 (2020) · Kaiser 
 
 ::: {.column width="40%"}
 
-::: {.fragment .fade-in-then-semi-out style="margin: 0.6em 0; font-size:0.84em;"}
-**Fault detection** — CEBAF: ML-based SRF cavity-fault classification in production since ~2019 (Tennant et al. 2020)
+::: {.fragment .fade-in-then-semi-out style="margin: 0.7em 0; font-size:0.92em;"}
+**Fault detection** — production ML triage
 :::
 
-::: {.fragment .fade-in-then-semi-out style="margin: 0.6em 0; font-size:0.84em;"}
-**Beam tuning** — Bayesian optimisation at LCLS: setup time from hours to **≈50 evaluations**; RL at CERN/DESY runs closed-loop
+::: {.fragment .fade-in-then-semi-out style="margin: 0.7em 0; font-size:0.92em;"}
+**Beam tuning** — BO + RL, closed-loop
 :::
 
-::: {.fragment .fade-in-then-semi-out style="margin: 0.6em 0; font-size:0.84em;"}
-**Simulation** — Cheetah replaces MAD-X at **10⁵× speedup**; KARA AI cuts ring energy use by **−30%** on the live machine
+::: {.fragment .fade-in-then-semi-out style="margin: 0.7em 0; font-size:0.92em;"}
+**Simulation** — differentiable, fast surrogates
 :::
 
-::: {.fragment .fade-in-then-semi-out style="margin: 0.6em 0; font-size:0.84em;"}
-**Optimisation toolboxes** — Badger (SLAC) and Geoff wrap BO/GP for any beamline; deployed at SLAC, CERN, DESY
+::: {.fragment .fade-in-then-semi-out style="margin: 0.7em 0; font-size:0.92em;"}
+**Optimisation toolboxes** — facility-agnostic
 :::
 
 :::
@@ -937,7 +866,7 @@ This living review covers all ML applications in accelerator physics — updated
 
 ---
 
-## Six ways AI helps accelerators today
+## Five ways AI helps accelerators today
 
 :::: {.columns}
 
@@ -949,7 +878,7 @@ This living review covers all ML applications in accelerator physics — updated
 :::
 
 ::: {.fragment .fade-in-then-semi-out #box-tuning}
-- **Beam tuning** — find optimal settings with minimal beam time (< 50 evaluations)
+- **Beam tuning &amp; adaptive control** — optimal settings in < 50 evaluations; online RL in the loop
 :::
 
 ::: {.fragment .fade-in-then-semi-out #box-surrogate}
@@ -958,10 +887,6 @@ This living review covers all ML applications in accelerator physics — updated
 
 ::: {.fragment .fade-in-then-semi-out}
 - **Predictive maintenance** — forecast failures before they occur
-:::
-
-::: {.fragment .fade-in-then-semi-out}
-- **Adaptive control** — online reinforcement learning in the control loop
 :::
 
 ::: {.fragment .fade-in-then-semi-out}
@@ -983,11 +908,11 @@ import plotly.graph_objects as go
 
 # Bottom-to-top: Digital twins (bar 0, least mature) → Fault detection (bar 5, most mature)
 # Fragment index matches bar index: fragment 0 → bar 0, ..., fragment 5 → bar 5
-ways      = ['Digital twins', 'Adaptive<br>control', 'Pred.<br>maintenance',
-             'Surrogate<br>models', 'Beam<br>tuning', 'Fault<br>detection']
-readiness = [3.5, 4.5, 4.2, 6.2, 7.2, 7.8]
+ways      = ['Digital twins', 'Pred.<br>maintenance', 'Surrogate<br>models',
+             'Beam<br>tuning', 'Fault<br>detection']
+readiness = [3.5, 4.2, 6.2, 7.2, 7.8]
 # All bars start invisible — JS state machine drives colors
-colors    = ['rgba(0,0,0,0)'] * 6
+colors    = ['rgba(0,0,0,0)'] * 5
 
 fig = go.Figure(go.Bar(
     y=ways, x=readiness,
@@ -995,9 +920,9 @@ fig = go.Figure(go.Bar(
     marker=dict(color=colors, line=dict(color='rgba(255,255,255,0.08)', width=0.5)),
     width=0.60,
 ))
-fig.add_shape(type='line', x0=5.5, x1=5.5, y0=-0.5, y1=5.5,
+fig.add_shape(type='line', x0=5.5, x1=5.5, y0=-0.5, y1=4.5,
     line=dict(color='rgba(34,211,238,0.35)', width=1.2, dash='dot'))
-fig.add_annotation(x=5.5, y=5.8, text='in production →',
+fig.add_annotation(x=5.5, y=4.8, text='in production →',
     showarrow=False, font=dict(size=9, color='#22d3ee'), xanchor='left')
 
 fig.update_layout(
@@ -1026,81 +951,6 @@ fig
 This lecture covers the first three in depth with runnable code.
 :::
 
----
-
-## Choosing the right method
-
-```{python}
-#| echo: false
-#| eval: true
-
-import plotly.graph_objects as go
-
-# x: training data / evaluations needed (0 = very few → 3 = large dataset)
-# y: works without fault labels (1 = needs full labels → 5 = fully unsupervised)
-methods = [
-    ("Threshold rules",      0.05, 4.3, 20, "#475569", "bottom right"),
-    ("PCA / statistics",     0.30, 3.8, 20, "#64748b", "top right"),
-    ("Isolation Forest",     0.65, 3.4, 22, "#94a3b8", "bottom right"),
-    ("RL (online)",          0.90, 3.1, 24, "#fb923c", "bottom right"),
-    ("Bayesian Opt ★",       0.40, 4.1, 44, "#22d3ee", "top left"),
-    ("Autoencoder ★",        1.25, 4.6, 44, "#22d3ee", "top left"),
-    ("GP Surrogate",         1.70, 2.6, 24, "#60a5fa", "bottom right"),
-    ("SVM (supervised)",     1.35, 1.0, 22, "#94a3b8", "top right"),
-    ("MLP Surrogate ★",      2.45, 1.8, 44, "#22d3ee", "top right"),
-    ("Deep CNN / LSTM",      2.80, 1.2, 24, "#a78bfa", "top left"),
-    ("Transformer / LLM",    3.10, 0.7, 22, "#a78bfa", "bottom left"),
-]
-
-fig = go.Figure()
-
-fig.add_shape(type="rect", x0=-0.15, x1=1.65, y0=2.7, y1=5.2,
-    fillcolor="rgba(34,211,238,0.04)", layer="below",
-    line=dict(color="rgba(34,211,238,0.25)", width=1, dash="dot"))
-fig.add_annotation(x=0.75, y=5.05, text="<i>clinical-machine zone</i>",
-    showarrow=False, font=dict(size=10, color="#22d3ee"), opacity=0.6)
-
-for name, x, y, size, color, pos in methods:
-    is_pick = "★" in name
-    fig.add_trace(go.Scatter(
-        x=[x], y=[y], mode="markers+text",
-        marker=dict(size=size, color=color,
-            line=dict(color="#e2e8f0" if is_pick else "#0d1b2a",
-                      width=2.5 if is_pick else 1.5)),
-        text=[f"<b>{name}</b>" if is_pick else name],
-        textposition=pos,
-        textfont=dict(size=13 if is_pick else 8, color=color),
-        showlegend=False,
-    ))
-
-fig.update_layout(
-    height=490, autosize=True,
-    paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
-    font=dict(color="#e2e8f0", size=11),
-    xaxis=dict(
-        title="Training data / evaluations needed",
-        range=[-0.3, 3.5],
-        tickvals=[0.3, 1.5, 2.7],
-        ticktext=["Very few  (< 100)", "Moderate  (1 000s)", "Large  (> 10 000s)"],
-        showgrid=True, gridcolor="#1e3048", zeroline=False,
-    ),
-    yaxis=dict(
-        title="Works without fault labels",
-        range=[0.3, 5.4],
-        tickvals=[1, 2, 3, 4, 5],
-        ticktext=["Needs full<br>label set", "Needs partial<br>labels",
-                  "Semi-super-<br>vised", "Mostly<br>label-free", "Fully<br>unsupervised"],
-        showgrid=True, gridcolor="#1e3048", zeroline=False,
-    ),
-    margin=dict(l=110, r=30, t=15, b=70),
-)
-fig
-```
-
-::: {.slide-ref}
-★ methods used in this lecture. Existing detail landscapes: anomaly detection → slide 14 · optimisation → slide 21 · surrogate → slide 27
-:::
-
 # Practical Foundations {.section-divider background-color="#e2e8f0" data-background-transition="zoom"}
 
 ::: {style="color: #1e3a5f; font-size: 1.6em; font-weight: 800; margin-top: 0.5em;"}
@@ -1109,6 +959,10 @@ From raw signals to trained model
 
 ::: {style="font-size: 1em; color: #334155;"}
 Data · Features · Method selection · Pipeline
+:::
+
+::: notes
+~7 minutes. Before the use cases, the unglamorous but decisive part: data quality, feature engineering, method selection, and the deploy pipeline. The theme to repeat throughout: in operational accelerator ML the bottleneck is almost never the model — it is the data and the integration into the control system.
 :::
 
 ---
@@ -1256,19 +1110,21 @@ Pause here — let the two boxes land. Next press reveals the full data quality 
 **① Clean**
 Remove corrupted pulses, stuck sensors, dropouts.
 :::
-::: {.fragment .highlight-box style="flex:1; padding:0.35em 0.55em; font-size:0.78em; margin:0;"}
+::: {.fragment .highlight-box fragment-index=1 style="flex:1; padding:0.35em 0.55em; font-size:0.78em; margin:0;"}
 **② Synchronise**
 Align timestamps across RF, BPM, power supplies.
 :::
-::: {.fragment .highlight-box style="flex:1; padding:0.35em 0.55em; font-size:0.78em; margin:0;"}
+::: {.fragment .highlight-box fragment-index=2 style="flex:1; padding:0.35em 0.55em; font-size:0.78em; margin:0;"}
 **③ Normalise**
 Scale to [−1, 1] — prevents one channel dominating.
 :::
-::: {.fragment .highlight-box style="flex:1; padding:0.35em 0.55em; font-size:0.78em; margin:0;"}
+::: {.fragment .highlight-box fragment-index=3 style="flex:1; padding:0.35em 0.55em; font-size:0.78em; margin:0;"}
 **④ Balance**
 SRF faults < 0.1 % of pulses — naïve model learns to ignore them.
 :::
 :::
+
+::: {style="position:relative;"}
 
 ```{python}
 #| echo: false
@@ -1280,62 +1136,89 @@ from plotly.subplots import make_subplots
 
 np.random.seed(42)
 t = np.linspace(0, 4*np.pi, 300)
-raw = np.sin(t) + 0.25 * np.random.randn(300)
+base = np.sin(t)
+
+# ① Clean — raw with noise + 2 outliers, de-spiked overlay
+raw = base + 0.25 * np.random.randn(300)
 raw[55] = 3.9
 raw[195] = -3.6
+cleaned = base + 0.08 * np.random.randn(300)
 
-# Min-max scale to exactly [−1, 1]
-clean_raw = np.sin(t) + 0.1 * np.random.randn(300)
-mn, mx = clean_raw.min(), clean_raw.max()
-cleaned = 2.0 * (clean_raw - mn) / (mx - mn) - 1.0
+# ② Synchronise — two channels, one time-lagged
+lag = 24
+sigA = base
+sigB = 0.85 * np.roll(base, lag)
+
+# ③ Normalise — min-max scale cleaned signal to [−1, 1]
+mn, mx = cleaned.min(), cleaned.max()
+norm = 2.0 * (cleaned - mn) / (mx - mn) - 1.0
 
 fig = make_subplots(
-    rows=1, cols=2,
-    subplot_titles=["Raw signal — noise & outliers",
-                    "After cleaning & normalisation  [−1, 1]"],
-    horizontal_spacing=0.10,
+    rows=1, cols=4,
+    subplot_titles=["① Clean", "② Synchronise", "③ Normalise", "④ Balance"],
+    horizontal_spacing=0.035,
 )
 
-fig.add_trace(go.Scatter(
-    x=t, y=raw, mode='lines',
-    line=dict(color='#64748b', width=1.2), showlegend=False,
-), row=1, col=1)
-fig.add_trace(go.Scatter(
-    x=[t[55], t[195]], y=[raw[55], raw[195]], mode='markers',
-    marker=dict(color='#f87171', size=13, symbol='x',
-                line=dict(width=2.5, color='#f87171')),
-    showlegend=False,
-), row=1, col=1)
-fig.add_annotation(x=t[55], y=raw[55]+0.25, text="outlier",
-    showarrow=False, font=dict(size=9, color='#f87171'), row=1, col=1)
+# Panel 1 — Clean
+fig.add_trace(go.Scatter(x=t, y=raw, mode='lines',
+    line=dict(color='#475569', width=1.0), showlegend=False), row=1, col=1)
+fig.add_trace(go.Scatter(x=t, y=cleaned, mode='lines',
+    line=dict(color='#22d3ee', width=1.4), showlegend=False), row=1, col=1)
+fig.add_trace(go.Scatter(x=[t[55], t[195]], y=[raw[55], raw[195]], mode='markers',
+    marker=dict(color='#f87171', size=11, symbol='x',
+                line=dict(width=2.2, color='#f87171')), showlegend=False), row=1, col=1)
 
-fig.add_trace(go.Scatter(
-    x=t, y=cleaned, mode='lines',
-    line=dict(color='#22d3ee', width=1.4), showlegend=False,
-), row=1, col=2)
-fig.add_hline(y=1,  line_dash="dot", line_color="#475569", opacity=0.6, row=1, col=2)
-fig.add_hline(y=-1, line_dash="dot", line_color="#475569", opacity=0.6, row=1, col=2)
+# Panel 2 — Synchronise
+fig.add_trace(go.Scatter(x=t, y=sigA, mode='lines',
+    line=dict(color='#60a5fa', width=1.3), showlegend=False), row=1, col=2)
+fig.add_trace(go.Scatter(x=t, y=sigB, mode='lines',
+    line=dict(color='#a78bfa', width=1.3, dash='dot'), showlegend=False), row=1, col=2)
+
+# Panel 3 — Normalise
+fig.add_trace(go.Scatter(x=t, y=norm, mode='lines',
+    line=dict(color='#22d3ee', width=1.4), showlegend=False), row=1, col=3)
+fig.add_hline(y=1,  line_dash="dot", line_color="#475569", opacity=0.7, row=1, col=3)
+fig.add_hline(y=-1, line_dash="dot", line_color="#475569", opacity=0.7, row=1, col=3)
+
+# Panel 4 — Balance (class imbalance, log scale)
+fig.add_trace(go.Bar(x=['normal', 'fault'], y=[99900, 100],
+    marker_color=['#334155', '#f87171'],
+    text=['99.9 %', '0.1 %'], textposition='outside',
+    textfont=dict(color='#e2e8f0', size=11), showlegend=False), row=1, col=4)
 
 fig.update_xaxes(showgrid=False, showticklabels=False, zeroline=False)
-fig.update_yaxes(showgrid=True, gridcolor='#1e3048', zeroline=True,
-                 zerolinecolor='#334155')
-fig.update_yaxes(range=[-1.15, 1.15], row=1, col=2)
+fig.update_yaxes(showgrid=False, showticklabels=False, zeroline=False)
+fig.update_yaxes(range=[-1.3, 1.3], row=1, col=3)
+fig.update_yaxes(type='log', range=[1.4, 5.9], row=1, col=4)
 
 fig.update_layout(
-    height=310, autosize=True,
+    height=300, autosize=True,
     paper_bgcolor='#0d1b2a', plot_bgcolor='#111f30',
     font=dict(color='#e2e8f0', size=11),
-    margin=dict(t=28, b=5, l=10, r=10),
+    margin=dict(t=30, b=8, l=8, r=8),
 )
 fig
 ```
 
-<div class="fragment slide-callout-overlay">
+<div style="position:absolute; left:0; right:0; top:26px; bottom:14px; display:flex; gap:1.1%; pointer-events:none;">
+<div class="fragment fade-out" data-fragment-index="1" style="flex:1; border-radius:8px; border:2px solid #22d3ee; background:rgba(34,211,238,0.06); box-shadow:0 0 22px rgba(34,211,238,0.5);"></div>
+<div class="fragment current-visible" data-fragment-index="1" style="flex:1; border-radius:8px; border:2px solid #22d3ee; background:rgba(34,211,238,0.06); box-shadow:0 0 22px rgba(34,211,238,0.5);"></div>
+<div class="fragment current-visible" data-fragment-index="2" style="flex:1; border-radius:8px; border:2px solid #22d3ee; background:rgba(34,211,238,0.06); box-shadow:0 0 22px rgba(34,211,238,0.5);"></div>
+<div class="fragment current-visible" data-fragment-index="3" style="flex:1; border-radius:8px; border:2px solid #22d3ee; background:rgba(34,211,238,0.06); box-shadow:0 0 22px rgba(34,211,238,0.5);"></div>
+</div>
+
+:::
+
+<div class="fragment slide-callout-overlay" data-fragment-index="4">
 <div class="callout-box">
 A model trained on bad data learns bad behaviour.<br>
 <span style="font-weight:400; font-size:0.82em; color:#94a3b8;">No algorithm compensates for this.</span>
 </div>
 </div>
+
+::: notes
+Four preprocessing steps, ordered by how often they are skipped and later regretted. Each press lights up its panel in the strip below. Clean — remove corrupted pulses, stuck sensors, dropouts (panel 1: grey raw with two red outliers, cyan de-spiked result). Synchronise — align timestamps across RF, BPMs, and power supplies, genuinely hard across subsystems with different clocks (panel 2: two channels, one lagged). Normalise to [−1, 1] — so one high-amplitude channel does not dominate the loss (panel 3: scaled between the dotted bounds). Balance — SRF faults are under 0.1% of pulses, so a naïve model reaches 99.9% "accuracy" by always predicting normal and detecting nothing (panel 4: the log-scale class bar makes the imbalance visceral). Punchline on the overlay: a model trained on bad data learns bad behaviour, and no algorithm downstream compensates for that.
+:::
 
 ---
 
@@ -1489,7 +1372,11 @@ fig
 ```
 
 ::: {style="font-size:0.68em; color:#22d3ee; font-weight:600; text-align:center; margin:0.15em 0 0 0;"}
-256 numbers → 3 numbers · 99 % compression, all information retained
+this case: 256 IQ samples → 3 scalars · 99 % compression, fault information retained
+:::
+
+::: {style="font-size:0.58em; color:#94a3b8; margin-top:0.3em; line-height:1.55; text-align:center;"}
+**The feature map depends on the data** — RF waveform → **FFT peaks · Q · phase drift** &nbsp;·&nbsp; beam image → **Gaussian-fit σ, centroid, image moments** &nbsp;·&nbsp; bunch → **6-D phase-space stats (emittance, Twiss α/β)** &nbsp;·&nbsp; BPM stream → **orbit harmonics**
 :::
 
 <div class="fragment slide-callout-overlay">
@@ -1498,6 +1385,10 @@ Good features = simpler models + better generalisation.<br>
 <span style="font-weight:400; font-size:0.82em; color:#94a3b8;">Domain knowledge beats brute force.</span>
 </div>
 </div>
+
+::: notes
+The whole point of feature engineering in one figure: for *this* case, 256 raw IQ samples collapse to three physically meaningful scalars — mean amplitude, phase drift, fill fraction — with no loss of the information that distinguishes faults (99% compression). The strip beneath makes the general point: the right feature map depends on the data — FFT peaks/Q/phase for an RF waveform, Gaussian-fit σ and image moments for a screen image, 6-D phase-space statistics (emittance, Twiss) for a bunch, orbit harmonics for a BPM stream. Good features mean smaller models, less data, better generalisation: domain knowledge beats brute force. Then flag the trade-off that sets up UC1: this is the classical route, whereas the autoencoder deliberately skips hand-crafted features and learns its own representation from the raw waveform. Neither is universally right — it depends on how much you trust your physics versus your data.
+:::
 
 ---
 
@@ -1549,6 +1440,10 @@ Good features = simpler models + better generalisation.<br>
 ③ Train &amp; validate
 </div>
 
+::: notes
+Third stage — train and validate. p4 lights up in the pipeline; the next press shrinks it into the top-left corner before the detail slide.
+:::
+
 ---
 
 ## {data-auto-animate=true}
@@ -1560,6 +1455,10 @@ Good features = simpler models + better generalisation.<br>
 </div>
 </div>
 
+::: notes
+p4 flies to the top-left corner and everything else clears. Next press brings in the train-and-validate detail.
+:::
+
 ---
 
 ## {data-auto-animate=true}
@@ -1571,20 +1470,70 @@ Good features = simpler models + better generalisation.<br>
 </div>
 </div>
 
-::: {style="display:flex; gap:0.35em; margin:0.4em 0 0.35em 0;"}
-::: {.highlight-box style="flex:1; padding:0.35em 0.55em; font-size:0.78em; margin:0;"}
-**① Split & stratify**
-80 % train / 20 % test — stratified to preserve the rare-fault rate (< 0.1 %).
+::: {style="text-align:center; font-size:0.72em; color:#cbd5e1; margin:0.05em 0 0.45em 0;"}
+**The task decides what "validate" means — and which metric.**
 :::
-::: {.fragment .highlight-box style="flex:1; padding:0.35em 0.55em; font-size:0.78em; margin:0;"}
-**② Cross-validate**
-5-fold CV on training set — essential when labelled faults number in the hundreds.
+
+<div style="display:flex; gap:0.4em; margin:0.2em 0 0.4em 0; align-items:stretch;">
+<div class="highlight-box" style="flex:1; padding:0.4em 0.6em; font-size:0.66em; margin:0;">
+<strong>Anomaly detection</strong> · UC1 <span style="color:#94a3b8;">unsupervised autoencoder</span>
+<div style="border-top:1px solid rgba(148,163,184,0.25); margin:0.3em 0;"></div>
+Validate on held-out <strong>normal + unseen fault types</strong>
+<div style="margin-top:0.25em; color:#34d399;">✓ ROC-AUC · PR-AUC · F1</div>
+<div style="color:#f87171;">✗ accuracy — 99.9 % normal hides everything</div>
+</div>
+<div class="fragment highlight-box" data-fragment-index="1" style="flex:1; padding:0.4em 0.6em; font-size:0.66em; margin:0;">
+<strong>Surrogate regression</strong> · UC3 <span style="color:#94a3b8;">supervised MLP</span>
+<div style="border-top:1px solid rgba(148,163,184,0.25); margin:0.3em 0;"></div>
+Validate on inputs <strong>outside the training points</strong>
+<div style="margin-top:0.25em; color:#34d399;">✓ R² · RMSE · residual / σ</div>
+<div style="color:#f87171;">✗ extrapolation past the training envelope</div>
+</div>
+<div class="fragment highlight-box" data-fragment-index="2" style="flex:1; padding:0.4em 0.6em; font-size:0.66em; margin:0;">
+<strong>Optimisation</strong> · UC2 <span style="color:#94a3b8;">Bayesian optimisation</span>
+<div style="border-top:1px solid rgba(148,163,184,0.25); margin:0.3em 0;"></div>
+No train/test split — judge <strong>best-so-far vs budget, across seeds</strong>
+<div style="margin-top:0.25em; color:#34d399;">✓ regret · convergence · reproducibility</div>
+<div style="color:#f87171;">✗ trusting one lucky run</div>
+</div>
+</div>
+
+<div class="fragment slide-callout-overlay" data-fragment-index="3">
+<div class="callout-box">
+Same word, three protocols.<br>
+<span style="font-weight:400; font-size:0.82em; color:#94a3b8;">Anomaly & surrogate split the data; optimisation measures regret over a budget — there is no test set.</span>
+</div>
+</div>
+
+::: notes
+Before any loss curve, fix the most common confusion: "validate" is not one thing. Three task types, three protocols. Anomaly detection (UC1) is unsupervised — you validate the autoencoder on held-out normal data and, critically, on fault types it never saw in training; the metrics are ROC-AUC, precision-recall, F1, never raw accuracy, which is meaningless at 99.9% normal. Surrogate regression (UC3) is supervised — you hold out input points and check R², RMSE, and residuals against the model's own uncertainty; the real failure mode is extrapolation outside the training envelope. Optimisation (UC2) is different in kind — there is no test set at all; you judge a Bayesian-optimisation run by its regret, its convergence against the evaluation budget, and whether it reproduces across random seeds, not by any single lucky run. The takeaway box: same word, three protocols. The next slide drills into the split-and-overfitting story, which applies to the first two.
 :::
-::: {.fragment .highlight-box style="flex:1; padding:0.35em 0.55em; font-size:0.78em; margin:0;"}
-**③ Metrics for imbalance**
-ROC-AUC · precision-recall · F1 — accuracy is misleading when 99.9 % of pulses are normal.
+
+---
+
+## {data-auto-animate=true}
+
+<div style="display:flex; gap:0.25em; width:16%; margin-top:0.4em;">
+<div data-id="p4" style="flex:1; padding:0.3em 0.2em; border-radius:6px; border:1px solid rgba(148,163,184,0.45); background:rgba(148,163,184,0.06); text-align:center;">
+<div style="font-weight:700; font-size:0.58em; color:#94a3b8;">Train &amp; validate</div>
+<div style="font-size:0.46em; color:#475569; margin-top:0.2em; line-height:1.3;">80/20 split<br>cross-val · AUC</div>
+</div>
+</div>
+
+::: {style="text-align:center; font-size:0.7em; color:#cbd5e1; margin:0.05em 0 0.4em 0;"}
+**Train / validate / test — and the overfitting trap** <span style="color:#64748b; font-size:0.85em;">(supervised tasks)</span>
 :::
-:::
+
+<div style="display:flex; width:100%; height:2.3em; border-radius:7px; overflow:hidden; font-size:0.6em; font-weight:700; color:#0d1b2a; margin-bottom:0.15em;">
+<div style="flex:70; background:#60a5fa; display:flex; align-items:center; justify-content:center;">Train · 70 %</div>
+<div style="flex:15; background:#22d3ee; display:flex; align-items:center; justify-content:center;">Val · 15 %</div>
+<div style="flex:15; background:#fbbf24; display:flex; align-items:center; justify-content:center;">Test · 15 %</div>
+</div>
+<div style="display:flex; width:100%; font-size:0.5em; color:#94a3b8; text-align:center; margin-bottom:0.4em;">
+<div style="flex:70;">fit the weights</div>
+<div style="flex:15;">tune &amp; early-stop</div>
+<div style="flex:15;">touch <em>once</em> — unbiased estimate</div>
+</div>
 
 ```{python}
 #| echo: false
@@ -1595,27 +1544,44 @@ import plotly.graph_objects as go
 
 np.random.seed(42)
 epochs = np.arange(1, 81)
-train_loss = 0.78 * np.exp(-epochs / 14) + 0.048 + 0.008 * np.random.randn(80)
-val_loss   = 0.80 * np.exp(-epochs / 17) + 0.068 + 0.012 * np.random.randn(80)
-val_loss[52:] += np.linspace(0, 0.025, 28)   # mild overfitting after early stop
+
+# Train loss keeps falling — the model fits the TRAINING set ever better
+train_loss = 0.75 * np.exp(-epochs / 13) + 0.022 + 0.006 * np.random.randn(80)
+
+# Validation loss is U-shaped — it falls, bottoms out, then RISES (overfitting)
+val_smooth = 0.75 * np.exp(-epochs / 9) + 0.085 + 0.0022 * np.clip(epochs - 22, 0, None)
+val_loss   = val_smooth + 0.007 * np.random.randn(80)
+
+best     = int(np.argmin(val_smooth)) + 1     # early stop = validation minimum
+val_best  = float(val_smooth[best - 1])
+test_loss = val_best + 0.013                   # TEST set — one honest evaluation at the best model
 
 fig = go.Figure()
-fig.add_trace(go.Scatter(x=epochs, y=train_loss, name='Train loss',
+# overfitting region (after the validation minimum)
+fig.add_vrect(x0=best, x1=80, fillcolor='rgba(248,113,113,0.06)', line_width=0,
+    annotation_text='overfitting', annotation_position='top right',
+    annotation_font=dict(color='#f87171', size=10))
+fig.add_trace(go.Scatter(x=epochs, y=train_loss, name='Train (70 %)',
     line=dict(color='#60a5fa', width=1.8)))
-fig.add_trace(go.Scatter(x=epochs, y=val_loss, name='Validation loss',
+fig.add_trace(go.Scatter(x=epochs, y=val_loss, name='Validation (15 %)',
     line=dict(color='#22d3ee', width=1.8)))
-fig.add_vline(x=52, line_dash='dot', line_color='#fbbf24', opacity=0.75)
-fig.add_annotation(x=54, y=0.22, text='early stop', showarrow=False,
-    font=dict(color='#fbbf24', size=10), xanchor='left')
+# best model / early stop at the validation minimum
+fig.add_vline(x=best, line_dash='dot', line_color='#fbbf24', opacity=0.85)
+fig.add_annotation(x=best, y=0.02, text='best model<br>(early stop)', showarrow=False,
+    font=dict(color='#fbbf24', size=9), xanchor='center', yanchor='bottom')
+# test set — a single point, evaluated once at the chosen model
+fig.add_trace(go.Scatter(x=[best], y=[test_loss], mode='markers', name='Test (15 %) — once',
+    marker=dict(color='#fbbf24', size=13, symbol='star',
+                line=dict(color='#0d1b2a', width=1.2))))
 
 fig.update_layout(
-    height=290, autosize=True,
+    height=270, autosize=True,
     paper_bgcolor='#0d1b2a', plot_bgcolor='#111f30',
     font=dict(color='#e2e8f0', size=11),
-    legend=dict(bgcolor='rgba(0,0,0,0)', font=dict(size=10), x=0.65, y=0.95),
+    legend=dict(bgcolor='rgba(0,0,0,0)', font=dict(size=10), x=0.60, y=0.97),
     xaxis=dict(title='Epoch', showgrid=True, gridcolor='#1e3048', zeroline=False),
     yaxis=dict(title='MSE loss', showgrid=True, gridcolor='#1e3048', zeroline=False),
-    margin=dict(t=10, b=45, l=60, r=15),
+    margin=dict(t=10, b=42, l=58, r=15),
 )
 fig
 ```
@@ -1627,7 +1593,7 @@ fig
 One <strong>epoch</strong> = one complete forward + backward pass over every training sample.<br>
 <span style="font-size:0.88em; color:#94a3b8;">
 Example: 10 000 pulses, batch 32 → 313 weight updates per epoch.<br>
-Training halts when validation loss stops improving — here at epoch 52 (early stopping).
+Training halts when validation loss stops improving — the dashed line marks that minimum (early stopping).
 </span>
 </div>
 </div>
@@ -1636,9 +1602,13 @@ Training halts when validation loss stops improving — here at epoch 52 (early 
 <div class="fragment slide-callout-overlay">
 <div class="callout-box">
 Validate on data the model has never seen — and on faults it has never seen.<br>
-<span style="font-weight:400; font-size:0.82em; color:#94a3b8;">Temporal splits matter more than random splits in accelerator data.</span>
+<span style="font-weight:400; font-size:0.82em; color:#94a3b8;">Temporal splits matter more than random splits in accelerator data — and stratify to preserve the &lt; 0.1 % fault rate.</span>
 </div>
 </div>
+
+::: notes
+The three-way split, in order of who touches it: train fits the weights (blue, keeps falling); validation tunes hyper-parameters and triggers early stopping (cyan, U-shaped); test is the amber star — touched exactly once, at the chosen model, for an unbiased estimate (every extra peek leaks it into your choices). The loss curve is the overfitting story: train loss keeps falling while validation loss bottoms out and then turns back up — that widening gap is the model memorising noise, and early stopping freezes it at the validation minimum, where we read the test point. Define "epoch" from the concept box if the audience is mixed. Two accelerator-specific cautions on the last overlay: prefer temporal splits over random ones — random splits leak information between time-correlated neighbouring pulses and flatter the model — and stratify so the sub-0.1% fault rate survives in every split. With only hundreds of labelled faults, 5-fold cross-validation on the training portion is the practical way to get a stable estimate.
+:::
 
 ---
 
@@ -1690,16 +1660,9 @@ Validate on data the model has never seen — and on faults it has never seen.<b
 ④ Deploy &amp; infer
 </div>
 
----
-
-## {data-auto-animate=true}
-
-<div style="display:flex; gap:0.25em; width:16%; margin-top:0.4em;">
-<div data-id="p5" style="flex:1; padding:0.3em 0.2em; border-radius:6px; border:1px solid rgba(148,163,184,0.45); background:rgba(148,163,184,0.06); text-align:center;">
-<div style="font-weight:700; font-size:0.58em; color:#94a3b8;">Deploy &amp; infer</div>
-<div style="font-size:0.46em; color:#475569; margin-top:0.2em; line-height:1.3;">Sub-ms response<br>monitoring · retrain</div>
-</div>
-</div>
+::: notes
+Fourth and final stage — deploy and infer. p5 lights up; the next press shrinks it before the detail slide.
+:::
 
 ---
 
@@ -1712,18 +1675,37 @@ Validate on data the model has never seen — and on faults it has never seen.<b
 </div>
 </div>
 
-::: {style="display:flex; gap:0.35em; margin:0.4em 0 0.35em 0;"}
-::: {.highlight-box style="flex:1; padding:0.35em 0.55em; font-size:0.78em; margin:0;"}
+::: notes
+p5 flies to the corner; next press brings in the deployment detail.
+:::
+
+---
+
+## {data-auto-animate=true}
+
+<div style="display:flex; gap:0.25em; width:16%; margin-top:0.4em;">
+<div data-id="p5" style="flex:1; padding:0.3em 0.2em; border-radius:6px; border:1px solid rgba(148,163,184,0.45); background:rgba(148,163,184,0.06); text-align:center;">
+<div style="font-weight:700; font-size:0.58em; color:#94a3b8;">Deploy &amp; infer</div>
+<div style="font-size:0.46em; color:#475569; margin-top:0.2em; line-height:1.3;">Sub-ms response<br>monitoring · retrain</div>
+</div>
+</div>
+
+::: {style="display:flex; gap:0.3em; margin:0.4em 0 0.35em 0;"}
+::: {.highlight-box style="flex:1; padding:0.3em 0.5em; font-size:0.68em; margin:0;"}
 **① Latency budget**
-LINAC at 100 Hz → 10 ms per pulse. Inference must complete in < 1 ms to leave headroom.
+Set by the *control loop*, not the model: fast feedback may need sub-ms, daily tuning tolerates seconds.
 :::
-::: {.fragment .highlight-box style="flex:1; padding:0.35em 0.55em; font-size:0.78em; margin:0;"}
+::: {.fragment .highlight-box style="flex:1; padding:0.3em 0.5em; font-size:0.68em; margin:0;"}
 **② Export &amp; serve**
-ONNX / TorchScript → deterministic runtime, no Python overhead, embeddable in EPICS/TANGO.
+Deterministic runtime (e.g. ONNX, TorchScript) embeddable in EPICS / TANGO / DOOCS — no Python in the loop.
 :::
-::: {.fragment .highlight-box style="flex:1; padding:0.35em 0.55em; font-size:0.78em; margin:0;"}
-**③ Monitor &amp; retrain**
-Track anomaly rate and input distributions. Trigger retraining when drift exceeds threshold.
+::: {.fragment .highlight-box style="flex:1; padding:0.3em 0.5em; font-size:0.68em; margin:0;"}
+**③ Compress to hardware**
+Pruning + quantisation (FP32→INT8) cut latency — at some accuracy cost; trade-off depends on CPU / GPU / FPGA.
+:::
+::: {.fragment .highlight-box style="flex:1; padding:0.3em 0.5em; font-size:0.68em; margin:0;"}
+**④ Monitor &amp; retrain**
+Track output rate and input distributions; retrain when drift crosses a threshold.
 :::
 :::
 
@@ -1746,7 +1728,7 @@ fig.add_trace(go.Bar(
     textfont=dict(color='#e2e8f0', size=12),
 ))
 fig.add_hline(y=10, line_dash='dot', line_color='#fbbf24', opacity=0.8,
-    annotation_text='  10 ms budget (100 Hz LINAC)',
+    annotation_text='  example control-loop deadline',
     annotation_font=dict(color='#fbbf24', size=10),
     annotation_position='top left')
 
@@ -1770,6 +1752,10 @@ A model in a notebook is not a deployed model.<br>
 </div>
 </div>
 
+::: notes
+This is where most accelerator-ML projects actually fail. Four constraints, none about the model's accuracy. Latency budget — set by the *control loop*, not the model: a fast feedback loop may demand sub-millisecond inference, while daily tuning tolerates seconds, so match the model to the loop's deadline (don't quote a universal number). Export and serve — convert to a deterministic runtime; ONNX and TorchScript are two examples, embeddable in EPICS / TANGO / DOOCS with no Python interpreter in the loop. Compress to the hardware — pruning and quantisation (e.g. FP32→INT8) cut latency and memory at some accuracy cost, and the right trade-off depends on whether you deploy on CPU, GPU, or FPGA. Monitor and retrain — track output rate and input distributions, retrain when drift crosses a threshold. The log-scale chart is illustrative (the dashed line is an *example* deadline). Closing line: a model in a notebook is not a deployed model — latency, precision, reliability, and drift are engineering problems, not modelling ones.
+:::
+
 # Practical Applications {.section-divider background-color="#e2e8f0" data-background-transition="zoom"}
 
 ::: {style="color: #1e3a5f; font-size: 1.6em; font-weight: 800; margin-top: 0.5em;"}
@@ -1784,8 +1770,6 @@ Use case 1 — RF fault detection &nbsp;·&nbsp; Use case 2 — Beam tuning &nbs
 Three back-to-back use cases, each self-contained. Same structure: problem → method → result → notebook. Companion notebooks are open on Colab.
 :::
 
----
-
 # Use Case 1 {.section-divider background-color="#e2e8f0" data-background-transition="zoom"}
 
 ::: {style="color: #1e3a5f; font-size: 1.6em; font-weight: 800; margin-top: 0.5em;"}
@@ -1796,68 +1780,15 @@ RF Fault Detection
 Autoencoders on cavity IQ waveforms · Notebook 01
 :::
 
----
-
-## Anomaly detection — method landscape
-
-```{python}
-#| echo: false
-#| eval: true
-
-import plotly.graph_objects as go
-
-# x: training data volume needed (0=minimal → 2=large dataset)
-# y: suitability for rare-event / SRF fault detection (1=poor → 5=excellent)
-methods = [
-    ("Threshold rules",  0.00, 1.1, 20, "#475569", "bottom right"),
-    ("PCA anomaly",      0.30, 2.0, 22, "#64748b", "top right"),
-    ("KDE / GMM",        0.55, 2.3, 20, "#64748b", "bottom right"),
-    ("Isolation Forest", 0.70, 2.9, 26, "#94a3b8", "top left"),
-    ("One-class SVM",    0.90, 2.5, 24, "#94a3b8", "bottom right"),
-    ("LSTM-AE",          1.60, 3.9, 26, "#a78bfa", "bottom right"),
-    ("VAE",              1.80, 4.6, 30, "#a78bfa", "top right"),
-    ("Autoencoder ★",   1.20, 4.3, 42, "#22d3ee", "top left"),
-]
-
-fig = go.Figure()
-for name, x, y, size, color, pos in methods:
-    is_pick = "★" in name
-    fig.add_trace(go.Scatter(
-        x=[x], y=[y], mode="markers+text",
-        marker=dict(size=size, color=color,
-            line=dict(color="#e2e8f0" if is_pick else "#0d1b2a",
-                      width=2.5 if is_pick else 1.5)),
-        text=[f"<b>{name}</b>" if is_pick else name],
-        textposition=pos,
-        textfont=dict(size=12 if is_pick else 10, color=color),
-        showlegend=False,
-    ))
-
-fig.update_layout(
-    height=530, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
-    font=dict(color="#e2e8f0", size=11),
-    xaxis=dict(title="Training data volume required",
-               range=[-0.3, 2.5],
-               tickvals=[0, 1, 2],
-               ticktext=["Minimal<br>(unsupervised)", "Moderate<br>(normal data only)", "Large<br>(fault labels)"],
-               showgrid=True, gridcolor="#1e3048", zeroline=False),
-    yaxis=dict(title="Suitability for rare-event detection",
-               range=[0.6, 5.4],
-               tickvals=[1, 2, 3, 4, 5],
-               ticktext=["Poor", "Fair", "Moderate", "Good", "Excellent"],
-               showgrid=True, gridcolor="#1e3048", zeroline=False),
-    margin=dict(l=90, r=30, t=20, b=70),
-)
-fig
-```
-
-::: {.key-result style="margin-top: 0.3em; font-size: 0.78em;"}
-**This lecture:** Autoencoder — unsupervised, normal-data only, scales to 1 kHz waveform streams.
+::: notes
+~11 minutes for UC1. The problem: rare RF faults with no labels. The method: an autoencoder trained on normal pulses only, with the anomaly score being the reconstruction error. Notebook 01 is live on Colab. Set expectations honestly here — be explicit later that this autoencoder is our own illustration on synthetic data, not the CEBAF production system, which is a supervised classifier (Tennant 2020).
 :::
 
 ---
 
 ## The problem: rare faults, no labels
+
+<div class="stepper"><span class="on">① Problem</span> · <span>② Method</span> · <span>③ Results</span> · <span>④ Notebook</span></div>
 
 :::: {.columns style="margin-top:0.3em; gap:1.5em;"}
 ::: {.column width="54%"}
@@ -1908,10 +1839,15 @@ Anomaly score = reconstruction error.
 :::
 ::::
 
+::: notes
+Frame the constraint honestly. Each cavity produces roughly 1 kHz of IQ waveforms — over a million pulses a day — but a clinical machine is safe by design, so genuine faults are vanishingly rare. That kills supervised classification: you cannot collect thousands of labelled examples per fault class in clinical operation. The reframe is the key insight: do not try to classify faults, instead model what "normal" looks like and flag anything that deviates. The four fault classes in the table — quench, detuning, multipacting, plus normal — are what we synthesise in the notebook to test the detector. The detector itself never sees them during training; it only ever learns normal.
+:::
 
 ---
 
 ## What the waveforms look like
+
+<div class="stepper"><span class="on">① Problem</span> · <span>② Method</span> · <span>③ Results</span> · <span>④ Notebook</span></div>
 
 ```{python}
 #| echo: false
@@ -1984,11 +1920,82 @@ Row 1 = I (in-phase), Row 2 = Q (quadrature). Normal: clean trapezoid, Q near ze
 
 ---
 
-## The autoencoder — architecture
+## Anomaly detection — method landscape
 
-::: {.col-left}
+<div class="stepper"><span>① Problem</span> · <span class="on">② Method</span> · <span>③ Results</span> · <span>④ Notebook</span></div>
 
 ```{python}
+#| echo: false
+#| eval: true
+
+import plotly.graph_objects as go
+
+# x: training data volume needed (0=minimal → 2=large dataset)
+# y: suitability for rare-event / SRF fault detection (1=poor → 5=excellent)
+methods = [
+    ("Threshold rules",  0.00, 1.1, 20, "#475569", "bottom right"),
+    ("PCA anomaly",      0.30, 2.0, 22, "#64748b", "top right"),
+    ("KDE / GMM",        0.55, 2.3, 20, "#64748b", "bottom right"),
+    ("Isolation Forest", 0.70, 2.9, 26, "#94a3b8", "top left"),
+    ("One-class SVM",    0.90, 2.5, 24, "#94a3b8", "bottom right"),
+    ("LSTM-AE",          1.60, 3.9, 26, "#a78bfa", "bottom right"),
+    ("VAE",              1.80, 4.6, 30, "#a78bfa", "top right"),
+    ("Autoencoder ★",   1.20, 4.3, 42, "#22d3ee", "top left"),
+]
+
+fig = go.Figure()
+for name, x, y, size, color, pos in methods:
+    is_pick = "★" in name
+    fig.add_trace(go.Scatter(
+        x=[x], y=[y], mode="markers+text",
+        marker=dict(size=size, color=color,
+            line=dict(color="#e2e8f0" if is_pick else "#0d1b2a",
+                      width=2.5 if is_pick else 1.5)),
+        text=[f"<b>{name}</b>" if is_pick else name],
+        textposition=pos,
+        textfont=dict(size=12 if is_pick else 10, color=color),
+        showlegend=False,
+    ))
+
+fig.update_layout(
+    height=530, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
+    font=dict(color="#e2e8f0", size=11),
+    xaxis=dict(title="Training data volume required",
+               range=[-0.3, 2.5],
+               tickvals=[0, 1, 2],
+               ticktext=["Minimal<br>(unsupervised)", "Moderate<br>(normal data only)", "Large<br>(fault labels)"],
+               showgrid=True, gridcolor="#1e3048", zeroline=False),
+    yaxis=dict(title="Suitability for rare-event detection",
+               range=[0.6, 5.4],
+               tickvals=[1, 2, 3, 4, 5],
+               ticktext=["Poor", "Fair", "Moderate", "Good", "Excellent"],
+               showgrid=True, gridcolor="#1e3048", zeroline=False),
+    margin=dict(l=90, r=30, t=20, b=70),
+)
+fig
+```
+
+::: {.key-result style="margin-top: 0.3em; font-size: 0.78em;"}
+**This lecture:** Autoencoder — unsupervised, normal-data only, scales to 1 kHz waveform streams.
+:::
+
+::: notes
+The same decision map as before, zoomed into anomaly detection. x is the training data required, y is suitability for rare-event detection. The autoencoder (cyan star) sits in the sweet spot: it trains on normal data only, needs no fault labels, and scales to kHz waveform streams. The classical methods on the left — threshold rules, PCA, isolation forest — are cheaper but weaker on high-dimensional waveforms. The VAE and LSTM-autoencoder top-right are more powerful but more data-hungry and harder to deploy. We pick the autoencoder as the best balance for a clinical machine.
+:::
+
+---
+
+## The autoencoder — architecture
+
+<div class="stepper"><span>① Problem</span> · <span class="on">② Method</span> · <span>③ Results</span> · <span>④ Notebook</span></div>
+
+:::::: {.columns}
+::::: {.column width="56%"}
+
+:::: {style="display:grid;"}
+
+::: {style="grid-area:1/1;"}
+```{.python}
 class RFAutoencoder(nn.Module):
     def __init__(self, latent_dim=16):
         super().__init__()
@@ -2002,37 +2009,152 @@ class RFAutoencoder(nn.Module):
         )
         self.decoder = nn.Sequential(...)    # mirror
 ```
-
-Input `(batch, 2, 256)` — I and Q as 2 channels
-
 :::
 
-::: {.col-right}
-
-::: {.highlight-box}
-**Why 1D convolutions?**
-
-The waveform is a time series — Conv1d captures local temporal features (rise, drop, oscillations) efficiently.
+::: {.fragment .current-visible style="grid-area:1/1;" fragment-index="1"}
+```{.python code-line-numbers="4-11"}
+class RFAutoencoder(nn.Module):
+    def __init__(self, latent_dim=16):
+        super().__init__()
+        self.encoder = nn.Sequential(
+            nn.Conv1d(2, 32, kernel_size=8, stride=4),
+            nn.GELU(),
+            nn.Conv1d(32, 64, kernel_size=4, stride=2),
+            nn.GELU(),
+            nn.Flatten(),
+            nn.Linear(64 * 32, latent_dim),  # bottleneck
+        )
+        self.decoder = nn.Sequential(...)    # mirror
+```
 :::
 
-::: {.key-result style="margin-top: 0.8em;"}
-**Anomaly score** = reconstruction error
-
-Normal → low · Faults → high
+::: {.fragment .current-visible style="grid-area:1/1;" fragment-index="2"}
+```{.python code-line-numbers="5,7"}
+class RFAutoencoder(nn.Module):
+    def __init__(self, latent_dim=16):
+        super().__init__()
+        self.encoder = nn.Sequential(
+            nn.Conv1d(2, 32, kernel_size=8, stride=4),
+            nn.GELU(),
+            nn.Conv1d(32, 64, kernel_size=4, stride=2),
+            nn.GELU(),
+            nn.Flatten(),
+            nn.Linear(64 * 32, latent_dim),  # bottleneck
+        )
+        self.decoder = nn.Sequential(...)    # mirror
+```
 :::
 
+::: {.fragment .current-visible style="grid-area:1/1;" fragment-index="3"}
+```{.python code-line-numbers="10"}
+class RFAutoencoder(nn.Module):
+    def __init__(self, latent_dim=16):
+        super().__init__()
+        self.encoder = nn.Sequential(
+            nn.Conv1d(2, 32, kernel_size=8, stride=4),
+            nn.GELU(),
+            nn.Conv1d(32, 64, kernel_size=4, stride=2),
+            nn.GELU(),
+            nn.Flatten(),
+            nn.Linear(64 * 32, latent_dim),  # bottleneck
+        )
+        self.decoder = nn.Sequential(...)    # mirror
+```
 :::
 
-::: {.clearfix}
+::: {.fragment .current-visible style="grid-area:1/1;" fragment-index="4"}
+```{.python code-line-numbers="12"}
+class RFAutoencoder(nn.Module):
+    def __init__(self, latent_dim=16):
+        super().__init__()
+        self.encoder = nn.Sequential(
+            nn.Conv1d(2, 32, kernel_size=8, stride=4),
+            nn.GELU(),
+            nn.Conv1d(32, 64, kernel_size=4, stride=2),
+            nn.GELU(),
+            nn.Flatten(),
+            nn.Linear(64 * 32, latent_dim),  # bottleneck
+        )
+        self.decoder = nn.Sequential(...)    # mirror
+```
+:::
+
+::::
+
+::: {style="font-size:0.62em; color:#94a3b8; margin-top:0.3em;"}
+Input `(batch, 2, 256)` — I and Q as two channels
+:::
+
+:::::
+::::: {.column width="44%"}
+
+:::: {style="font-size:0.62em; padding-top:0.3em;"}
+
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.18em 0.55em; margin-bottom:0.3em;" fragment-index="1"}
+**① Encoder · lines 4–11** — two `Conv1d` stages compress the `(2, 256)` waveform.
+:::
+
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.18em 0.55em; margin-bottom:0.3em;" fragment-index="2"}
+**② 1D convolutions · lines 5, 7** — capture local features (rise, drop, oscillations) with few parameters.
+:::
+
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.18em 0.55em; margin-bottom:0.3em;" fragment-index="3"}
+**③ Bottleneck · line 10** — the pulse is squeezed through 16 numbers; the net must learn what *normal* looks like.
+:::
+
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.18em 0.55em; margin-bottom:0.3em;" fragment-index="4"}
+**④ Decoder · line 12** — mirrors the encoder, rebuilding `(2, 256)` from the 16-D code.
+:::
+
+::::
+
+:::::
+::::::
+
+:::: {.fragment style="text-align:center; margin-top:0.3em;" fragment-index="5"}
+::: {.key-result style="display:inline-block; font-size:0.86em;"}
+**Anomaly score = reconstruction error** · Normal → low · Faults → high
+:::
+::::
+
+<div style="display:flex; align-items:center; justify-content:center; gap:0.3em; margin-top:0.3em; font-family:'IBM Plex Mono',monospace;">
+<div style="width:54px; height:52px; background:rgba(34,211,238,0.18); border:1px solid #22d3ee; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:0.42em; color:#e2e8f0;">2×256</div>
+<span style="color:#64748b;">→</span>
+<div style="width:46px; height:40px; background:rgba(34,211,238,0.15); border:1px solid rgba(34,211,238,0.6); border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:0.42em; color:#cbd5e1;">32 ch</div>
+<span style="color:#64748b;">→</span>
+<div style="width:46px; height:30px; background:rgba(34,211,238,0.12); border:1px solid rgba(34,211,238,0.45); border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:0.42em; color:#cbd5e1;">64 ch</div>
+<span style="color:#64748b;">→</span>
+<div style="width:46px; height:22px; background:rgba(251,191,36,0.22); border:2px solid #fbbf24; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:0.44em; color:#fbbf24; font-weight:700;">16</div>
+<span style="color:#64748b;">→</span>
+<div style="width:46px; height:30px; background:rgba(96,165,250,0.12); border:1px solid rgba(96,165,250,0.45); border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:0.42em; color:#cbd5e1;">64 ch</div>
+<span style="color:#64748b;">→</span>
+<div style="width:46px; height:40px; background:rgba(96,165,250,0.15); border:1px solid rgba(96,165,250,0.6); border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:0.42em; color:#cbd5e1;">32 ch</div>
+<span style="color:#64748b;">→</span>
+<div style="width:54px; height:52px; background:rgba(96,165,250,0.18); border:1px solid #60a5fa; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:0.42em; color:#e2e8f0;">2×256</div>
+</div>
+<div style="display:flex; justify-content:center; gap:4.5em; font-size:0.5em; margin-top:0.2em;">
+<span style="color:#22d3ee;">◀ encoder · compress</span>
+<span style="color:#fbbf24;">bottleneck</span>
+<span style="color:#60a5fa;">decoder · reconstruct ▶</span>
+</div>
+
+::: notes
+**Arrow-driven walk-through.** Each right-arrow press highlights the matching code lines on the left and lights up the corresponding point on the right; earlier points stay visible but dimmed (half-faded), so the list accumulates. The funnel below stays up throughout as the anchor. ① Encoder — two Conv1d stages compress the 2×256 input. ② 1D convolutions slide along the time axis, capturing local structure (rise, drop, oscillations) with far fewer parameters than dense layers. ③ Bottleneck — the whole pulse is squeezed through 16 numbers, so the network can only store a compact model of *normal*; this dimension is the critical hyperparameter (too large and it reconstructs faults too, killing the signal). ④ Decoder mirrors the encoder. Final press: the punchline — anomaly score = reconstruction error, low for normal, high for faults.
 :::
 
 ---
 
 ## Training and result
 
-::: {.col-left}
+<div class="stepper"><span>① Problem</span> · <span>② Method</span> · <span class="on">③ Results</span> · <span>④ Notebook</span></div>
 
-```{python}
+:::::: {.columns}
+::::: {.column width="50%"}
+
+:::: {style="display:grid;"}
+
+::: {style="grid-area:1/1;"}
+```{.python}
 # Train on NORMAL pulses only
 X_normal = X_train[y_train == 0]
 for epoch in range(50):
@@ -2047,10 +2169,82 @@ with torch.no_grad():
     scores = ((X - model(X))**2).mean(dim=(1,2))
 threshold = scores[normal_mask].quantile(0.95)
 ```
-
 :::
 
-::: {.col-right}
+::: {.fragment .current-visible style="grid-area:1/1;" fragment-index="1"}
+```{.python code-line-numbers="1-2"}
+# Train on NORMAL pulses only
+X_normal = X_train[y_train == 0]
+for epoch in range(50):
+    for (batch,) in loader:
+        loss = ((batch - model(batch))**2).mean()
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+# Score every pulse at inference
+with torch.no_grad():
+    scores = ((X - model(X))**2).mean(dim=(1,2))
+threshold = scores[normal_mask].quantile(0.95)
+```
+:::
+
+::: {.fragment .current-visible style="grid-area:1/1;" fragment-index="2"}
+```{.python code-line-numbers="3-8"}
+# Train on NORMAL pulses only
+X_normal = X_train[y_train == 0]
+for epoch in range(50):
+    for (batch,) in loader:
+        loss = ((batch - model(batch))**2).mean()
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+# Score every pulse at inference
+with torch.no_grad():
+    scores = ((X - model(X))**2).mean(dim=(1,2))
+threshold = scores[normal_mask].quantile(0.95)
+```
+:::
+
+::: {.fragment .current-visible style="grid-area:1/1;" fragment-index="3"}
+```{.python code-line-numbers="10-13"}
+# Train on NORMAL pulses only
+X_normal = X_train[y_train == 0]
+for epoch in range(50):
+    for (batch,) in loader:
+        loss = ((batch - model(batch))**2).mean()
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+# Score every pulse at inference
+with torch.no_grad():
+    scores = ((X - model(X))**2).mean(dim=(1,2))
+threshold = scores[normal_mask].quantile(0.95)
+```
+:::
+
+::::
+
+:::: {style="font-size:0.6em; margin-top:0.4em;"}
+
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.18em 0.55em; margin-bottom:0.3em;" fragment-index="1"}
+**① Train on *normal* only · lines 1–2** — the model never sees a fault.
+:::
+
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.18em 0.55em; margin-bottom:0.3em;" fragment-index="2"}
+**② Reconstruction loss · lines 3–8** — minimise the MSE between each pulse and its rebuild.
+:::
+
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.18em 0.55em;" fragment-index="3"}
+**③ Unsupervised threshold · lines 10–13** — flag pulses above the 95th percentile of *normal* errors. No fault labels used.
+:::
+
+::::
+
+:::::
+::::: {.column width="50%"}
 
 ```{python}
 #| echo: false
@@ -2083,33 +2277,46 @@ fig
 
 ::: {style="text-align:center; margin-top:0.4em;"}
 <span style="font-size:1.5em; font-weight:800; color:#22d3ee; line-height:1.1;">1.000</span><br>
-[ROC-AUC — threshold-independent fault detection]{.metric-label}
+[ROC-AUC — *on synthetic data*]{.metric-label}
 :::
 
-:::
-
-::: {.clearfix}
-:::
+:::::
+::::::
 
 <div class="fragment slide-callout-overlay">
 <div class="concept-callout-box">
 <div class="concept-callout-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-0.15em;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Concept — ROC-AUC</div>
 <div>
-Sweep the decision threshold across the full score range. At each value, plot <strong>True Positive Rate</strong> (sensitivity) vs <strong>False Positive Rate</strong> (1 − specificity).<br>
-<strong>AUC</strong> = area under that curve. &emsp;AUC 0.5 → random classifier &emsp;AUC 1.0 → perfect separation.<br>
-<span style="color:#94a3b8; font-size:0.92em;">Threshold-independent — essential when fault rate &lt; 0.1 %: no fixed threshold is meaningful across operating conditions.</span>
+A detector needs a threshold — but which one? <strong>ROC-AUC sidesteps the choice.</strong><br>
+Sweep <em>every</em> threshold; at each, plot <strong>true-positive rate</strong> (sensitivity) vs <strong>false-positive rate</strong> (1 − specificity). <strong>AUC</strong> = area under that curve.<br>
+<strong>0.5</strong> → coin-flip &emsp; <strong>1.0</strong> → perfect separation of normal vs fault.<br>
+<span style="color:#94a3b8; font-size:0.92em;">Threshold-independent — the right metric when a sub-0.1 % fault rate makes any single fixed cut arbitrary.</span>
 </div>
 </div>
 </div>
+
+::: notes
+Two code ideas to highlight. First, we train only on normal pulses — the y==0 selection — so the network never sees a fault. Second, we set the decision threshold at the 95th percentile of the normal reconstruction errors: a purely unsupervised choice that needs no faults at all. The histogram then shows the payoff — normal errors cluster low, fault errors spread high, with clean separation at the threshold. The headline is ROC-AUC = 1.000, but say "on this synthetic dataset" out loud: real machines are messier and this number will not survive contact with real data — that gap is part of the open-problems discussion later. Use the ROC-AUC concept box for mixed audiences: it is threshold-independent, which is exactly why it is the right metric when no single fixed threshold is meaningful across operating conditions.
+:::
 
 ---
 
 ## Notebook 01 — live preview
 
+<div class="stepper"><span>① Problem</span> · <span>② Method</span> · <span>③ Results</span> · <span class="on">④ Notebook</span></div>
+
+<div style="text-align:center; margin:0.1em 0 0.45em;">
+<a href="https://colab.research.google.com/github/aghribi/cas2026-ai-medical-accelerators/blob/main/notebooks/01_fault_detection/notebook.ipynb" target="_blank" style="background:#F9AB00; color:#000; border-radius:4px; padding:0.2em 0.75em; font-weight:700; font-family:'IBM Plex Mono',monospace; white-space:nowrap; text-decoration:none; font-size:0.72em;">▶ Open 01_fault_detection in Colab</a>
+</div>
+
 <iframe src="notebooks_rendered/01_fault_detection.html"
-        width="100%" height="610px" frameborder="0"
+        width="100%" height="560px" frameborder="0"
         style="border-radius:6px; border:1px solid #22d3ee; background:#fff;">
 </iframe>
+
+::: notes
+Live notebook — runnable on Colab from a phone, zero install. If time allows, walk through one cell: generating a normal pulse, training the autoencoder, then scoring a fault and watching the reconstruction error jump. Do not get stuck here — it is a pointer for the audience to explore later, not a deep dive.
+:::
 
 # Use Case 2 {.section-divider background-color="#e2e8f0" data-background-transition="zoom"}
 
@@ -2121,9 +2328,70 @@ Beam Tuning with Bayesian Optimisation
 Cheetah · differentiable accelerator simulation · Notebook 02
 :::
 
+::: notes
+~11 minutes for UC2. The problem: daily beam tuning is slow and largely manual. The method: Bayesian optimisation on a Cheetah simulation. The deeper pedagogical payload — and the thing to keep coming back to — is dimensional scaling: in 2D, BO barely beats a grid, but the gap explodes as you add tuning dimensions. Notebook 02 is live.
+:::
+
+---
+
+## The daily startup problem
+
+<div class="stepper"><span class="on">① Problem</span> · <span>② Method</span> · <span>③ Results</span> · <span>④ Notebook</span></div>
+
+::: {.col-left}
+
+Every morning on a clinical machine:
+
+1. Run QA checks (output, flatness, energy)
+2. Tune magnets until beam is within spec
+3. Hand off to clinical staff
+
+Currently: **20–45 min of physicist time**, largely manual.
+
+$n$ correctors × $k$ quads → high-dimensional space that grows exponentially for grid search.
+
+:::
+
+::: {.col-right}
+
+::: {.highlight-box}
+**Bayesian Optimisation fits naturally:**
+
+- Works in 2–20 dimensions
+- **~50 evaluations** to a good solution
+- Model-free — no simulator needed
+:::
+
+::: {.key-result .fragment style="margin-top: 0.8em;"}
+Demonstrated in production at SLAC LCLS and across light sources, FELs, and linacs (Duris 2020; Roussel et al. 2024).
+:::
+
+:::
+
+::: {.clearfix}
+:::
+
+<div class="fragment slide-callout-overlay">
+<div class="concept-callout-box">
+<div class="concept-callout-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-0.15em;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Concept — Bayesian prior</div>
+<div>
+A <strong>prior</strong> P(f) encodes your belief <em>before</em> data — e.g. "the beam response is smooth in magnet space".<br>
+Bayes' theorem updates it: <strong>P(f | data) ∝ P(data | f) · P(f)</strong> — the result is the <em>posterior</em>.<br>
+BO uses the posterior to pick the next probe: explore where uncertain, exploit where promising.<br>
+<span style="color:#94a3b8; font-size:0.92em;">Every measurement actively informs the next — no wasted machine evaluations.</span>
+</div>
+</div>
+</div>
+
+::: notes
+Ground the problem in daily operations. Every morning: run QA checks (output, flatness, energy), tune the magnets until the beam is within spec, then hand off to clinical staff. Today that is 20–45 minutes of largely manual physicist time. With n correctors and k quadrupoles the search space grows exponentially, so a grid scan is hopeless. BO fits this naturally: it works in 2–20 dimensions, reaches a good solution in tens of evaluations, and is model-free, so it runs directly on the machine with no simulator. Use the Bayesian-prior concept box to give the core idea: encode a belief — "the beam response is smooth in magnet space" — then let Bayes update it with each measurement so every probe is chosen to be maximally informative.
+:::
+
 ---
 
 ## Optimisation — method landscape
+
+<div class="stepper"><span>① Problem</span> · <span class="on">② Method</span> · <span>③ Results</span> · <span>④ Notebook</span></div>
 
 ```{python}
 #| echo: false
@@ -2189,65 +2457,30 @@ fig
 Duris et al., *PRL* 124 (2020) · Roussel et al., *PRAB* 27 (2024) · Emma et al., *Nat. Mach. Int.* 1 (2019) · Kain et al., *Phys. Rev. Accel. Beams* 23 (2020)
 :::
 
----
-
-## The daily startup problem
-
-::: {.col-left}
-
-Every morning on a clinical machine:
-
-1. Run QA checks (output, flatness, energy)
-2. Tune magnets until beam is within spec
-3. Hand off to clinical staff
-
-Currently: **20–45 min of physicist time**, largely manual.
-
-$n$ correctors × $k$ quads → high-dimensional space that grows exponentially for grid search.
-
+::: notes
+Decision map for optimisation. x is evaluations to converge — fewer is better, and the axis is reversed so "good" is to the right — and y is whether the method works on a real machine without gradients. Bayesian optimisation (cyan star) is in the best quadrant: gradient-free and sample-efficient, converging in tens of evaluations. Two things to point out. The footnote on RL: it is excellent for sequential online control but not single-shot tuning, so it is not really a competitor for this specific task. And gradient descent sits at the bottom because you rarely have usable gradients on a real machine — which is exactly the gap Cheetah closes on the next slide.
 :::
-
-::: {.col-right}
-
-::: {.highlight-box}
-**Bayesian Optimisation fits naturally:**
-
-- Works in 2–20 dimensions
-- **~50 evaluations** to a good solution
-- Model-free — no simulator needed
-:::
-
-::: {.key-result .fragment style="margin-top: 0.8em;"}
-Demonstrated in production at SLAC LCLS and across light sources, FELs, and linacs (Duris 2020; Roussel et al. 2024).
-:::
-
-:::
-
-::: {.clearfix}
-:::
-
-<div class="fragment slide-callout-overlay">
-<div class="concept-callout-box">
-<div class="concept-callout-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-0.15em;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Concept — Bayesian prior</div>
-<div>
-A <strong>prior</strong> P(f) encodes your belief <em>before</em> data — e.g. "the beam response is smooth in magnet space".<br>
-Bayes' theorem updates it: <strong>P(f | data) ∝ P(data | f) · P(f)</strong> — the result is the <em>posterior</em>.<br>
-BO uses the posterior to pick the next probe: explore where uncertain, exploit where promising.<br>
-<span style="color:#94a3b8; font-size:0.92em;">Every measurement actively informs the next — no wasted machine evaluations.</span>
-</div>
-</div>
-</div>
 
 ---
 
 ## Cheetah — PyTorch beam dynamics
 
-::: {.col-left}
+<div class="stepper"><span>① Problem</span> · <span class="on">② Method</span> · <span>③ Results</span> · <span>④ Notebook</span></div>
 
-```{python}
+<style>
+#cheetah-pytorch-beam-dynamics pre { font-size: 0.46em !important; }
+</style>
+
+:::::: {.columns}
+::::: {.column width="58%"}
+
+:::: {style="display:grid;"}
+
+::: {style="grid-area:1/1;"}
+```{.python}
 import torch, cheetah
 
-# Beam diverged 3.7 mm/plane after 2 m upstream drift
+# Beam diverges after a 2 m upstream drift
 upstream = cheetah.Segment([cheetah.Drift(length=torch.tensor(2.0))])
 beam_in  = upstream.track(cheetah.ParameterBeam.from_twiss(
     energy=torch.tensor(1088.3e6),   # 150 MeV proton, eV
@@ -2268,35 +2501,150 @@ segment = cheetah.Segment(elements=[
 
 beam_out = segment.track(beam_in)
 ```
-
 :::
 
-::: {.col-right}
+::: {.fragment .current-visible style="grid-area:1/1;" fragment-index="1"}
+```{.python code-line-numbers="3-10"}
+import torch, cheetah
 
-::: {.highlight-box style="font-size: 0.78em;"}
-**Why Cheetah?**
+# Beam diverges after a 2 m upstream drift
+upstream = cheetah.Segment([cheetah.Drift(length=torch.tensor(2.0))])
+beam_in  = upstream.track(cheetah.ParameterBeam.from_twiss(
+    energy=torch.tensor(1088.3e6),   # 150 MeV proton, eV
+    beta_x=torch.tensor(0.3),
+    emittance_x=torch.tensor(1e-6),
+    species=cheetah.Species("proton"),
+))
 
-- PyTorch module → **gradients flow** through the simulation
-- Milliseconds per call
-- Same API whether virtual machine or real machine
+# Re-focusing doublet
+segment = cheetah.Segment(elements=[
+    cheetah.Drift(length=torch.tensor(0.1)),
+    cheetah.Quadrupole(length=torch.tensor(0.3), name="Q1"),
+    cheetah.Drift(length=torch.tensor(0.6)),
+    cheetah.Quadrupole(length=torch.tensor(0.3), name="Q2"),
+    cheetah.Drift(length=torch.tensor(0.3)),
+    cheetah.Screen(name="monitor"),
+])
+
+beam_out = segment.track(beam_in)
+```
 :::
 
-::: {.highlight-box style="margin-top: 0.8em; font-size: 0.72em;"}
-At screen, no quads: σ_x + σ_y = 13.2 mm (6.6 mm/plane)
+::: {.fragment .current-visible style="grid-area:1/1;" fragment-index="2"}
+```{.python code-line-numbers="12-21"}
+import torch, cheetah
+
+# Beam diverges after a 2 m upstream drift
+upstream = cheetah.Segment([cheetah.Drift(length=torch.tensor(2.0))])
+beam_in  = upstream.track(cheetah.ParameterBeam.from_twiss(
+    energy=torch.tensor(1088.3e6),   # 150 MeV proton, eV
+    beta_x=torch.tensor(0.3),
+    emittance_x=torch.tensor(1e-6),
+    species=cheetah.Species("proton"),
+))
+
+# Re-focusing doublet
+segment = cheetah.Segment(elements=[
+    cheetah.Drift(length=torch.tensor(0.1)),
+    cheetah.Quadrupole(length=torch.tensor(0.3), name="Q1"),
+    cheetah.Drift(length=torch.tensor(0.6)),
+    cheetah.Quadrupole(length=torch.tensor(0.3), name="Q2"),
+    cheetah.Drift(length=torch.tensor(0.3)),
+    cheetah.Screen(name="monitor"),
+])
+
+beam_out = segment.track(beam_in)
+```
 :::
 
+::: {.fragment .current-visible style="grid-area:1/1;" fragment-index="3"}
+```{.python code-line-numbers="22"}
+import torch, cheetah
+
+# Beam diverges after a 2 m upstream drift
+upstream = cheetah.Segment([cheetah.Drift(length=torch.tensor(2.0))])
+beam_in  = upstream.track(cheetah.ParameterBeam.from_twiss(
+    energy=torch.tensor(1088.3e6),   # 150 MeV proton, eV
+    beta_x=torch.tensor(0.3),
+    emittance_x=torch.tensor(1e-6),
+    species=cheetah.Species("proton"),
+))
+
+# Re-focusing doublet
+segment = cheetah.Segment(elements=[
+    cheetah.Drift(length=torch.tensor(0.1)),
+    cheetah.Quadrupole(length=torch.tensor(0.3), name="Q1"),
+    cheetah.Drift(length=torch.tensor(0.6)),
+    cheetah.Quadrupole(length=torch.tensor(0.3), name="Q2"),
+    cheetah.Drift(length=torch.tensor(0.3)),
+    cheetah.Screen(name="monitor"),
+])
+
+beam_out = segment.track(beam_in)
+```
 :::
 
-::: {.clearfix}
+::::
+
+:::::
+::::: {.column width="42%"}
+
+:::: {style="font-size:0.62em;"}
+
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.18em 0.55em; margin-bottom:0.3em;" fragment-index="1"}
+**① Beam setup · lines 3–10** — a 150 MeV proton beam; after a 2 m drift it has diverged.
+:::
+
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.18em 0.55em; margin-bottom:0.3em;" fragment-index="2"}
+**② Re-focusing doublet · lines 12–21** — two independently powered quads (Q1, Q2) and a screen.
+:::
+
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.18em 0.55em;" fragment-index="3"}
+**③ Track · line 22** — push the beam through; read σ at the screen.
+:::
+
+::::
+
+:::: {.fragment style="margin-top:0.5em;" fragment-index="4"}
+
+::: {.highlight-box style="font-size: 0.7em;"}
+**Why Cheetah?** PyTorch module → **gradients flow** through the simulation · ms per call · same API for a virtual or real machine.
+:::
+
+::: {.key-result style="margin-top: 0.5em; font-size: 0.68em;"}
+At the screen, quads off: σ_x + σ_y = **13.2 mm** (6.6 mm/plane) — the baseline BO must beat.
+:::
+
+::::
+
+:::::
+::::::
+
+::: {.slide-ref}
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" style="width:0.85em;height:0.85em;fill:#94a3b8;vertical-align:-0.12em;margin-right:0.2em;"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg><a href="https://github.com/desy-ml/cheetah" style="color:#22d3ee;">github.com/desy-ml/cheetah</a> &nbsp;·&nbsp; Kaiser, Xu, Eichler & Santamaria Garcia, *PRAB* **27**, 054601 (2024)
+:::
+
+::: notes
+Cheetah is the enabling tool: a beam-dynamics code written as a PyTorch module. Two properties matter. It is differentiable — gradients flow straight through the tracking, so it composes natively with machine-learning optimisers — and it runs in milliseconds per call, with the same API whether you point it at a virtual or a real machine. Our setup, which we reuse for the rest of UC2: a 150 MeV proton beam that has diverged after a 2 m drift, re-focused by a two-quad doublet, with the objective being σx + σy at the screen. With the quads switched off, σx + σy is 13.2 mm — that is the untuned baseline BO has to beat, and the convention σx + σy (the sum of both planes) is used consistently across the whole use case.
 :::
 
 ---
 
 ## BO finds focus in tens of evaluations
 
-::: {.col-left style="padding-top:0.9em;"}
+<div class="stepper"><span>① Problem</span> · <span>② Method</span> · <span class="on">③ Results</span> · <span>④ Notebook</span></div>
 
-```{python}
+<style>
+#bo-finds-focus-in-tens-of-evaluations pre { font-size: 0.42em !important; }
+</style>
+
+:::::: {.columns}
+::::: {.column width="52%"}
+
+:::: {style="display:grid;"}
+
+::: {style="grid-area:1/1;"}
+```{.python}
 from skopt import gp_minimize
 from skopt.space import Real
 
@@ -2304,8 +2652,8 @@ NOISE = 0.04  # 4% shot-to-shot noise
 
 def objective(params):
     k1_q1, k1_q2 = params
-    segment.Q1.k1 = torch.tensor(k1_q1, dtype=torch.float32)
-    segment.Q2.k1 = torch.tensor(k1_q2, dtype=torch.float32)
+    segment.Q1.k1 = torch.tensor(k1_q1)
+    segment.Q2.k1 = torch.tensor(k1_q2)
     beam_out = segment.track(beam_in)
     sigma = (beam_out.sigma_x + beam_out.sigma_y).item()
     if not np.isfinite(sigma): return 0.20
@@ -2313,19 +2661,104 @@ def objective(params):
 
 result = gp_minimize(
     func=objective,
-    dimensions=[Real(-15.0, 15.0, name="k1_Q1"),
-                Real(-15.0, 15.0, name="k1_Q2")],
+    dimensions=[Real(-15, 15, name="k1_Q1"),
+                Real(-15, 15, name="k1_Q2")],
     n_calls=60, n_initial_points=12,
-    acq_func="EI", noise=(NOISE*3e-3)**2,   # noise scaled to the metre-valued objective
+    acq_func="EI",                # Expected Improvement
 )
-# → ~2.2 mm (8-seed mean) vs 13.2 mm untuned — a ~6× reduction
-#   (noiseless optimum 0.8 mm; the 4% readout noise sets the ~2 mm floor)
+# → ~2.2 mm (8-seed) vs 13.2 mm — a ~6× cut
 ```
-
 :::
 
-::: {.col-right}
+::: {.fragment .current-visible style="grid-area:1/1;" fragment-index="1"}
+```{.python code-line-numbers="6-13"}
+from skopt import gp_minimize
+from skopt.space import Real
 
+NOISE = 0.04  # 4% shot-to-shot noise
+
+def objective(params):
+    k1_q1, k1_q2 = params
+    segment.Q1.k1 = torch.tensor(k1_q1)
+    segment.Q2.k1 = torch.tensor(k1_q2)
+    beam_out = segment.track(beam_in)
+    sigma = (beam_out.sigma_x + beam_out.sigma_y).item()
+    if not np.isfinite(sigma): return 0.20
+    return sigma * (1 + np.random.normal(0, NOISE))
+
+result = gp_minimize(
+    func=objective,
+    dimensions=[Real(-15, 15, name="k1_Q1"),
+                Real(-15, 15, name="k1_Q2")],
+    n_calls=60, n_initial_points=12,
+    acq_func="EI",                # Expected Improvement
+)
+# → ~2.2 mm (8-seed) vs 13.2 mm — a ~6× cut
+```
+:::
+
+::: {.fragment .current-visible style="grid-area:1/1;" fragment-index="2"}
+```{.python code-line-numbers="15-21"}
+from skopt import gp_minimize
+from skopt.space import Real
+
+NOISE = 0.04  # 4% shot-to-shot noise
+
+def objective(params):
+    k1_q1, k1_q2 = params
+    segment.Q1.k1 = torch.tensor(k1_q1)
+    segment.Q2.k1 = torch.tensor(k1_q2)
+    beam_out = segment.track(beam_in)
+    sigma = (beam_out.sigma_x + beam_out.sigma_y).item()
+    if not np.isfinite(sigma): return 0.20
+    return sigma * (1 + np.random.normal(0, NOISE))
+
+result = gp_minimize(
+    func=objective,
+    dimensions=[Real(-15, 15, name="k1_Q1"),
+                Real(-15, 15, name="k1_Q2")],
+    n_calls=60, n_initial_points=12,
+    acq_func="EI",                # Expected Improvement
+)
+# → ~2.2 mm (8-seed) vs 13.2 mm — a ~6× cut
+```
+:::
+
+::: {.fragment .current-visible style="grid-area:1/1;" fragment-index="3"}
+```{.python code-line-numbers="22"}
+from skopt import gp_minimize
+from skopt.space import Real
+
+NOISE = 0.04  # 4% shot-to-shot noise
+
+def objective(params):
+    k1_q1, k1_q2 = params
+    segment.Q1.k1 = torch.tensor(k1_q1)
+    segment.Q2.k1 = torch.tensor(k1_q2)
+    beam_out = segment.track(beam_in)
+    sigma = (beam_out.sigma_x + beam_out.sigma_y).item()
+    if not np.isfinite(sigma): return 0.20
+    return sigma * (1 + np.random.normal(0, NOISE))
+
+result = gp_minimize(
+    func=objective,
+    dimensions=[Real(-15, 15, name="k1_Q1"),
+                Real(-15, 15, name="k1_Q2")],
+    n_calls=60, n_initial_points=12,
+    acq_func="EI",                # Expected Improvement
+)
+# → ~2.2 mm (8-seed) vs 13.2 mm — a ~6× cut
+```
+:::
+
+::::
+
+:::::
+::::: {.column width="48%"}
+
+:::: {style="display:grid;"}
+
+::: {style="grid-area:1/1;"}
 ```{python}
 #| echo: false
 #| eval: true
@@ -2412,7 +2845,7 @@ fig.add_trace(go.Scatter(x=iters, y=bo_curve, name="Bayesian opt. ± 1σ",
 fig.add_annotation(x=39, y=1.5, text="~2.2 mm",
     font=dict(color="#22d3ee", size=13), showarrow=False)
 
-fig.update_layout(height=460, autosize=True,
+fig.update_layout(height=350, autosize=True,
     xaxis_title="Evaluations", yaxis_title="Best σ_x + σ_y  (mm)",
     yaxis=dict(range=[0.3, 14.5], gridcolor="#1e3048"),
     xaxis=dict(gridcolor="#1e3048"),
@@ -2423,11 +2856,32 @@ fig.update_layout(height=460, autosize=True,
     margin=dict(l=40, r=10, t=28, b=40))
 fig
 ```
+:::
+
+::: {.fragment .fade-out style="grid-area:1/1; background:#0d1b2a; display:flex; flex-direction:column; justify-content:center; padding:0 1em;" fragment-index="4"}
+
+::: {style="font-size:0.58em; color:#94a3b8; margin-bottom:0.5em; text-transform:uppercase; letter-spacing:0.08em;"}
+What the code does
+:::
+
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.2em 0.6em; margin-bottom:0.4em; font-size:0.72em;" fragment-index="1"}
+**① Objective · lines 6–13** — set the two quads, track in Cheetah, return σ_x + σ_y (with 4 % shot noise).
+:::
+
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.2em 0.6em; margin-bottom:0.4em; font-size:0.72em;" fragment-index="2"}
+**② gp_minimize · lines 15–21** — the BO loop: a GP surrogate + Expected-Improvement choose each next setting (60 calls, 12 random to start).
+:::
+
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.2em 0.6em; font-size:0.72em;" fragment-index="3"}
+**③ Result · line 22** — 13.2 → ~2.2 mm (8-seed mean), a ~6× cut in tens of evaluations.
+:::
 
 :::
 
-::: {.clearfix}
-:::
+::::
+
+:::::
+::::::
 
 ::: {.notes}
 **Reading the convergence plot**
@@ -2443,12 +2897,11 @@ fig
 
 <div class="fragment slide-callout-overlay">
 <div class="concept-callout-box">
-<div class="concept-callout-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-0.15em;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Concept — Gaussian process</div>
+<div class="concept-callout-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-0.15em;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Concept — Gaussian process vs Bayesian optimisation</div>
 <div>
-A distribution over functions — defined by a <strong>kernel</strong> k(x, x') encoding smoothness. Any finite inputs yield a joint Gaussian: mean (prediction) + variance (uncertainty).<br>
-Far from data → wide variance → explore. Near data → narrow → exploit. Posterior updates in <strong>closed form</strong>.<br>
-<strong>Kernels:</strong> Matérn 5/2 (physical systems default) · RBF (very smooth) · Periodic (cyclic RF signals).<br>
-<span style="color:#94a3b8; font-size:0.92em;">The kernel encodes physical priors about the objective — the most important modelling choice in BO.</span>
+<strong>Gaussian process = the model.</strong> Predicts a <em>mean</em> + <em>variance</em> at every untried setting; the <strong>kernel</strong> sets smoothness (Matérn 5/2 default).<br>
+<strong>Bayesian optimisation = the loop.</strong> Fit GP → maximise Expected Improvement (exploit low mean vs explore high variance) → evaluate → repeat.<br>
+<span style="color:#94a3b8; font-size:0.92em;">GP = the engine ("what does it look like?"); BO = the driver ("where next?").</span>
 </div>
 </div>
 </div>
@@ -2457,10 +2910,20 @@ Far from data → wide variance → explore. Near data → narrow → exploit. P
 
 ## Notebook 02 — live preview
 
+<div class="stepper"><span>① Problem</span> · <span>② Method</span> · <span>③ Results</span> · <span class="on">④ Notebook</span></div>
+
+<div style="text-align:center; margin:0.1em 0 0.45em;">
+<a href="https://colab.research.google.com/github/aghribi/cas2026-ai-medical-accelerators/blob/main/notebooks/02_beam_tuning/notebook.ipynb" target="_blank" style="background:#F9AB00; color:#000; border-radius:4px; padding:0.2em 0.75em; font-weight:700; font-family:'IBM Plex Mono',monospace; white-space:nowrap; text-decoration:none; font-size:0.72em;">▶ Open 02_beam_tuning in Colab</a>
+</div>
+
 <iframe src="notebooks_rendered/02_beam_tuning.html"
-        width="100%" height="610px" frameborder="0"
+        width="100%" height="560px" frameborder="0"
         style="border-radius:6px; border:1px solid #22d3ee; background:#fff;">
 </iframe>
+
+::: notes
+Live BO notebook. If time allows, show the GP posterior and the acquisition-function contour updating as points are added — that animation is the entire intuition for how BO trades exploration against exploitation. The high-dimensional scaling experiment in §7b is the part worth flagging verbally even if you do not run it live: it is the measured D=2/4/6 sweep that backs up the "BO wins as dimension grows" claim.
+:::
 
 # Use Case 3 {.section-divider background-color="#e2e8f0" data-background-transition="zoom"}
 
@@ -2472,9 +2935,77 @@ Surrogate Models
 Replacing tracking codes with neural networks · Notebook 03
 :::
 
+::: notes
+~8 minutes for UC3. The problem: physics codes are too slow for real-time control. The method: train a neural-network surrogate offline, then call it instead of the simulator at runtime. This is also the bridge to digital twins, which we pick up in the future-directions section. Notebook 03 is live.
+:::
+
+---
+
+## The speed problem
+
+<div class="stepper"><span class="on">① Problem</span> · <span>② Method</span> · <span>③ Results</span> · <span>④ Notebook</span></div>
+
+::: {.col-left style="padding-top: 0.5em;"}
+
+Real-time control needs **millisecond response** — not minutes.
+
+**Workflow:**
+
+1. Run the slow code offline for thousands of inputs
+2. Train a neural network on those pairs
+3. Call the NN instead of the simulator at runtime
+
+:::
+
+::: {.col-right}
+
+```{python}
+#| echo: false
+#| eval: true
+
+import plotly.graph_objects as go
+
+methods = ["TraceWin<br>(1 call)", "G4beamline<br>(1 call)",
+           "Cheetah<br>(1 000 calls)", "Surrogate<br>(1 000 calls)"]
+times = [60_000, 600_000, 770, 1.2]
+colors = ["#64748b", "#475569", "#f87171", "#22d3ee"]
+labels = ["1 min", "10 min", "770 ms", "1.2 ms"]
+
+fig = go.Figure(go.Bar(
+    x=methods, y=times, marker_color=colors,
+    text=labels, textposition="outside",
+    textfont=dict(color=colors, size=14),
+))
+fig.update_layout(
+    yaxis=dict(type="log", gridcolor="#1e3048",
+               tickvals=[1, 1e3, 1e5, 1e6],
+               ticktext=["1 ms", "1 s", "1 min", "10 min"]),
+    xaxis=dict(gridcolor="#1e3048"),
+    height=460, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
+    font=dict(color="#e2e8f0", size=12),
+    margin=dict(t=50, b=10, l=50, r=10), showlegend=False,
+)
+fig
+```
+
+:::
+
+::: {.clearfix}
+:::
+
+::: {.key-result style="margin-top: 0.5em;"}
+Typical speedup: **10³–10⁵×** · error **< 1%** in domain
+:::
+
+::: notes
+The motivation in one chart, on a log scale: TraceWin and G4beamline take minutes per call, Cheetah takes milliseconds, and a trained surrogate takes microseconds. The workflow is the standard recipe — run the slow code offline for thousands of inputs, fit a network to the input-output pairs, then call the network instead of the simulator at runtime. Typical speedups are 10³ to 10⁵× with under 1% error. Stress "in domain": a surrogate interpolates beautifully inside the region it was trained on and extrapolates badly outside it, so the training distribution defines where you are allowed to trust it.
+:::
+
 ---
 
 ## Surrogate models — method landscape
+
+<div class="stepper"><span>① Problem</span> · <span class="on">② Method</span> · <span>③ Results</span> · <span>④ Notebook</span></div>
 
 ```{python}
 #| echo: false
@@ -2546,69 +3077,23 @@ Methods: <strong>deep ensembles</strong> (spread of N models) · <strong>MC Drop
 </div>
 </div>
 
----
-
-## The speed problem
-
-::: {.col-left style="padding-top: 0.5em;"}
-
-Real-time control needs **millisecond response** — not minutes.
-
-**Workflow:**
-
-1. Run the slow code offline for thousands of inputs
-2. Train a neural network on those pairs
-3. Call the NN instead of the simulator at runtime
-
-:::
-
-::: {.col-right}
-
-```{python}
-#| echo: false
-#| eval: true
-
-import plotly.graph_objects as go
-
-methods = ["TraceWin<br>(1 call)", "G4beamline<br>(1 call)",
-           "Cheetah<br>(1 000 calls)", "Surrogate<br>(1 000 calls)"]
-times = [60_000, 600_000, 770, 1.2]
-colors = ["#64748b", "#475569", "#f87171", "#22d3ee"]
-labels = ["1 min", "10 min", "770 ms", "1.2 ms"]
-
-fig = go.Figure(go.Bar(
-    x=methods, y=times, marker_color=colors,
-    text=labels, textposition="outside",
-    textfont=dict(color=colors, size=14),
-))
-fig.update_layout(
-    yaxis=dict(type="log", gridcolor="#1e3048",
-               tickvals=[1, 1e3, 1e5, 1e6],
-               ticktext=["1 ms", "1 s", "1 min", "10 min"]),
-    xaxis=dict(gridcolor="#1e3048"),
-    height=460, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
-    font=dict(color="#e2e8f0", size=12),
-    margin=dict(t=50, b=10, l=50, r=10), showlegend=False,
-)
-fig
-```
-
-:::
-
-::: {.clearfix}
-:::
-
-::: {.key-result style="margin-top: 0.5em;"}
-Typical speedup: **10³–10⁵×** · error **< 1%** in domain
+::: notes
+Decision map for surrogates. x is the training samples needed, y is the quality of uncertainty quantification. The MLP (cyan star) is fast and reasonably data-efficient but gives no uncertainty estimate on its own — which is exactly why the notebook adds deep ensembles and MC-dropout on top of it. Gaussian processes have excellent, closed-form, calibrated uncertainty but scale badly to large datasets; ensemble MLPs buy you uncertainty at N times the cost. Use the UQ concept box to draw the key distinction: epistemic uncertainty is model uncertainty from too little data and is reducible by collecting more; aleatoric uncertainty is inherent measurement noise and is irreducible. For safety-critical beam control, knowing when the model does not know is as important as the prediction itself.
 :::
 
 ---
 
 ## Training the surrogate
 
-::: {.col-left style="padding-top:1.1em;"}
+<div class="stepper"><span>① Problem</span> · <span class="on">② Method</span> · <span class="on">③ Results</span> · <span>④ Notebook</span></div>
 
-```{python}
+:::::: {.columns}
+::::: {.column width="50%"}
+
+:::: {style="display:grid;"}
+
+::: {style="grid-area:1/1;"}
+```{.python}
 # MLP: (k₁_QF, k₁_QD) → (σ_x, σ_y) in mm
 surrogate = nn.Sequential(
     nn.Linear(2, 128), nn.Tanh(),
@@ -2619,10 +3104,70 @@ surrogate = nn.Sequential(
 # 5 000 Cheetah calls offline (3 s total)
 # 300 epochs · Adam · cosine LR schedule
 ```
-
 :::
 
-::: {.col-right}
+::: {.fragment .current-visible style="grid-area:1/1;" fragment-index="1"}
+```{.python code-line-numbers="1-1"}
+# MLP: (k₁_QF, k₁_QD) → (σ_x, σ_y) in mm
+surrogate = nn.Sequential(
+    nn.Linear(2, 128), nn.Tanh(),
+    nn.Linear(128, 128), nn.Tanh(),
+    nn.Linear(128, 128), nn.Tanh(),
+    nn.Linear(128, 2),
+)
+# 5 000 Cheetah calls offline (3 s total)
+# 300 epochs · Adam · cosine LR schedule
+```
+:::
+
+::: {.fragment .current-visible style="grid-area:1/1;" fragment-index="2"}
+```{.python code-line-numbers="2-7"}
+# MLP: (k₁_QF, k₁_QD) → (σ_x, σ_y) in mm
+surrogate = nn.Sequential(
+    nn.Linear(2, 128), nn.Tanh(),
+    nn.Linear(128, 128), nn.Tanh(),
+    nn.Linear(128, 128), nn.Tanh(),
+    nn.Linear(128, 2),
+)
+# 5 000 Cheetah calls offline (3 s total)
+# 300 epochs · Adam · cosine LR schedule
+```
+:::
+
+::: {.fragment .current-visible style="grid-area:1/1;" fragment-index="3"}
+```{.python code-line-numbers="8-9"}
+# MLP: (k₁_QF, k₁_QD) → (σ_x, σ_y) in mm
+surrogate = nn.Sequential(
+    nn.Linear(2, 128), nn.Tanh(),
+    nn.Linear(128, 128), nn.Tanh(),
+    nn.Linear(128, 128), nn.Tanh(),
+    nn.Linear(128, 2),
+)
+# 5 000 Cheetah calls offline (3 s total)
+# 300 epochs · Adam · cosine LR schedule
+```
+:::
+
+::::
+
+:::: {style="font-size:0.6em; margin-top:0.4em;"}
+
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.18em 0.55em; margin-bottom:0.3em;" fragment-index="1"}
+**① Input → output · line 1** — two quad strengths (k₁) map to the two beam sizes (σ_x, σ_y).
+:::
+
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.18em 0.55em; margin-bottom:0.3em;" fragment-index="2"}
+**② The network · lines 2–7** — a small MLP: three 128-wide `Tanh` hidden layers.
+:::
+
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.18em 0.55em;" fragment-index="3"}
+**③ Training data · lines 8–9** — 5 000 Cheetah samples generated offline; 300 epochs with Adam.
+:::
+
+::::
+
+:::::
+::::: {.column width="50%"}
 
 ```{python}
 #| echo: false
@@ -2656,10 +3201,8 @@ fig.update_layout(height=380, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcol
 fig
 ```
 
-:::
-
-::: {.clearfix}
-:::
+:::::
+::::::
 
 ::: {style="display:flex; gap:2.5em; justify-content:center; margin-top:0.45em;"}
 ::: {style="text-align:center;"}
@@ -2673,67 +3216,28 @@ fig
 :::
 :::
 
+::: notes
+Concrete numbers. A tiny MLP — 2 → 128 → 128 → 128 → 2 with Tanh activations — maps the two quad strengths to (σx, σy). Training uses 5000 Cheetah calls offline, about 3 seconds of data generation, then 300 epochs. The parity plot sits right on the diagonal: R² ≈ 1.00, MAE around 0.001 mm, roughly 600× speedup. Two honesty caveats straight from the notebook. The ~600× is deliberately qualitative — run-to-run timing varies by a few hundred-fold depending on hardware and batching, so do not quote a precise figure. And the learned input-output sensitivity is near-uniform — each quad affects both transverse planes — not the clean diagonal one might naively expect, because every quadrupole focuses in one plane and defocuses in the other.
+:::
+
 ---
 
 ## Notebook 03 — live preview
 
+<div class="stepper"><span>① Problem</span> · <span>② Method</span> · <span>③ Results</span> · <span class="on">④ Notebook</span></div>
+
+<div style="text-align:center; margin:0.1em 0 0.45em;">
+<a href="https://colab.research.google.com/github/aghribi/cas2026-ai-medical-accelerators/blob/main/notebooks/03_surrogate_model/notebook.ipynb" target="_blank" style="background:#F9AB00; color:#000; border-radius:4px; padding:0.2em 0.75em; font-weight:700; font-family:'IBM Plex Mono',monospace; white-space:nowrap; text-decoration:none; font-size:0.72em;">▶ Open 03_surrogate_model in Colab</a>
+</div>
+
 <iframe src="notebooks_rendered/03_surrogate_model.html"
-        width="100%" height="610px" frameborder="0"
+        width="100%" height="560px" frameborder="0"
         style="border-radius:6px; border:1px solid #22d3ee; background:#fff;">
 </iframe>
 
----
-
-## From surrogate to digital twin
-
-:::: {.columns style="margin-top:0.3em; gap:1.5em;"}
-::: {.column width="54%"}
-
-::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="1"}
-**Surrogate** — trained offline to mimic the simulator.
-Inference in **1.2 µs** vs. 1–10 min per call.
+::: notes
+Live surrogate notebook. The part worth showing if time allows is the ensemble and MC-dropout uncertainty bands: the model reports when it does not know, which is precisely what makes it usable inside a control loop rather than just a fast lookup table. Keep it brief — it is a pointer.
 :::
-
-::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="2"}
-**Digital twin** — surrogate + live sensors + continuous update.
-Tracks actual machine state in real time.
-:::
-
-::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em;" fragment-index="3"}
-**Applications:** virtual commissioning · adaptive QA · cross-facility transfer
-:::
-
-:::
-::: {.column width="44%"}
-
-<div style="display:grid;">
-
-::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.8em 0;" fragment-index="1"}
-<span style="font-size:2.4em; font-weight:800; color:#22d3ee; line-height:1.0;">~600×</span><br>
-<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">Surrogate speedup vs. Cheetah<br>1.2 µs/call · error &lt; 1% in domain</span>
-:::
-
-::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.5em 0;" fragment-index="2"}
-<span style="font-size:1.5em; font-weight:800; color:#22d3ee; line-height:1.2;">TwinRISE</span><br>
-<span style="font-size:0.80em; color:#e2e8f0; display:block; margin-top:0.3em;">Horizon Europe 2026–2030</span>
-<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.3em;"><strong style="color:#22d3ee;">19 institutions</strong> · <strong style="color:#22d3ee;">7 countries</strong><br>Federated — data sovereignty preserved</span>
-:::
-
-::: {.fragment .current-visible style="grid-area:1/1; padding:1.2em 0.5em;" fragment-index="3"}
-<div style="font-size:0.72em; color:#22d3ee; font-weight:600; margin-bottom:0.5em;">Applications</div>
-<div style="font-size:0.74em; color:#e2e8f0; line-height:1.8;">
-🔬 Virtual commissioning<br>
-⚙ Adaptive QA<br>
-🔁 Cross-facility transfer
-</div>
-:::
-
-</div>
-
-:::
-::::
-
----
 
 # Future Directions & Opportunities {.section-divider background-color="#e2e8f0" data-background-transition="zoom"}
 
@@ -2761,7 +3265,7 @@ Open problems · What comes next · Community
 :::
 
 ::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="3"}
-**🔌 Agnostic integration** — deploy one model into EPICS, TANGO or DOOCS in < 1 ms; vendor-neutral adapter layer.
+**🔌 Agnostic integration** — deploy one model into EPICS, TANGO or DOOCS; vendor-neutral adapter layer.
 :::
 
 ::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="4"}
@@ -2789,7 +3293,7 @@ Open problems · What comes next · Community
 
 ::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.2em 0;" fragment-index="3"}
 <span style="font-size:1.4em; font-weight:800; color:#22d3ee; line-height:1.2;">EPICS · TANGO · DOOCS</span><br>
-<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">&lt; 1 ms inference · vendor-neutral adapter<br>certification pipeline: active design work</span>
+<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">vendor-neutral adapter layer<br>certification pipeline: active design work</span>
 :::
 
 ::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.2em 0;" fragment-index="4"}
@@ -2818,10 +3322,15 @@ Active research — AI delivers value **today**.
 <strong>SHAP</strong>: assigns each input a numerical contribution to the prediction (Shapley values from game theory, 1953 — model-agnostic).<br>
 <strong>LIME</strong>: fits a local linear model around one specific prediction to explain it locally.<br>
 EU AI Act (2024) classifies control-loop AI on clinical machines as <em>high-risk</em> — auditable, explainable decisions required.<br>
-<span style="color:#94a3b8; font-size:0.92em;">In practice: SHAP tells you whether the model learned beam physics or a spurious data artefact.</span>
+<span style="color:#94a3b8; font-size:0.92em;">In practice: SHAP tells you whether the model learned beam physics or a spurious data artefact.</span><br>
+<span style="color:#fbbf24; font-size:0.92em;">→ XAI is developed in depth in the lecture proceedings.</span>
 </div>
 </div>
 </div>
+
+::: notes
+Five honest open problems, each framed as an accelerator question rather than an abstract ML one. Explainability — the EU AI Act classifies control-loop AI on a clinical machine as high-risk, so decisions must be auditable. Cross-facility transfer — a model trained at Centre A rarely works at Centre B without re-tuning. Agnostic integration — getting one model into EPICS, TANGO, or DOOCS through a vendor-neutral adapter layer (latency target depends on the use case — keep it general here). Data and model standards — there is still no shared schema and no FAIR ML models across facilities. And agentic orchestration — LLM planners coordinating specialist ML tools, an emerging architecture. The balance to strike: these are genuinely active research, but the lecture has just shown AI delivering value today. Use the XAI concept box for SHAP versus LIME — and the punchline that SHAP tells you whether the model learned beam physics or a spurious artefact in your data.
+:::
 
 ---
 
@@ -2839,6 +3348,7 @@ techs = [
     ("Transformers",         5.8, 8.2, 34, "#22d3ee"),
     ("Reinforcement\nlearning", 8.2, 9.4, 46, "#fb923c"),
     ("Generative\nmodels",   4.1, 8.0, 34, "#34d399"),
+    ("Digital\ntwins",       6.8, 9.0, 40, "#f472b6"),
 ]
 
 fig = go.Figure()
@@ -2895,8 +3405,12 @@ fig
 :::
 ::::
 
+::: {.fragment .highlight-box style="font-size:0.74em; margin-top:0.45em;"}
+**Digital twins** — a surrogate **+** live sensors **+** continuous updates, tracking the real machine in real time (virtual commissioning · adaptive QA · cross-facility transfer). The **~600× surrogate speedup** is what makes a live twin computationally possible; European vehicle: **TwinRISE** (Horizon Europe).
+:::
+
 ::: notes
-This is an appetizer, not a full menu. Foundation models (e.g. CERN's accelerator-specific LLM prototypes), PINNs (several groups at SNS and ESS), and RL (Kain+2020, Hirlaender+2020) are all active research directions with published results. The key message: the gap between today's lecture and the frontier is smaller than students often assume. Bubble position is schematic — readiness is illustrative, not a formal TRL score.
+This is an appetizer, not a full menu. Foundation models (e.g. CERN's accelerator-specific LLM prototypes), PINNs (several groups at SNS and ESS), and RL (Kain+2020, Hirlaender+2020) are all active research directions with published results. Digital twins are the natural endpoint of the surrogate use case: a surrogate plus live sensor feeds plus continuous updating, tracking the actual machine rather than a static design model — and it is the ~600× surrogate speedup that makes a real-time twin feasible at all. TwinRISE (Horizon Europe 2026–2030, 19 institutions, federated for data sovereignty) is the European vehicle; more on it in the opportunities slide. The key message: the gap between today's lecture and the frontier is smaller than students often assume. Bubble position is schematic — readiness is illustrative, not a formal TRL score.
 :::
 
 ---
@@ -2912,13 +3426,13 @@ This is an appetizer, not a full menu. Foundation models (e.g. CERN's accelerato
 :::
 
 ::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="2"}
-**RL4AA** — Workshop & challenge · 2026 edition: **Liverpool** · open datasets
-<a href="https://rl4aa.github.io/" style="color:#22d3ee; font-size:0.80em;">rl4aa.github.io</a>
+**GENESIS** — US DOE AI mission · $293 M · 17 national laboratories · 2025
+<a href="https://www.energy.gov/undersecretaryforscience/genesis-mission/genesis-mission" style="color:#22d3ee; font-size:0.80em;">energy.gov → Genesis</a>
 :::
 
 ::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="3"}
-**GENESIS** — US DOE AI mission · $293 M · 17 national laboratories · 2025
-<a href="https://www.energy.gov/undersecretaryforscience/genesis-mission/genesis-mission" style="color:#22d3ee; font-size:0.80em;">energy.gov → Genesis</a>
+**RL4AA** — Workshop & challenge · 2026 edition: **Liverpool** · open datasets
+<a href="https://rl4aa.github.io/" style="color:#22d3ee; font-size:0.80em;">rl4aa.github.io</a>
 :::
 
 ::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="4"}
@@ -2942,13 +3456,13 @@ This is an appetizer, not a full menu. Foundation models (e.g. CERN's accelerato
 :::
 
 ::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.8em 0;" fragment-index="2"}
-<span style="font-size:2.0em; font-weight:800; color:#22d3ee; line-height:1.2;">Liverpool<br>2026</span><br>
-<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">Tutorials · challenge · open datasets<br>rl4aa.github.io</span>
+<span style="font-size:2.4em; font-weight:800; color:#22d3ee; line-height:1.0;">$293M</span><br>
+<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">17 US national laboratories<br>DOE AI for Science, launched 2025</span>
 :::
 
 ::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.8em 0;" fragment-index="3"}
-<span style="font-size:2.4em; font-weight:800; color:#22d3ee; line-height:1.0;">$293M</span><br>
-<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">17 US national laboratories<br>DOE AI for Science, launched 2025</span>
+<span style="font-size:2.0em; font-weight:800; color:#22d3ee; line-height:1.2;">Liverpool<br>2026</span><br>
+<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">Tutorials · challenge · open datasets<br>rl4aa.github.io</span>
 :::
 
 ::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.8em 0;" fragment-index="4"}
@@ -2956,9 +3470,18 @@ This is an appetizer, not a full menu. Foundation models (e.g. CERN's accelerato
 <span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">IN2P3 · open to all<br>indico.in2p3.fr/event/39704</span>
 :::
 
-::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.8em 0;" fragment-index="5"}
-<span style="font-size:1.6em; font-weight:800; color:#22d3ee; line-height:1.2;">artifact-network.org</span><br>
-<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">European open network · accelerator physics &amp; medical AI<br>Working groups · shared datasets · open to all</span>
+::: {.fragment .current-visible style="grid-area:1/1; padding:0.5em 0.3em;" fragment-index="5"}
+<div style="font-size:1.25em; font-weight:800; color:#22d3ee; text-align:center; line-height:1.1;">artifact-network.org</div>
+<div style="font-size:0.60em; color:#94a3b8; text-align:center; margin:0.25em 0 0.6em;">European open network · accelerator physics &amp; medical AI</div>
+<div style="font-size:0.66em; color:#e2e8f0; line-height:1.55;">
+<strong style="color:#22d3ee;">Shares</strong> data · beam-time · models · training material<br>
+<strong style="color:#22d3ee;">Multi-project synergies</strong> —
+<a href="https://artifact-network.org/initiatives/TwinRISE_Deck.html#1" style="color:#67e8f9;">TwinRISE</a> ·
+<a href="https://www.irisproject.eu" style="color:#67e8f9;">IRIS</a> ·
+<a href="https://www.sciance.eu" style="color:#67e8f9;">SCIANCE</a> ·
+ARTIFACT Doctoral Networks
+</div>
+<div style="font-size:0.60em; color:#94a3b8; margin-top:0.5em; font-style:italic; border-top:1px solid rgba(148,163,184,0.2); padding-top:0.4em;">TwinRISE links AI across accelerators &amp; medical.</div>
 :::
 
 </div>
@@ -2974,30 +3497,36 @@ RAISE: the full EU AI in Science strategy aims to double Horizon Europe AI fundi
 
 ## Summary
 
-| | Tool | Key result |
-|---|---|---|
-| **RF fault detection** | Autoencoder (unsupervised) | ROC-AUC = 1.000, no fault labels |
-| **Beam tuning** | Bayesian opt. + Cheetah | 13.2→2.2 mm, ~60 noisy evals, scales to high-D |
-| **Surrogate model** | MLP, Tanh, normalised I/O | R²=1.00, **~600× speedup** |
+::: {style="font-size:0.74em; color:#94a3b8; margin-bottom:0.3em;"}
+AI is broader than deep learning. Today we built and demystified three methods — two neural, one classical (BO/GP) — on real beam-physics problems, end to end: **problem → method → result → runnable notebook.**
+:::
 
-::: {.col-left style="margin-top: 0.8em;"}
-::: {.key-result}
-Physics invented the foundations of AI.
-The Nobel Prize in Physics 2024 confirmed it.
-We are natural practitioners.
+::: {style="font-size:0.66em;"}
+| Use case | Problem | Method | Result |
+|---|---|---|---|
+| **RF fault detection** | rare faults, no labels | Autoencoder — unsupervised | ROC-AUC 1.000 *(synthetic data)* |
+| **Beam tuning** | slow, manual daily startup | Bayesian opt. + Cheetah | 13.2 → ~2.2 mm; advantage grows with dimension |
+| **Surrogate model** | physics codes too slow | MLP + uncertainty | R² ≈ 1.00, ~600× faster |
+:::
+
+::: {style="display:flex; gap:0.7em; margin-top:0.55em;"}
+::: {.key-result style="flex:1; font-size:0.66em;"}
+**Physics ↔ AI** — Hopfield, Boltzmann machines, the 2024 Nobel in Physics. We are natural practitioners, not outsiders.
+:::
+::: {.key-result style="flex:1; font-size:0.66em;"}
+**The model is rarely the bottleneck** — data quality, features and the pipeline decide whether it works.
+:::
+::: {.key-result style="flex:1; font-size:0.66em;"}
+**Deployment ≠ accuracy** — latency, drift, explainability and certification are the real blockers to the clinic.
 :::
 :::
 
-::: {.col-right style="margin-top: 0.8em;"}
-::: {.key-result}
-All code is open and runnable on Colab.
-
-`github.com/aghribi/`
-`cas2026-ai-medical-accelerators`
-:::
+::: {style="text-align:center; font-size:0.72em; color:#22d3ee; margin-top:0.55em;"}
+All code open & runnable on Colab — `github.com/aghribi/cas2026-ai-medical-accelerators`
 :::
 
-::: {.clearfix}
+::: notes
+A real summary, three layers. (1) The one-line thesis at top: AI is broader than deep learning, and we covered three methods — two neural, one classical — each taken end to end from problem to runnable notebook. (2) The table recaps each use case as problem → method → result; say "ROC-AUC 1.000 on *synthetic* data" out loud. (3) The three takeaway boxes are the lecture's real message beyond the demos: physics and AI are the same toolkit (Nobel 2024), the model is rarely the bottleneck (data and pipeline are), and deployment is gated by certification, not accuracy. Close on: everything is open and runnable on Colab. Slow down here — this is the last content slide before Q&A.
 :::
 
 ---
@@ -3038,6 +3567,65 @@ Hopfield, *PNAS* **79** (1982) — associative memory
 :::
 ::::
 
+::: notes
+Reference slide — leave it up during the transition to Q&A so people can photograph it. Rather than reading citations aloud, point them at two things: the living review, which is continuously updated and is the real map of the field, and the three Colab notebooks, which are the hands-on entry point. The six papers listed are the load-bearing ones if anyone asks for a single starting reference per topic.
+:::
+
+---
+
+## Glossary — acronyms used in this lecture
+
+:::: {.columns style="font-size:0.46em; line-height:1.55; margin-top:0.3em;"}
+::: {.column width="33%"}
+
+**AI** — Artificial Intelligence<br>
+**ML** — Machine Learning<br>
+**NN** — Neural Network<br>
+**MLP** — Multi-Layer Perceptron<br>
+**CNN** — Convolutional Neural Network<br>
+**LSTM** — Long Short-Term Memory<br>
+**AE** — Autoencoder<br>
+**VAE** — Variational Autoencoder<br>
+**RL** — Reinforcement Learning<br>
+**PINN** — Physics-Informed Neural Network<br>
+**SVM** — Support Vector Machine<br>
+
+:::
+::: {.column width="34%"}
+
+**BO** — Bayesian Optimisation<br>
+**GP** — Gaussian Process<br>
+**EI** — Expected Improvement<br>
+**LHS** — Latin Hypercube Sampling<br>
+**PCA** — Principal Component Analysis<br>
+**UQ** — Uncertainty Quantification<br>
+**MC** — Monte Carlo (dropout)<br>
+**ROC** — Receiver Operating Characteristic<br>
+**AUC** — Area Under the ROC Curve<br>
+**MSE / MAE** — Mean Squared / Absolute Error<br>
+**R²** — Coefficient of Determination<br>
+
+:::
+::: {.column width="33%"}
+
+**XAI** — Explainable AI<br>
+**SHAP** — SHapley Additive exPlanations<br>
+**LIME** — Local Interpretable Model-agnostic Explanations<br>
+**FAIR** — Findable, Accessible, Interoperable, Reusable<br>
+**ONNX** — Open Neural Network Exchange<br>
+**IQ** — In-phase / Quadrature (RF)<br>
+**SRF** — Superconducting Radio-Frequency<br>
+**BPM** — Beam Position Monitor<br>
+**EPICS · TANGO · DOOCS** — control systems<br>
+**TRL** — Technology Readiness Level<br>
+
+:::
+::::
+
+::: notes
+Reference resource, not a slide to present — mention in one breath that acronyms are collected here, then move to the close. Accelerator-side terms (RF, BPM, SRF, LINAC, QA) are assumed known; the list focuses on the AI/ML vocabulary that a mixed audience may not share. Sourced from the proceedings' acronyms.tex.
+:::
+
 ---
 
 ## {.plain background-color="#0d1b2a"}
@@ -3052,5 +3640,399 @@ Thank you · Questions welcome
 Dr. Adnan Ghribi · GANIL / CNRS-IN2P3 · `adnan.ghribi@ganil.fr`
 :::
 
+:::
+
+::: notes
+Close and open the floor. Anticipated questions worth pre-loading an answer for: "Does AUC = 1.0 hold on a real machine?" — no, that was synthetic data; real signals are messier and that is precisely the open problem. "Why not RL for tuning?" — RL is excellent for sequential online control but overkill for single-shot optimisation, where BO is more sample-efficient. "How do you certify this for clinical use?" — that lands on the explainability and integration open problems and the EU AI Act high-risk classification. Thank the CERN Accelerator School and acknowledge GANIL / CNRS-IN2P3.
+:::
+
+# Backup {.section-divider background-color="#e2e8f0" data-background-transition="zoom"}
+
+::: {style="color: #1e3a5f; font-size: 1.4em; font-weight: 800; margin-top: 0.5em;"}
+Backup slides
+:::
+
+::: {style="font-size: 0.95em; color: #334155;"}
+Deep-dives for questions — not part of the 50-minute talk
+:::
+
+::: notes
+Everything past here is Q&A material only. Quick index: Hopfield capacity & retrieval · Minsky–Papert and the funding winter · BO internals (EI + kernels) · high-dimensional scaling (D=2/4/6) · autoencoder vs supervised/threshold · uncertainty quantification in numbers · RL worked example · EU AI Act & certification.
+:::
+
+---
+
+## Hopfield — memory retrieval and capacity
+
+:::: {.columns style="margin-top:0.3em; gap:1.5em;"}
+::: {.column width="54%"}
+
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="1"}
+**① Ball in a valley** — memories are energy minima.
+Noisy input rolls downhill → arrives at nearest stored pattern.
+:::
+
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="2"}
+**② Spin update** — $s_i \leftarrow \text{sign}(\sum_j w_{ij} s_j)$
+Energy decreases at every step: **guaranteed convergence**.
+:::
+
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em;" fragment-index="3"}
+**③ Capacity ≈ 0.14 N** — beyond this, retrieval fails **catastrophically** (sharp phase transition, not gradual).
+:::
+
+:::
+::: {.column width="44%"}
+
+<div style="display:grid;">
+
+::: {.fragment .current-visible style="grid-area:1/1;" fragment-index="1"}
+
+```{python}
+#| echo: false
+#| eval: true
+
+import numpy as np
+import plotly.graph_objects as go
+
+x = np.linspace(-2.5, 2.5, 90)
+y = np.linspace(-2.5, 2.5, 90)
+X, Y = np.meshgrid(x, y)
+
+E = (
+    - 2.2 * np.exp(-2.2*((X - 1.3)**2 + (Y - 1.1)**2))
+    - 2.2 * np.exp(-2.2*((X + 1.3)**2 + (Y + 1.1)**2))
+    + 0.28*(X**2 + Y**2)
+)
+
+fig = go.Figure()
+fig.add_trace(go.Contour(
+    z=E, x=x, y=y,
+    colorscale=[[0,"#0a2040"],[0.4,"#1a3a6f"],[0.75,"#22d3ee"],[1,"#f87171"]],
+    contours=dict(showlabels=False, coloring='fill'),
+    showscale=False, ncontours=22, opacity=0.9,
+))
+fig.add_trace(go.Scatter(
+    x=[1.3, -1.3], y=[1.1, -1.1], mode="markers+text",
+    marker=dict(color="#fbbf24", size=14, symbol="star"),
+    text=["Memory 1", "Memory 2"],
+    textposition=["top right", "bottom left"],
+    textfont=dict(size=10, color="#fbbf24"),
+    showlegend=False,
+))
+tx = [0.35, 0.60, 0.88, 1.10, 1.25, 1.30]
+ty = [0.05, 0.30, 0.62, 0.88, 1.03, 1.10]
+fig.add_trace(go.Scatter(
+    x=tx, y=ty, mode="lines+markers",
+    line=dict(color="#fb923c", width=2.5),
+    marker=dict(color="#fb923c", size=7),
+    showlegend=False,
+))
+fig.add_annotation(x=0.35, y=0.05, text="Noisy / partial input",
+    font=dict(size=9, color="#fb923c"),
+    showarrow=True, ax=-45, ay=28,
+    arrowcolor="#fb923c", arrowwidth=1.5)
+fig.add_annotation(x=0.88, y=0.62, text="each update:<br>energy ↓",
+    font=dict(size=8.5, color="#fb923c"), showarrow=False,
+    xanchor="left", bgcolor="rgba(13,27,42,0.7)")
+fig.add_annotation(x=1.3, y=1.1, text="recalled<br>memory",
+    font=dict(size=9, color="#fbbf24"),
+    showarrow=True, ax=38, ay=-28,
+    arrowcolor="#fbbf24", arrowwidth=1.5)
+fig.add_annotation(x=-1.3, y=-1.1, text="energy<br>minimum",
+    font=dict(size=8.5, color="#94a3b8"),
+    showarrow=True, ax=-38, ay=22,
+    arrowcolor="#475569", arrowwidth=1.2)
+fig.update_layout(
+    height=270, autosize=True,
+    paper_bgcolor="#0d1b2a", plot_bgcolor="#0d1b2a",
+    xaxis=dict(showgrid=False, showticklabels=False, zeroline=False),
+    yaxis=dict(showgrid=False, showticklabels=False, zeroline=False),
+    margin=dict(l=5, r=5, t=28, b=5),
+    font=dict(color="#e2e8f0"),
+    title=dict(text="Network state space — stored memories = energy minima",
+               font=dict(size=10, color="#94a3b8"), x=0.5, y=0.99),
+)
+fig
+```
+
+:::
+
+::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.5em 0.5em;" fragment-index="2"}
+<div style="font-size:1.1em; color:#22d3ee; font-weight:700; margin-bottom:0.5em; font-family:monospace;">
+s<sub>i</sub> ← sign(Σ w<sub>ij</sub> s<sub>j</sub>)
+</div>
+<div style="font-size:0.72em; color:#94a3b8; line-height:1.6;">
+Hebb rule · ΔE ≤ 0 per step<br>
+<span style="color:#fbbf24;">Same physics as spin relaxation</span>
+</div>
+:::
+
+::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.8em 0;" fragment-index="3"}
+<span style="font-size:2.4em; font-weight:800; color:#22d3ee; line-height:1.0;">0.14 N</span><br>
+<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">Capacity limit · recall error: 0 → 50%</span>
+:::
+
+</div>
+
+:::
+::::
+
+::: {.slide-ref}
+Amit, Gutfreund & Sompolinsky (1985). Storing infinite numbers of patterns in a spin-glass model. *PRL* 55, 1530.
+:::
+
+::: notes
+**① The contour plot — energy landscape:** the axes are abstract coordinates in the space of all possible network states; each point is one configuration of all N neurons. Colour = energy. The two yellow stars are stored memories (energy minima); the orange trajectory is a noisy input rolling downhill to the nearest one. Particle-in-a-potential dynamics, where the "particle" is the whole network state.
+
+**② Spin update s_i ← sign(Σ_j w_{ij} s_j):** one can prove ΔE ≤ 0 at every update (E = −½ Σ w_{ij} s_i s_j, w symmetric), so convergence to a local minimum is guaranteed — identical to spin relaxation in an Ising magnet at zero temperature.
+
+**③ Why 0.14N:** with load α = P/N, the other P−1 patterns inject cross-talk noise ~√(P/N). Amit–Gutfreund–Sompolinsky (1985) computed the critical α_c ≈ 0.138 with the replica method (spin-glass theory) — a genuine field-theoretic result, not a scaling estimate. The transition is first-order: below it recall error ≈ 0, at it the error jumps to ~0.5. A 1000-neuron network stores ~138 patterns, then breaks catastrophically.
+:::
+
+---
+
+## How Minsky & Papert froze the field (1969) {.smaller}
+
+::: {.col-left}
+
+**1969 — *Perceptrons*** (Minsky & Papert) proved a single-layer perceptron **cannot compute XOR**, nor any non-linearly-separable function.
+
+Impact as much *sociological* as mathematical:
+
+- US funding agencies read it as "neural nets are a dead end"
+- Connectionist funding collapsed through the 1970s
+- The field pivoted to **symbolic AI** / expert systems
+- Revived only by **backprop** (Werbos 1974; Rumelhart–Hinton–Williams 1986) — which trains the hidden layers they dismissed
+
+:::
+::: {.col-right}
+
+::: {.highlight-box}
+**The irony**
+
+XOR *is* solvable — with **one hidden layer**. The authors knew it, but wrongly argued such nets could never be trained at scale. Backprop proved them wrong 17 years later.
+:::
+
+::: {.key-result style="margin-top:0.6em;"}
+One influential "impossibility" result can freeze a direction for a decade. Scepticism cuts both ways.
+:::
+
+:::
+
+::: {.clearfix}
+:::
+
+::: {.slide-ref}
+Minsky & Papert (1969). *Perceptrons*, MIT Press. · Werbos (1974) · Rumelhart, Hinton & Williams (1986), *Nature* 323, 533.
+:::
+
+::: notes
+Backup for the AI-winters slide. The take-home is the sociology of science, not just the XOR maths: a single authoritative result, amplified by funding decisions, set the field back a decade even though the technical fix (hidden layers) was already conceivable. Good answer if someone asks "why did it take so long?"
+:::
+
+---
+
+## Backup — Bayesian optimisation internals {.smaller}
+
+::: {.col-left}
+
+**Expected Improvement** acquisition function:
+
+$$\alpha_{\text{EI}}(x) = \mathbb{E}\big[\max(0,\; f_{\text{best}} - f(x))\big]$$
+
+For a GP posterior with mean $\mu(x)$, std $\sigma(x)$, and $z = \dfrac{f_{\text{best}} - \mu(x)}{\sigma(x)}$:
+
+$$\alpha_{\text{EI}}(x) = \sigma(x)\,\big[\,z\,\Phi(z) + \phi(z)\,\big]$$
+
+- $\Phi, \phi$ — standard-normal CDF / PDF
+- term 1 **exploits** (low predicted mean), term 2 **explores** (high variance)
+- next probe = $\arg\max_x \alpha_{\text{EI}}(x)$
+
+:::
+::: {.col-right}
+
+::: {.highlight-box style="font-size:0.82em;"}
+**The kernel is the prior on smoothness**
+
+- **Matérn 5/2** — twice-differentiable; default for physical systems
+- **RBF** — infinitely smooth (often *too* smooth for real data)
+- **Periodic** — cyclic signals (RF phase)
+:::
+
+::: {.key-result style="margin-top:0.6em; font-size:0.82em;"}
+Kernel choice encodes physics — the single most consequential modelling decision in BO.
+:::
+
+:::
+
+::: {.clearfix}
+:::
+
+::: notes
+Backup for UC2. If asked "how does BO actually pick the next point": EI balances exploit (first term) and explore (second term) in closed form from the GP posterior. The kernel question is the one experts ask — Matérn 5/2 is the sane default because real beam responses are continuous but not infinitely smooth; RBF over-smooths and can miss sharp features.
+:::
+
+---
+
+## Backup — BO vs grid / random as dimension grows
+
+::: {style="font-size:0.8em; margin-top:0.2em;"}
+Controlled experiment (notebook 02 §7b): a *D*-quad matching section, **the same budget B = 120 evaluations** for every method, log(σ_x+σ_y) objective, 4% noise, 3 seeds.
+:::
+
+::: {style="font-size:0.92em;"}
+| Dimension | Grid | Random | **Bayesian opt.** |
+|:--|:--:|:--:|:--:|
+| **D = 2** (2 quads) | 5.1 mm | 4.7 mm | **3.4 mm** |
+| **D = 4** (4 quads) | 7.2 mm | 3.0 mm | **1.2 mm** |
+| **D = 6** (6 quads) | 5.9 mm | 4.6 mm | **1.5 mm** |
+:::
+
+::: {.key-result style="margin-top:0.5em; font-size:0.84em;"}
+At D = 6, BO is ~3× better than either baseline and **every seed wins**. A full-resolution 7ᴰ grid would need 7⁶ = **117,649** evaluations; BO used 120.
+:::
+
+::: {style="font-size:0.74em; color:#94a3b8; margin-top:0.4em; line-height:1.5;"}
+Why grid/random collapse: usable volume shrinks as ~rᴰ, so a fixed budget covers exponentially less of the space. BO builds a surrogate and spends evaluations where they matter. And note D = 4/6 reach a *smaller* spot than D = 2 — more quads give more focusing freedom, which BO exploits and classical methods cannot.
+:::
+
+::: notes
+This is the slide that backs the "BO wins as dimension grows" claim with measured numbers, not extrapolation. The 2D result is honestly a near-tie; the story only becomes decisive at D = 4 and beyond. Pull this up if anyone challenges why BO over a simple grid.
+:::
+
+---
+
+## Backup — why an autoencoder, not a classifier?
+
+::: {style="font-size:0.82em;"}
+| Approach | Needs fault labels? | Detects *unseen* fault types? | Fit for clinical RF |
+|:--|:--:|:--:|:--|
+| **Threshold / interlock** | no | no — only hard-coded limits | safety net, not detection |
+| **Supervised classifier** (Tennant 2020) | **yes — many per class** | no | great *when* labels exist |
+| **Autoencoder (ours)** | **no — normal data only** | **yes** | fits label-scarce clinical ops |
+:::
+
+::: {.highlight-box style="margin-top:0.5em; font-size:0.84em;"}
+The autoencoder learns "normal"; anything it reconstructs poorly is flagged — including fault modes never seen in training. A supervised classifier can only recognise the classes it was trained on.
+:::
+
+::: {.key-result style="margin-top:0.5em; font-size:0.82em;"}
+Trade-off: the autoencoder tells you *something is wrong*, not *what*. Pair it with a classifier once labels accumulate.
+:::
+
+::: notes
+Backup for UC1, and the honest framing of the Tennant-2020 comparison: the CEBAF system is a supervised classifier on labelled data — the right tool there. Our autoencoder is the right tool when no labels exist, which is the clinical reality. They are complementary, not competing.
+:::
+
+---
+
+## Backup — uncertainty quantification, in numbers
+
+::: {.col-left}
+
+Two ways to make the MLP surrogate report confidence (notebook 03):
+
+**Deep ensemble** — train N models from different initialisations; the spread of their predictions is the uncertainty.
+
+**MC-dropout** — keep dropout active at inference and run K stochastic forward passes.
+
+:::
+::: {.col-right}
+
+::: {.highlight-box style="font-size:0.84em;"}
+**Measured — MC-dropout, σ_x+σ_y**
+
+- R² ≈ 0.999
+- σ_MC ≈ 0.13 mm
+- ~99.7% empirical coverage (within ±3σ)
+:::
+
+:::
+
+::: {.clearfix}
+:::
+
+::: {.key-result style="margin-top:0.5em; font-size:0.82em;"}
+**Epistemic** (reducible by more data) vs **aleatoric** (irreducible noise). For control you want *calibrated* σ — the error bars should match the actual errors.
+:::
+
+::: notes
+Backup for UC3. The key word is "calibrated": a model that reports σ = 0.13 mm but is routinely wrong by 1 mm is worse than useless in a control loop. Coverage near the nominal 99.7% (±3σ) is the check that the uncertainty is honest.
+:::
+
+---
+
+## Backup — reinforcement learning in the control loop
+
+::: {.col-left}
+
+**Setup:** the agent observes machine state $s$ (BPMs, losses), takes action $a$ (corrector / quad set-points), receives reward $r$ (e.g. −beam loss), and learns a policy $\pi(a\,|\,s)$ that maximises cumulative reward.
+
+**Why RL, not BO, here?** RL *amortises*: it learns a reusable policy for a recurring sequential task, where BO re-optimises from scratch every time.
+
+:::
+::: {.col-right}
+
+::: {.highlight-box style="font-size:0.82em;"}
+**Demonstrated**
+
+- **CERN** — sample-efficient RL for steering (Kain et al. 2020)
+- **DESY** — online RL + BO injector tuning (Kaiser et al. 2023)
+- **RL4AA** — community challenge & open benchmarks
+:::
+
+::: {.key-result style="margin-top:0.6em; font-size:0.8em;"}
+Open problems on a clinical machine: sample efficiency and *safe* exploration.
+:::
+
+:::
+
+::: {.clearfix}
+:::
+
+::: {.slide-ref}
+Kain et al., *PRAB* 23, 124801 (2020) · Hirländer et al. (2020) · Kaiser et al. (2023)
+:::
+
+::: notes
+Backup for the futures slide, since RL is named but never shown. The crisp distinction to offer: BO is single-shot optimisation, RL learns a policy for a repeated sequential task. On a clinical machine the blocker is not capability but safe exploration — you cannot let an agent try arbitrary set-points on a live patient beam.
+:::
+
+---
+
+## Backup — EU AI Act & clinical certification
+
+::: {.col-left}
+
+The **EU AI Act (2024)** is risk-tiered. AI **in the control loop of a medical device** falls in the **high-risk** class, which requires:
+
+- documented training data & provenance
+- demonstrable robustness and accuracy
+- meaningful human oversight
+- **explainable, auditable** decisions
+
+:::
+::: {.col-right}
+
+::: {.highlight-box style="font-size:0.82em;"}
+**Practical consequences**
+
+- black-box models need an XAI layer (SHAP / LIME) for audit
+- versioned, reproducible models (FAIR + ONNX)
+- a certification pipeline that re-validates after every retrain
+:::
+
+::: {.key-result style="margin-top:0.6em; font-size:0.8em;"}
+This is why "AUC = 1.0 in a notebook" is the *start*, not the end. Certification, not accuracy, is the bottleneck to clinical deployment.
+:::
+
+:::
+
+::: {.clearfix}
+:::
+
+::: notes
+Backup for the open-problems and certification questions. The point that resonates with this audience: the hard part of clinical AI is not the model — it is proving, to a regulator, that the model is safe, reproducible, and auditable after every retrain. That reframes the whole lecture's "open problems" as regulatory-engineering problems, not ML ones.
 :::
 

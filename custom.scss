@@ -64,9 +64,23 @@ $code-bg:               rgba(34, 211, 238, 0.06);
 
 // Code in float columns: reduce further so long blocks stay on-slide
 .reveal .col-left pre,
-.reveal .col-right pre {
+.reveal .col-right pre,
+.reveal .column pre {
   font-size: 0.56em;
 }
+
+// Use-case phase stepper badge (top-right of each use-case slide)
+.reveal .stepper {
+  position: absolute;
+  top: 0.15em;
+  right: 0.5em;
+  font-size: 0.32em;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  color: #475569;
+  z-index: 6;
+}
+.reveal .stepper .on { color: #22d3ee; }
 
 // Remove reveal.js default top-margin on pre/cell so code aligns with
 // the first element of the right column (highlight-box or Plotly figure)
