@@ -118,6 +118,8 @@ Three live notebooks — the code on the slides is the code in those notebooks, 
 
 ## Disclaimer — scope & slide guide
 
+<div class="more-corner"><a class="more-link" href="#/backup" title="Jump to the backup deep-dives"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 9 5 12 1.8-5.2L21 14Z"/><path d="M7.2 2.2 8 5.1"/><path d="m5.1 8-2.9-.8"/><path d="M14 4.1 12 6"/><path d="m6 12-1.9 2"/></svg>click me to know more</a></div>
+
 ::: {.col-left style="font-size:0.88em;"}
 
 **In scope — accelerator side**
@@ -439,6 +441,8 @@ The Mark 1 Perceptron at Cornell learned to recognise letters from photographs. 
 
 ## AI winters and the deep learning renaissance
 
+<div class="more-corner"><a class="more-link" href="#/bk-minsky" title="Backup: Minsky & Papert and the XOR problem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 9 5 12 1.8-5.2L21 14Z"/><path d="M7.2 2.2 8 5.1"/><path d="m5.1 8-2.9-.8"/><path d="M14 4.1 12 6"/><path d="m6 12-1.9 2"/></svg>click me to know more</a></div>
+
 ```{python}
 #| echo: false
 #| eval: true
@@ -595,6 +599,8 @@ As accelerator physicists, we think in terms of Hamiltonians, phase spaces, and 
 ---
 
 ## Hopfield networks — neurons as spins
+
+<div class="more-corner"><a class="more-link" href="#/bk-hopfield" title="Backup: Hopfield memory retrieval & capacity"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 9 5 12 1.8-5.2L21 14Z"/><path d="M7.2 2.2 8 5.1"/><path d="m5.1 8-2.9-.8"/><path d="M14 4.1 12 6"/><path d="m6 12-1.9 2"/></svg>click me to know more</a></div>
 
 :::: {.columns style="margin-top:0.2em;"}
 ::: {.column width="55%"}
@@ -1793,6 +1799,7 @@ Autoencoders on cavity IQ waveforms · Notebook 01
 ## The problem: rare faults, no labels
 
 <div class="stepper"><span class="on">① Problem</span> · <span>② Method</span> · <span>③ Results</span> · <span>④ Notebook</span></div>
+<div class="more-corner below-stepper"><a class="more-link" href="#/bk-anomaly-landscape" title="Backup: anomaly-detection method landscape"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 9 5 12 1.8-5.2L21 14Z"/><path d="M7.2 2.2 8 5.1"/><path d="m5.1 8-2.9-.8"/><path d="M14 4.1 12 6"/><path d="m6 12-1.9 2"/></svg>click me to know more</a></div>
 
 :::: {.columns style="margin-top:0.3em; gap:1.5em;"}
 ::: {.column width="54%"}
@@ -1924,74 +1931,11 @@ Row 1 = I (in-phase), Row 2 = Q (quadrature). Normal: clean trapezoid, Q near ze
 
 ---
 
-## Anomaly detection — method landscape
-
-<div class="stepper"><span>① Problem</span> · <span class="on">② Method</span> · <span>③ Results</span> · <span>④ Notebook</span></div>
-
-```{python}
-#| echo: false
-#| eval: true
-
-import plotly.graph_objects as go
-
-# x: training data volume needed (0=minimal → 2=large dataset)
-# y: suitability for rare-event / SRF fault detection (1=poor → 5=excellent)
-methods = [
-    ("Threshold rules",  0.00, 1.1, 20, "#475569", "bottom right"),
-    ("PCA anomaly",      0.30, 2.0, 22, "#64748b", "top right"),
-    ("KDE / GMM",        0.55, 2.3, 20, "#64748b", "bottom right"),
-    ("Isolation Forest", 0.70, 2.9, 26, "#94a3b8", "top left"),
-    ("One-class SVM",    0.90, 2.5, 24, "#94a3b8", "bottom right"),
-    ("LSTM-AE",          1.60, 3.9, 26, "#a78bfa", "bottom right"),
-    ("VAE",              1.80, 4.6, 30, "#a78bfa", "top right"),
-    ("Autoencoder ★",   1.20, 4.3, 42, "#22d3ee", "top left"),
-]
-
-fig = go.Figure()
-for name, x, y, size, color, pos in methods:
-    is_pick = "★" in name
-    fig.add_trace(go.Scatter(
-        x=[x], y=[y], mode="markers+text",
-        marker=dict(size=size, color=color,
-            line=dict(color="#e2e8f0" if is_pick else "#0d1b2a",
-                      width=2.5 if is_pick else 1.5)),
-        text=[f"<b>{name}</b>" if is_pick else name],
-        textposition=pos,
-        textfont=dict(size=12 if is_pick else 10, color=color),
-        showlegend=False,
-    ))
-
-fig.update_layout(
-    height=530, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
-    font=dict(color="#e2e8f0", size=11),
-    xaxis=dict(title="Training data volume required",
-               range=[-0.3, 2.5],
-               tickvals=[0, 1, 2],
-               ticktext=["Minimal<br>(unsupervised)", "Moderate<br>(normal data only)", "Large<br>(fault labels)"],
-               showgrid=True, gridcolor="#1e3048", zeroline=False),
-    yaxis=dict(title="Suitability for rare-event detection",
-               range=[0.6, 5.4],
-               tickvals=[1, 2, 3, 4, 5],
-               ticktext=["Poor", "Fair", "Moderate", "Good", "Excellent"],
-               showgrid=True, gridcolor="#1e3048", zeroline=False),
-    margin=dict(l=90, r=30, t=20, b=70),
-)
-fig
-```
-
-::: {.key-result style="margin-top: 0.3em; font-size: 0.78em;"}
-**This lecture:** Autoencoder — unsupervised, normal-data only, scales to 1 kHz waveform streams.
-:::
-
-::: notes
-The same decision map as before, zoomed into anomaly detection. x is the training data required, y is suitability for rare-event detection. The autoencoder (cyan star) sits in the sweet spot: it trains on normal data only, needs no fault labels, and scales to kHz waveform streams. The classical methods on the left — threshold rules, PCA, isolation forest — are cheaper but weaker on high-dimensional waveforms. The VAE and LSTM-autoencoder top-right are more powerful but more data-hungry and harder to deploy. We pick the autoencoder as the best balance for a clinical machine.
-:::
-
----
 
 ## The autoencoder — architecture
 
 <div class="stepper"><span>① Problem</span> · <span class="on">② Method</span> · <span>③ Results</span> · <span>④ Notebook</span></div>
+<div class="more-corner below-stepper"><a class="more-link" href="#/bk-ae-classifier" title="Backup: why an autoencoder, not a classifier?"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 9 5 12 1.8-5.2L21 14Z"/><path d="M7.2 2.2 8 5.1"/><path d="m5.1 8-2.9-.8"/><path d="M14 4.1 12 6"/><path d="m6 12-1.9 2"/></svg>click me to know more</a></div>
 
 :::::: {.columns}
 ::::: {.column width="56%"}
@@ -2341,6 +2285,7 @@ Cheetah · differentiable accelerator simulation · Notebook 02
 ## The daily startup problem
 
 <div class="stepper"><span class="on">① Problem</span> · <span>② Method</span> · <span>③ Results</span> · <span>④ Notebook</span></div>
+<div class="more-corner below-stepper"><a class="more-link" href="#/bk-opt-landscape" title="Backup: optimisation method landscape"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 9 5 12 1.8-5.2L21 14Z"/><path d="M7.2 2.2 8 5.1"/><path d="m5.1 8-2.9-.8"/><path d="M14 4.1 12 6"/><path d="m6 12-1.9 2"/></svg>click me to know more</a></div>
 
 ::: {.col-left}
 
@@ -2393,79 +2338,6 @@ Ground the problem in daily operations. Every morning: run QA checks (output, fl
 
 ---
 
-## Optimisation — method landscape
-
-<div class="stepper"><span>① Problem</span> · <span class="on">② Method</span> · <span>③ Results</span> · <span>④ Notebook</span></div>
-
-```{python}
-#| echo: false
-#| eval: true
-
-import plotly.graph_objects as go
-import numpy as np
-
-# x: log10(typical evaluations to converge) — lower = better
-# y: works on real machine without gradient (1=no → 5=yes)
-# Scope: static beam-tuning optimisation (not sequential online control)
-methods = [
-    ("Grid Search",          4.3, 4.6, 22, "#475569", "top left"),
-    ("MOGA / GA",            3.6, 4.8, 24, "#a78bfa", "top right"),
-    ("RL † online ctrl",     3.8, 5.0, 22, "#a78bfa", "bottom right"),
-    ("Random Search",        2.5, 4.5, 24, "#94a3b8", "bottom right"),
-    ("CMA-ES",               2.7, 4.7, 22, "#64748b", "top right"),
-    ("Nelder-Mead",          2.3, 3.7, 22, "#94a3b8", "bottom left"),
-    ("Gradient descent",     1.8, 1.4, 24, "#fb923c", "bottom right"),
-    ("Bayesian Opt. ★",     1.6, 5.0, 42, "#22d3ee", "top right"),
-]
-
-fig = go.Figure()
-for name, logx, y, size, color, pos in methods:
-    is_pick = "★" in name
-    fig.add_trace(go.Scatter(
-        x=[logx], y=[y], mode="markers+text",
-        marker=dict(size=size, color=color,
-            line=dict(color="#e2e8f0" if is_pick else "#0d1b2a",
-                      width=2.5 if is_pick else 1.5)),
-        text=[f"<b>{name}</b>" if is_pick else name],
-        textposition=pos,
-        textfont=dict(size=12 if is_pick else 10, color=color),
-        showlegend=False,
-    ))
-
-fig.add_annotation(x=1.6, y=4.35, text="← best quadrant",
-    showarrow=False, font=dict(size=10, color="#fbbf24"), xanchor="left")
-fig.add_annotation(x=4.95, y=0.85,
-    text="† RL: best for sequential online control, not single-shot optimisation",
-    showarrow=False, font=dict(size=9, color="#64748b"), xanchor="right")
-
-fig.update_layout(
-    height=530, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
-    font=dict(color="#e2e8f0", size=11),
-    xaxis=dict(title="Evaluations to converge  (← fewer = better)",
-               range=[1.0, 5.0],
-               tickvals=[1, 2, 3, 4, 5],
-               ticktext=["10", "100", "1 000", "10 000", "100 000"],
-               showgrid=True, gridcolor="#1e3048", zeroline=False,
-               autorange="reversed"),
-    yaxis=dict(title="Real machine compatible (no gradient required)",
-               range=[0.8, 5.5],
-               tickvals=[1, 3, 5],
-               ticktext=["No<br>(needs gradient)", "Partial", "Yes<br>(model-free)"],
-               showgrid=True, gridcolor="#1e3048", zeroline=False),
-    margin=dict(l=110, r=30, t=20, b=80),
-)
-fig
-```
-
-::: {.slide-ref}
-Duris et al., *PRL* 124 (2020) · Roussel et al., *PRAB* 27 (2024) · Emma et al., *Nat. Mach. Int.* 1 (2019) · Kain et al., *Phys. Rev. Accel. Beams* 23 (2020)
-:::
-
-::: notes
-Decision map for optimisation. x is evaluations to converge — fewer is better, and the axis is reversed so "good" is to the right — and y is whether the method works on a real machine without gradients. Bayesian optimisation (cyan star) is in the best quadrant: gradient-free and sample-efficient, converging in tens of evaluations. Two things to point out. The footnote on RL: it is excellent for sequential online control but not single-shot tuning, so it is not really a competitor for this specific task. And gradient descent sits at the bottom because you rarely have usable gradients on a real machine — which is exactly the gap Cheetah closes on the next slide.
-:::
-
----
 
 ## Cheetah — PyTorch beam dynamics
 
@@ -2637,6 +2509,7 @@ Cheetah is the enabling tool: a beam-dynamics code written as a PyTorch module. 
 ## BO finds focus in tens of evaluations
 
 <div class="stepper"><span>① Problem</span> · <span>② Method</span> · <span class="on">③ Results</span> · <span>④ Notebook</span></div>
+<div class="more-corner below-stepper"><a class="more-link" href="#/bk-bo-internals" title="Backup: Bayesian optimisation internals (EI + kernels)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 9 5 12 1.8-5.2L21 14Z"/><path d="M7.2 2.2 8 5.1"/><path d="m5.1 8-2.9-.8"/><path d="M14 4.1 12 6"/><path d="m6 12-1.9 2"/></svg>click me to know more</a></div>
 
 <style>
 #bo-finds-focus-in-tens-of-evaluations pre { font-size: 0.42em !important; }
@@ -2948,6 +2821,7 @@ Replacing tracking codes with neural networks · Notebook 03
 ## The speed problem
 
 <div class="stepper"><span class="on">① Problem</span> · <span>② Method</span> · <span>③ Results</span> · <span>④ Notebook</span></div>
+<div class="more-corner below-stepper"><a class="more-link" href="#/bk-surrogate-landscape" title="Backup: surrogate-model method landscape"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 9 5 12 1.8-5.2L21 14Z"/><path d="M7.2 2.2 8 5.1"/><path d="m5.1 8-2.9-.8"/><path d="M14 4.1 12 6"/><path d="m6 12-1.9 2"/></svg>click me to know more</a></div>
 
 ::: {.col-left style="padding-top: 0.5em;"}
 
@@ -3007,89 +2881,11 @@ The motivation in one chart, on a log scale: TraceWin and G4beamline take minute
 
 ---
 
-## Surrogate models — method landscape
-
-<div class="stepper"><span>① Problem</span> · <span class="on">② Method</span> · <span>③ Results</span> · <span>④ Notebook</span></div>
-
-```{python}
-#| echo: false
-#| eval: true
-
-import plotly.graph_objects as go
-
-# x: log10(training samples needed) — fewer = better for data-scarce settings
-# y: uncertainty quantification quality (1=none → 5=calibrated)
-methods = [
-    ("Gaussian Process",  2.3, 5.0, 28, "#a78bfa", "top right"),
-    ("RBF interpolation", 2.5, 1.5, 22, "#64748b", "bottom right"),
-    ("Random Forest",     3.0, 4.0, 24, "#94a3b8", "top right"),
-    ("PINN",              3.0, 2.8, 24, "#fb923c", "bottom left"),
-    ("Ensemble MLP",      4.2, 5.0, 28, "#a78bfa", "top left"),
-    ("MLP / DNN ★",      3.7, 2.0, 42, "#22d3ee", "bottom right"),
-]
-
-fig = go.Figure()
-for name, logx, y, size, color, pos in methods:
-    is_pick = "★" in name
-    fig.add_trace(go.Scatter(
-        x=[logx], y=[y], mode="markers+text",
-        marker=dict(size=size, color=color,
-            line=dict(color="#e2e8f0" if is_pick else "#0d1b2a",
-                      width=2.5 if is_pick else 1.5)),
-        text=[f"<b>{name}</b>" if is_pick else name],
-        textposition=pos,
-        textfont=dict(size=12 if is_pick else 10, color=color),
-        showlegend=False,
-    ))
-
-fig.add_annotation(x=4.9, y=1.0,
-    text="← faster inference, higher throughput →",
-    showarrow=False, font=dict(size=10, color="#64748b"),
-    xanchor="right")
-
-fig.update_layout(
-    height=530, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
-    font=dict(color="#e2e8f0", size=11),
-    xaxis=dict(title="Training samples required",
-               range=[1.8, 5.0],
-               tickvals=[2, 3, 4, 5],
-               ticktext=["100", "1 000", "10 000", "100 000"],
-               showgrid=True, gridcolor="#1e3048", zeroline=False),
-    yaxis=dict(title="Uncertainty quantification quality",
-               range=[0.6, 5.5],
-               tickvals=[1, 2, 3, 4, 5],
-               ticktext=["None", "–", "Moderate", "–", "Calibrated"],
-               showgrid=True, gridcolor="#1e3048", zeroline=False),
-    margin=dict(l=90, r=30, t=20, b=70),
-)
-fig
-```
-
-::: {.slide-ref}
-Edelen et al., *IEEE TNS* 63 (2016) · Kaiser et al., *PRAB* 27 (2024)
-:::
-
-<div class="fragment slide-callout-overlay">
-<div class="concept-callout-box">
-<div class="concept-callout-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-0.15em;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Concept — Uncertainty quantification</div>
-<div>
-<strong>Epistemic</strong> (model) uncertainty: caused by insufficient data — <em>reducible</em> by collecting more samples.<br>
-<strong>Aleatoric</strong> (data) uncertainty: inherent measurement noise — <em>irreducible</em>.<br>
-Methods: <strong>deep ensembles</strong> (spread of N models) · <strong>MC Dropout</strong> (stochastic inference) · <strong>Gaussian processes</strong> (closed-form variance).<br>
-<span style="color:#94a3b8; font-size:0.92em;">Knowing <em>when the model is uncertain</em> is as important as the prediction itself — especially for safety-critical beam control.</span>
-</div>
-</div>
-</div>
-
-::: notes
-Decision map for surrogates. x is the training samples needed, y is the quality of uncertainty quantification. The MLP (cyan star) is fast and reasonably data-efficient but gives no uncertainty estimate on its own — which is exactly why the notebook adds deep ensembles and MC-dropout on top of it. Gaussian processes have excellent, closed-form, calibrated uncertainty but scale badly to large datasets; ensemble MLPs buy you uncertainty at N times the cost. Use the UQ concept box to draw the key distinction: epistemic uncertainty is model uncertainty from too little data and is reducible by collecting more; aleatoric uncertainty is inherent measurement noise and is irreducible. For safety-critical beam control, knowing when the model does not know is as important as the prediction itself.
-:::
-
----
 
 ## Training the surrogate
 
 <div class="stepper"><span>① Problem</span> · <span class="on">② Method</span> · <span class="on">③ Results</span> · <span>④ Notebook</span></div>
+<div class="more-corner below-stepper" style="top:auto; bottom:0.6em;"><a class="more-link" href="#/bk-uq" title="Backup: uncertainty quantification, in numbers"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 9 5 12 1.8-5.2L21 14Z"/><path d="M7.2 2.2 8 5.1"/><path d="m5.1 8-2.9-.8"/><path d="M14 4.1 12 6"/><path d="m6 12-1.9 2"/></svg>click me to know more</a></div>
 
 :::::: {.columns}
 ::::: {.column width="50%"}
@@ -3205,20 +3001,14 @@ fig.update_layout(height=380, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcol
 fig
 ```
 
+<div style="display:flex; gap:1.8em; justify-content:center; margin-top:0.5em;">
+<div style="text-align:center;"><span style="font-size:0.85em; font-weight:800; color:#22d3ee;">1.0000</span><br><span style="font-size:0.55em; color:#94a3b8;">R²</span></div>
+<div style="text-align:center;"><span style="font-size:0.85em; font-weight:800; color:#22d3ee;">0.001 mm</span><br><span style="font-size:0.55em; color:#94a3b8;">MAE</span></div>
+<div style="text-align:center;"><span style="font-size:0.85em; font-weight:800; color:#22d3ee;">~600×</span><br><span style="font-size:0.55em; color:#94a3b8;">speedup</span></div>
+</div>
+
 :::::
 ::::::
-
-::: {style="display:flex; gap:2.5em; justify-content:center; margin-top:0.45em;"}
-::: {style="text-align:center;"}
-[1.0000]{.metric}<br>[R²]{.metric-label}
-:::
-::: {style="text-align:center;"}
-[0.001 mm]{.metric}<br>[MAE]{.metric-label}
-:::
-::: {style="text-align:center;"}
-[~600×]{.metric}<br>[speedup]{.metric-label}
-:::
-:::
 
 ::: notes
 Concrete numbers. A tiny MLP — 2 → 128 → 128 → 128 → 2 with Tanh activations — maps the two quad strengths to (σx, σy). Training uses 5000 Cheetah calls offline, about 3 seconds of data generation, then 300 epochs. The parity plot sits right on the diagonal: R² ≈ 1.00, MAE around 0.001 mm, roughly 600× speedup. Two honesty caveats straight from the notebook. The ~600× is deliberately qualitative — run-to-run timing varies by a few hundred-fold depending on hardware and batching, so do not quote a precise figure. And the learned input-output sensitivity is near-uniform — each quad affects both transverse planes — not the clean diagonal one might naively expect, because every quadrupole focuses in one plane and defocuses in the other.
@@ -3256,6 +3046,8 @@ Open problems · What comes next · Community
 ---
 
 ## Open problems
+
+<div class="more-corner"><a class="more-link" href="#/bk-aiact" title="Backup: EU AI Act & clinical certification"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 9 5 12 1.8-5.2L21 14Z"/><path d="M7.2 2.2 8 5.1"/><path d="m5.1 8-2.9-.8"/><path d="M14 4.1 12 6"/><path d="m6 12-1.9 2"/></svg>click me to know more</a></div>
 
 :::: {.columns style="margin-top:0.3em; gap:1.5em;"}
 ::: {.column width="54%"}
@@ -3340,6 +3132,8 @@ Five honest open problems, each framed as an accelerator question rather than an
 
 ## What comes next — advanced AI for accelerators
 
+<div class="more-corner" style="top:auto; bottom:0.6em;"><a class="more-link" href="#/bk-rl" title="Backup: reinforcement learning in the control loop"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 9 5 12 1.8-5.2L21 14Z"/><path d="M7.2 2.2 8 5.1"/><path d="m5.1 8-2.9-.8"/><path d="M14 4.1 12 6"/><path d="m6 12-1.9 2"/></svg>click me to know more</a></div>
+
 ```{python}
 #| echo: false
 #| eval: true
@@ -3419,8 +3213,8 @@ This is an appetizer, not a full menu. Foundation models (e.g. CERN's accelerato
 :::
 
 ::: {.fragment .fade-in-then-semi-out style="border-left:3px solid #fbbf24; padding:0.4em 0.7em; font-size:0.72em;" fragment-index="3"}
-**Join the network**<br>
-**ARTIFACT** — European network · AI for accelerator physics & medical · open membership
+**Join the ARTIFACT network**<br>
+**ARTIFACT** — 6 active initiatives · 14 countries · +40 partner institutions · 6 sister networks
 :::
 
 :::
@@ -3628,21 +3422,13 @@ Close and open the floor. Anticipated questions worth pre-loading an answer for:
 
 # Backup {.section-divider background-color="#e2e8f0" data-background-transition="zoom"}
 
-::: {style="color: #1e3a5f; font-size: 1.4em; font-weight: 800; margin-top: 0.5em;"}
-Backup slides
-:::
-
-::: {style="font-size: 0.95em; color: #334155;"}
-Deep-dives for questions — not part of the 50-minute talk
-:::
-
 ::: notes
 Everything past here is Q&A material only. Quick index: Hopfield capacity & retrieval · Minsky–Papert and the funding winter · BO internals (EI + kernels) · high-dimensional scaling (D=2/4/6) · autoencoder vs supervised/threshold · uncertainty quantification in numbers · RL worked example · EU AI Act & certification.
 :::
 
 ---
 
-## Hopfield — memory retrieval and capacity
+## Hopfield — memory retrieval and capacity {#bk-hopfield}
 
 :::: {.columns style="margin-top:0.3em; gap:1.5em;"}
 ::: {.column width="54%"}
@@ -3772,7 +3558,7 @@ Amit, Gutfreund & Sompolinsky (1985). Storing infinite numbers of patterns in a 
 
 ---
 
-## How Minsky & Papert froze the field (1969) {.smaller}
+## How Minsky & Papert froze the field (1969) {.smaller #bk-minsky}
 
 ::: {.col-left}
 
@@ -3813,7 +3599,7 @@ Backup for the AI-winters slide. The take-home is the sociology of science, not 
 
 ---
 
-## Backup — Bayesian optimisation internals {.smaller}
+## Backup — Bayesian optimisation internals {.smaller #bk-bo-internals}
 
 ::: {.col-left}
 
@@ -3883,7 +3669,7 @@ This is the slide that backs the "BO wins as dimension grows" claim with measure
 
 ---
 
-## Backup — why an autoencoder, not a classifier?
+## Backup — why an autoencoder, not a classifier? {#bk-ae-classifier}
 
 ::: {style="font-size:0.82em;"}
 | Approach | Needs fault labels? | Detects *unseen* fault types? | Fit for clinical RF |
@@ -3907,7 +3693,7 @@ Backup for UC1, and the honest framing of the Tennant-2020 comparison: the CEBAF
 
 ---
 
-## Backup — uncertainty quantification, in numbers
+## Backup — uncertainty quantification, in numbers {#bk-uq}
 
 ::: {.col-left}
 
@@ -3943,7 +3729,7 @@ Backup for UC3. The key word is "calibrated": a model that reports σ = 0.13 mm 
 
 ---
 
-## Backup — reinforcement learning in the control loop
+## Backup — reinforcement learning in the control loop {#bk-rl}
 
 ::: {.col-left}
 
@@ -3981,7 +3767,7 @@ Backup for the futures slide, since RL is named but never shown. The crisp disti
 
 ---
 
-## Backup — EU AI Act & clinical certification
+## Backup — EU AI Act & clinical certification {#bk-aiact}
 
 ::: {.col-left}
 
@@ -4016,3 +3802,215 @@ This is why "AUC = 1.0 in a notebook" is the *start*, not the end. Certification
 Backup for the open-problems and certification questions. The point that resonates with this audience: the hard part of clinical AI is not the model — it is proving, to a regulator, that the model is safe, reproducible, and auditable after every retrain. That reframes the whole lecture's "open problems" as regulatory-engineering problems, not ML ones.
 :::
 
+---
+
+## Backup — anomaly detection: method landscape {#bk-anomaly-landscape}
+
+```{python}
+#| echo: false
+#| eval: true
+
+import plotly.graph_objects as go
+
+# x: training data volume needed (0=minimal → 2=large dataset)
+# y: suitability for rare-event / SRF fault detection (1=poor → 5=excellent)
+methods = [
+    ("Threshold rules",  0.00, 1.1, 20, "#475569", "bottom right"),
+    ("PCA anomaly",      0.30, 2.0, 22, "#64748b", "top right"),
+    ("KDE / GMM",        0.55, 2.3, 20, "#64748b", "bottom right"),
+    ("Isolation Forest", 0.70, 2.9, 26, "#94a3b8", "top left"),
+    ("One-class SVM",    0.90, 2.5, 24, "#94a3b8", "bottom right"),
+    ("LSTM-AE",          1.60, 3.9, 26, "#a78bfa", "bottom right"),
+    ("VAE",              1.80, 4.6, 30, "#a78bfa", "top right"),
+    ("Autoencoder ★",   1.20, 4.3, 42, "#22d3ee", "top left"),
+]
+
+fig = go.Figure()
+for name, x, y, size, color, pos in methods:
+    is_pick = "★" in name
+    fig.add_trace(go.Scatter(
+        x=[x], y=[y], mode="markers+text",
+        marker=dict(size=size, color=color,
+            line=dict(color="#e2e8f0" if is_pick else "#0d1b2a",
+                      width=2.5 if is_pick else 1.5)),
+        text=[f"<b>{name}</b>" if is_pick else name],
+        textposition=pos,
+        textfont=dict(size=12 if is_pick else 10, color=color),
+        showlegend=False,
+    ))
+
+fig.update_layout(
+    height=530, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
+    font=dict(color="#e2e8f0", size=11),
+    xaxis=dict(title="Training data volume required",
+               range=[-0.3, 2.5],
+               tickvals=[0, 1, 2],
+               ticktext=["Minimal<br>(unsupervised)", "Moderate<br>(normal data only)", "Large<br>(fault labels)"],
+               showgrid=True, gridcolor="#1e3048", zeroline=False),
+    yaxis=dict(title="Suitability for rare-event detection",
+               range=[0.6, 5.4],
+               tickvals=[1, 2, 3, 4, 5],
+               ticktext=["Poor", "Fair", "Moderate", "Good", "Excellent"],
+               showgrid=True, gridcolor="#1e3048", zeroline=False),
+    margin=dict(l=90, r=30, t=20, b=70),
+)
+fig
+```
+
+::: {.key-result style="margin-top: 0.3em; font-size: 0.78em;"}
+**This lecture:** Autoencoder — unsupervised, normal-data only, scales to 1 kHz waveform streams.
+:::
+
+::: notes
+The same decision map as before, zoomed into anomaly detection. x is the training data required, y is suitability for rare-event detection. The autoencoder (cyan star) sits in the sweet spot: it trains on normal data only, needs no fault labels, and scales to kHz waveform streams. The classical methods on the left — threshold rules, PCA, isolation forest — are cheaper but weaker on high-dimensional waveforms. The VAE and LSTM-autoencoder top-right are more powerful but more data-hungry and harder to deploy. We pick the autoencoder as the best balance for a clinical machine.
+:::
+
+---
+
+## Backup — optimisation: method landscape {#bk-opt-landscape}
+
+```{python}
+#| echo: false
+#| eval: true
+
+import plotly.graph_objects as go
+import numpy as np
+
+# x: log10(typical evaluations to converge) — lower = better
+# y: works on real machine without gradient (1=no → 5=yes)
+# Scope: static beam-tuning optimisation (not sequential online control)
+methods = [
+    ("Grid Search",          4.3, 4.6, 22, "#475569", "top left"),
+    ("MOGA / GA",            3.6, 4.8, 24, "#a78bfa", "top right"),
+    ("RL † online ctrl",     3.8, 5.0, 22, "#a78bfa", "bottom right"),
+    ("Random Search",        2.5, 4.5, 24, "#94a3b8", "bottom right"),
+    ("CMA-ES",               2.7, 4.7, 22, "#64748b", "top right"),
+    ("Nelder-Mead",          2.3, 3.7, 22, "#94a3b8", "bottom left"),
+    ("Gradient descent",     1.8, 1.4, 24, "#fb923c", "bottom right"),
+    ("Bayesian Opt. ★",     1.6, 5.0, 42, "#22d3ee", "top right"),
+]
+
+fig = go.Figure()
+for name, logx, y, size, color, pos in methods:
+    is_pick = "★" in name
+    fig.add_trace(go.Scatter(
+        x=[logx], y=[y], mode="markers+text",
+        marker=dict(size=size, color=color,
+            line=dict(color="#e2e8f0" if is_pick else "#0d1b2a",
+                      width=2.5 if is_pick else 1.5)),
+        text=[f"<b>{name}</b>" if is_pick else name],
+        textposition=pos,
+        textfont=dict(size=12 if is_pick else 10, color=color),
+        showlegend=False,
+    ))
+
+fig.add_annotation(x=1.6, y=4.35, text="← best quadrant",
+    showarrow=False, font=dict(size=10, color="#fbbf24"), xanchor="left")
+fig.add_annotation(x=4.95, y=0.85,
+    text="† RL: best for sequential online control, not single-shot optimisation",
+    showarrow=False, font=dict(size=9, color="#64748b"), xanchor="right")
+
+fig.update_layout(
+    height=530, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
+    font=dict(color="#e2e8f0", size=11),
+    xaxis=dict(title="Evaluations to converge  (← fewer = better)",
+               range=[1.0, 5.0],
+               tickvals=[1, 2, 3, 4, 5],
+               ticktext=["10", "100", "1 000", "10 000", "100 000"],
+               showgrid=True, gridcolor="#1e3048", zeroline=False,
+               autorange="reversed"),
+    yaxis=dict(title="Real machine compatible (no gradient required)",
+               range=[0.8, 5.5],
+               tickvals=[1, 3, 5],
+               ticktext=["No<br>(needs gradient)", "Partial", "Yes<br>(model-free)"],
+               showgrid=True, gridcolor="#1e3048", zeroline=False),
+    margin=dict(l=110, r=30, t=20, b=80),
+)
+fig
+```
+
+::: {.slide-ref}
+Duris et al., *PRL* 124 (2020) · Roussel et al., *PRAB* 27 (2024) · Emma et al., *Nat. Mach. Int.* 1 (2019) · Kain et al., *Phys. Rev. Accel. Beams* 23 (2020)
+:::
+
+::: notes
+Decision map for optimisation. x is evaluations to converge — fewer is better, and the axis is reversed so "good" is to the right — and y is whether the method works on a real machine without gradients. Bayesian optimisation (cyan star) is in the best quadrant: gradient-free and sample-efficient, converging in tens of evaluations. Two things to point out. The footnote on RL: it is excellent for sequential online control but not single-shot tuning, so it is not really a competitor for this specific task. And gradient descent sits at the bottom because you rarely have usable gradients on a real machine — which is exactly the gap Cheetah closes on the next slide.
+:::
+
+---
+
+## Backup — surrogate models: method landscape {#bk-surrogate-landscape}
+
+```{python}
+#| echo: false
+#| eval: true
+
+import plotly.graph_objects as go
+
+# x: log10(training samples needed) — fewer = better for data-scarce settings
+# y: uncertainty quantification quality (1=none → 5=calibrated)
+methods = [
+    ("Gaussian Process",  2.3, 5.0, 28, "#a78bfa", "top right"),
+    ("RBF interpolation", 2.5, 1.5, 22, "#64748b", "bottom right"),
+    ("Random Forest",     3.0, 4.0, 24, "#94a3b8", "top right"),
+    ("PINN",              3.0, 2.8, 24, "#fb923c", "bottom left"),
+    ("Ensemble MLP",      4.2, 5.0, 28, "#a78bfa", "top left"),
+    ("MLP / DNN ★",      3.7, 2.0, 42, "#22d3ee", "bottom right"),
+]
+
+fig = go.Figure()
+for name, logx, y, size, color, pos in methods:
+    is_pick = "★" in name
+    fig.add_trace(go.Scatter(
+        x=[logx], y=[y], mode="markers+text",
+        marker=dict(size=size, color=color,
+            line=dict(color="#e2e8f0" if is_pick else "#0d1b2a",
+                      width=2.5 if is_pick else 1.5)),
+        text=[f"<b>{name}</b>" if is_pick else name],
+        textposition=pos,
+        textfont=dict(size=12 if is_pick else 10, color=color),
+        showlegend=False,
+    ))
+
+fig.add_annotation(x=4.9, y=1.0,
+    text="← faster inference, higher throughput →",
+    showarrow=False, font=dict(size=10, color="#64748b"),
+    xanchor="right")
+
+fig.update_layout(
+    height=530, autosize=True, paper_bgcolor="#0d1b2a", plot_bgcolor="#111f30",
+    font=dict(color="#e2e8f0", size=11),
+    xaxis=dict(title="Training samples required",
+               range=[1.8, 5.0],
+               tickvals=[2, 3, 4, 5],
+               ticktext=["100", "1 000", "10 000", "100 000"],
+               showgrid=True, gridcolor="#1e3048", zeroline=False),
+    yaxis=dict(title="Uncertainty quantification quality",
+               range=[0.6, 5.5],
+               tickvals=[1, 2, 3, 4, 5],
+               ticktext=["None", "–", "Moderate", "–", "Calibrated"],
+               showgrid=True, gridcolor="#1e3048", zeroline=False),
+    margin=dict(l=90, r=30, t=20, b=70),
+)
+fig
+```
+
+::: {.slide-ref}
+Edelen et al., *IEEE TNS* 63 (2016) · Kaiser et al., *PRAB* 27 (2024)
+:::
+
+<div class="fragment slide-callout-overlay">
+<div class="concept-callout-box">
+<div class="concept-callout-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:-0.15em;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Concept — Uncertainty quantification</div>
+<div>
+<strong>Epistemic</strong> (model) uncertainty: caused by insufficient data — <em>reducible</em> by collecting more samples.<br>
+<strong>Aleatoric</strong> (data) uncertainty: inherent measurement noise — <em>irreducible</em>.<br>
+Methods: <strong>deep ensembles</strong> (spread of N models) · <strong>MC Dropout</strong> (stochastic inference) · <strong>Gaussian processes</strong> (closed-form variance).<br>
+<span style="color:#94a3b8; font-size:0.92em;">Knowing <em>when the model is uncertain</em> is as important as the prediction itself — especially for safety-critical beam control.</span>
+</div>
+</div>
+</div>
+
+::: notes
+Decision map for surrogates. x is the training samples needed, y is the quality of uncertainty quantification. The MLP (cyan star) is fast and reasonably data-efficient but gives no uncertainty estimate on its own — which is exactly why the notebook adds deep ensembles and MC-dropout on top of it. Gaussian processes have excellent, closed-form, calibrated uncertainty but scale badly to large datasets; ensemble MLPs buy you uncertainty at N times the cost. Use the UQ concept box to draw the key distinction: epistemic uncertainty is model uncertainty from too little data and is reducible by collecting more; aleatoric uncertainty is inherent measurement noise and is irreducible. For safety-critical beam control, knowing when the model does not know is as important as the prediction itself.
+:::

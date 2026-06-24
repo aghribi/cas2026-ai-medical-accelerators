@@ -353,3 +353,46 @@ $code-bg:               rgba(34, 211, 238, 0.06);
   color: #fbbf24 !important;
 }
 
+// ── "Click me to know more" deep-dive link (jumps to a backup slide) ──────────
+.reveal a.more-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.55);
+  border-radius: 999px;
+  padding: 0.2em 0.7em;
+  font-size: 0.5em;
+  font-weight: 700;
+  color: #fbbf24;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  cursor: pointer;
+  pointer-events: auto;
+  white-space: nowrap;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.reveal a.more-link:hover {
+  background: rgba(251, 191, 36, 0.26);
+  box-shadow: 0 0 14px rgba(251, 191, 36, 0.35);
+  text-decoration: none;
+}
+.reveal a.more-link svg {
+  width: 1.05em;
+  height: 1.05em;
+  fill: none;
+  stroke: #fbbf24;
+  flex-shrink: 0;
+}
+
+// Corner placement — top-right; .below-stepper drops it under the phase stepper
+.reveal .more-corner {
+  position: absolute;
+  top: 0.45em;
+  right: 0.55em;
+  z-index: 7;
+}
+.reveal .more-corner.below-stepper {
+  top: 1.55em;
+}
+
