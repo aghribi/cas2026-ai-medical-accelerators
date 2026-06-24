@@ -141,10 +141,6 @@ Three live notebooks — the code on the slides is the code in those notebooks, 
 → covered in the companion lecture *"AI — the medical side"*.
 :::
 
-::: {style="font-size:0.62em; color:#64748b; margin-top:0.5em;"}
-A **glossary** of acronyms is at the end of the deck, before the backup slides.
-:::
-
 :::
 
 ::: {.col-right}
@@ -189,6 +185,10 @@ aghribi/cas2026-ai-medical-accelerators
 </div>
 
 </div>
+
+::: {style="font-size:0.50em; color:#64748b; font-style:italic; margin-top:0.7em; border-top:1px solid rgba(71,85,105,0.3); padding-top:0.45em;"}
+A **glossary** of acronyms is at the end of the deck, before the backup slides.
+:::
 
 :::
 
@@ -261,12 +261,13 @@ Context &nbsp;·&nbsp; Brief history of AI &nbsp;·&nbsp; AI through the physici
 **Not covered here:** symbolic AI · LLMs &amp; agents · generative models — touched only in *future directions*.
 :::
 
-::: {.key-result style="margin-top:0.6em; font-size:0.66em;"}
-**Match the method to your data** — how much you have, and whether it is labelled — not to the hype.
-:::
-
 :::
 ::::
+
+<div style="margin:0.7em auto 0; max-width:90%; background:#140c00; border:2px solid #fbbf24; border-radius:10px; overflow:hidden; text-align:center;">
+<div style="background:rgba(251,191,36,0.16); padding:0.18em 0.8em; border-bottom:1px solid rgba(251,191,36,0.38); font-size:0.52em; font-weight:700; color:#fbbf24; letter-spacing:0.14em; text-transform:uppercase;">Key idea</div>
+<div style="padding:0.4em 1em 0.5em; font-size:0.74em; color:#e2e8f0;"><strong>Match the method to your data</strong> — how much you have, and whether it is labelled — not to the hype.</div>
+</div>
 
 ::: {.clearfix}
 :::
@@ -1545,12 +1546,15 @@ import plotly.graph_objects as go
 np.random.seed(42)
 epochs = np.arange(1, 81)
 
-# Train loss keeps falling — the model fits the TRAINING set ever better
-train_loss = 0.75 * np.exp(-epochs / 13) + 0.022 + 0.006 * np.random.randn(80)
+# Same decay so validation stays ABOVE train at every epoch (never dips below).
+decay = 0.72 * np.exp(-epochs / 12)
 
-# Validation loss is U-shaped — it falls, bottoms out, then RISES (overfitting)
-val_smooth = 0.75 * np.exp(-epochs / 9) + 0.085 + 0.0022 * np.clip(epochs - 22, 0, None)
-val_loss   = val_smooth + 0.007 * np.random.randn(80)
+# Train loss keeps falling — the model fits the TRAINING set ever better
+train_loss = decay + 0.020 + 0.005 * np.random.randn(80)
+
+# Validation loss is U-shaped — falls with train, bottoms out, then RISES (overfitting)
+val_smooth = decay + 0.050 + 0.0026 * np.clip(epochs - 16, 0, None)
+val_loss   = val_smooth + 0.006 * np.random.randn(80)
 
 best     = int(np.argmin(val_smooth)) + 1     # early stop = validation minimum
 val_best  = float(val_smooth[best - 1])
@@ -2621,7 +2625,7 @@ At the screen, quads off: σ_x + σ_y = **13.2 mm** (6.6 mm/plane) — the basel
 ::::::
 
 ::: {.slide-ref}
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" style="width:0.85em;height:0.85em;fill:#94a3b8;vertical-align:-0.12em;margin-right:0.2em;"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg><a href="https://github.com/desy-ml/cheetah" style="color:#22d3ee;">github.com/desy-ml/cheetah</a> &nbsp;·&nbsp; Kaiser, Xu, Eichler & Santamaria Garcia, *PRAB* **27**, 054601 (2024)
+<a href="https://github.com/desy-ml/cheetah" title="github.com/desy-ml/cheetah" style="text-decoration:none;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" style="width:0.95em;height:0.95em;fill:#22d3ee;vertical-align:-0.15em;margin-right:0.3em;"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a> &nbsp;·&nbsp; Kaiser, Xu, Eichler & Santamaria Garcia, *PRAB* **27**, 054601 (2024)
 :::
 
 ::: notes
@@ -3366,7 +3370,7 @@ for name, x, y, size, color in techs:
     ))
 
 fig.update_layout(
-    height=360,
+    height=415,
     autosize=True,
     paper_bgcolor="#0d1b2a", plot_bgcolor="#0d1b2a",
     xaxis=dict(title="Readiness →", range=[1.5, 10.5],
@@ -3387,26 +3391,8 @@ fig.update_layout(
 fig
 ```
 
-:::: {.columns style="margin-top:0.4em; gap:0.8em;"}
-::: {.column width="33%"}
-::: {.fragment .highlight-box style="font-size:0.76em;"}
-**Foundation models** — pretrained on multi-facility data; fine-tune per machine in minutes.
-:::
-:::
-::: {.column width="33%"}
-::: {.fragment .highlight-box style="font-size:0.76em;"}
-**Reinforcement learning** — closed-loop policy on the real machine. Demonstrated at CERN and DESY.
-:::
-:::
-::: {.column width="33%"}
-::: {.fragment .highlight-box style="font-size:0.76em;"}
-**Generative models** — diffusion / VAEs synthesise rare fault waveforms. Directly solves data scarcity.
-:::
-:::
-::::
-
-::: {.fragment .highlight-box style="font-size:0.74em; margin-top:0.45em;"}
-**Digital twins** — a surrogate **+** live sensors **+** continuous updates, tracking the real machine in real time (virtual commissioning · adaptive QA · cross-facility transfer). The **~600× surrogate speedup** is what makes a live twin computationally possible; European vehicle: **TwinRISE** (Horizon Europe).
+::: {.fragment .highlight-box style="font-size:0.60em; margin-top:0.5em; line-height:1.7;"}
+**Foundation models** pretrain on multi-facility data &nbsp;·&nbsp; **RL** closes the loop on the real machine (CERN, DESY) &nbsp;·&nbsp; **Generative models** synthesise rare fault data &nbsp;·&nbsp; **Digital twins** = surrogate + live sensors, enabled by the ~600× speedup (→ TwinRISE)
 :::
 
 ::: notes
@@ -3417,71 +3403,76 @@ This is an appetizer, not a full menu. Foundation models (e.g. CERN's accelerato
 
 ## Stay connected — opportunities
 
-:::: {.columns style="margin-top:0.5em; gap:1.5em;"}
-::: {.column width="54%"}
+:::: {.columns style="margin-top:0.5em; gap:1.2em;"}
+::: {.column width="49%"}
 
-::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="1"}
-**RAISE** — EU "CERN for AI": Resource for AI in Science in Europe · virtual institute · €107 M · Horizon Europe
-<a href="https://research-and-innovation.ec.europa.eu/strategy/strategy-research-and-innovation/our-digital-future/european-ai-science-strategy/raise-resource-ai-science-europe_en" style="color:#22d3ee; font-size:0.80em;">ec.europa.eu → RAISE</a>
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.4em 0.7em; font-size:0.72em; margin-bottom:0.6em;" fragment-index="1"}
+**AI-for-science missions**<br>
+**RAISE** — EU "CERN for AI" · €107 M · Horizon Europe<br>
+**GENESIS** — US DOE · $293 M · 17 national labs
 :::
 
-::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="2"}
-**GENESIS** — US DOE AI mission · $293 M · 17 national laboratories · 2025
-<a href="https://www.energy.gov/undersecretaryforscience/genesis-mission/genesis-mission" style="color:#22d3ee; font-size:0.80em;">energy.gov → Genesis</a>
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.4em 0.7em; font-size:0.72em; margin-bottom:0.6em;" fragment-index="2"}
+**Hands-on — workshops & schools**<br>
+**RL4AA** — workshop & challenge · Liverpool 2026<br>
+**AISSAI Hackathon** — Oct 11–16 2026 · IN2P3
 :::
 
-::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="3"}
-**RL4AA** — Workshop & challenge · 2026 edition: **Liverpool** · open datasets
-<a href="https://rl4aa.github.io/" style="color:#22d3ee; font-size:0.80em;">rl4aa.github.io</a>
-:::
-
-::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em; margin-bottom:0.5em;" fragment-index="4"}
-**AISSAI Hackathon** — Hands-on school · **Oct 11–16 2026** · IN2P3 · open to all
-<a href="https://indico.in2p3.fr/event/39704/" style="color:#22d3ee; font-size:0.80em;">indico.in2p3.fr/event/39704</a>
-:::
-
-::: {.fragment .fade-in-then-semi-out style="border-left:3px solid rgba(34,211,238,0.5); padding:0.35em 0.7em; font-size:0.76em;" fragment-index="5"}
-**ARTIFACT** — European network · AI for accelerator physics & medical applications · open membership
-<a href="https://artifact-network.org" style="color:#22d3ee; font-size:0.80em;">artifact-network.org</a>
+::: {.fragment .fade-in-then-semi-out style="border-left:3px solid #fbbf24; padding:0.4em 0.7em; font-size:0.72em;" fragment-index="3"}
+**Join the network**<br>
+**ARTIFACT** — European network · AI for accelerator physics & medical · open membership
 :::
 
 :::
-::: {.column width="44%"}
+::: {.column width="51%"}
 
 <div style="display:grid;">
 
-::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.8em 0;" fragment-index="1"}
-<span style="font-size:2.4em; font-weight:800; color:#22d3ee; line-height:1.0;">€107M</span><br>
-<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">Horizon Europe 2025–2027<br>Resource for AI in Science in Europe</span>
+::: {.fragment .current-visible style="grid-area:1/1; padding:0.4em 0.2em;" fragment-index="1"}
+<div style="text-align:center; border:1px solid rgba(34,211,238,0.30); border-radius:9px; padding:0.45em 0.4em; margin-bottom:0.55em;">
+<span style="font-size:1.85em; font-weight:800; color:#22d3ee; line-height:1.0;">€107 M</span><br>
+<span style="font-size:0.62em; color:#94a3b8;">RAISE · Horizon Europe 2025–27<br>Resource for AI in Science in Europe</span><br>
+<a href="https://research-and-innovation.ec.europa.eu/strategy/strategy-research-and-innovation/our-digital-future/european-ai-science-strategy/raise-resource-ai-science-europe_en" style="color:#67e8f9; font-size:0.56em;">ec.europa.eu → RAISE</a>
+</div>
+<div style="text-align:center; border:1px solid rgba(34,211,238,0.30); border-radius:9px; padding:0.45em 0.4em;">
+<span style="font-size:1.85em; font-weight:800; color:#22d3ee; line-height:1.0;">$293 M</span><br>
+<span style="font-size:0.62em; color:#94a3b8;">GENESIS · US DOE · 17 national labs · 2025</span><br>
+<a href="https://www.energy.gov/undersecretaryforscience/genesis-mission/genesis-mission" style="color:#67e8f9; font-size:0.56em;">energy.gov → Genesis</a>
+</div>
 :::
 
-::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.8em 0;" fragment-index="2"}
-<span style="font-size:2.4em; font-weight:800; color:#22d3ee; line-height:1.0;">$293M</span><br>
-<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">17 US national laboratories<br>DOE AI for Science, launched 2025</span>
+::: {.fragment .current-visible style="grid-area:1/1; padding:0.4em 0.2em;" fragment-index="2"}
+<div style="text-align:center; border:1px solid rgba(34,211,238,0.30); border-radius:9px; padding:0.45em 0.4em; margin-bottom:0.55em;">
+<span style="font-size:1.5em; font-weight:800; color:#22d3ee; line-height:1.1;">RL4AA · Liverpool 2026</span><br>
+<span style="font-size:0.62em; color:#94a3b8;">Tutorials · challenge · open datasets</span><br>
+<a href="https://rl4aa.github.io/" style="color:#67e8f9; font-size:0.56em;">rl4aa.github.io</a>
+</div>
+<div style="text-align:center; border:1px solid rgba(34,211,238,0.30); border-radius:9px; padding:0.45em 0.4em;">
+<span style="font-size:1.5em; font-weight:800; color:#22d3ee; line-height:1.1;">AISSAI · Oct 11–16 2026</span><br>
+<span style="font-size:0.62em; color:#94a3b8;">AI for Particle Accelerators hackathon</span><br>
+<a href="https://indico.in2p3.fr/event/39704/" style="color:#67e8f9; font-size:0.56em;">indico.in2p3.fr/event/39704</a> · <a href="https://aghribi1-presentation-20230911-artifact.docs.cern.ch/hackathon_Slidedeck#1" style="color:#67e8f9; font-size:0.56em;">slides</a>
+</div>
 :::
 
-::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.8em 0;" fragment-index="3"}
-<span style="font-size:2.0em; font-weight:800; color:#22d3ee; line-height:1.2;">Liverpool<br>2026</span><br>
-<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">Tutorials · challenge · open datasets<br>rl4aa.github.io</span>
-:::
-
-::: {.fragment .current-visible style="grid-area:1/1; text-align:center; padding:1.8em 0;" fragment-index="4"}
-<span style="font-size:2.0em; font-weight:800; color:#22d3ee; line-height:1.2;">Oct 11–16<br>2026</span><br>
-<span style="font-size:0.72em; color:#94a3b8; display:block; margin-top:0.4em;">IN2P3 · open to all<br>indico.in2p3.fr/event/39704</span>
-:::
-
-::: {.fragment .current-visible style="grid-area:1/1; padding:0.5em 0.3em;" fragment-index="5"}
-<div style="font-size:1.25em; font-weight:800; color:#22d3ee; text-align:center; line-height:1.1;">artifact-network.org</div>
-<div style="font-size:0.60em; color:#94a3b8; text-align:center; margin:0.25em 0 0.6em;">European open network · accelerator physics &amp; medical AI</div>
-<div style="font-size:0.66em; color:#e2e8f0; line-height:1.55;">
-<strong style="color:#22d3ee;">Shares</strong> data · beam-time · models · training material<br>
-<strong style="color:#22d3ee;">Multi-project synergies</strong> —
+::: {.fragment .current-visible style="grid-area:1/1; padding:0.3em 0.2em;" fragment-index="3"}
+<div style="border:2px solid #fbbf24; border-radius:10px; background:rgba(251,191,36,0.05); padding:0.5em 0.6em;">
+<div style="font-size:1.35em; font-weight:800; color:#fbbf24; text-align:center; line-height:1.1;">
+<a href="https://artifact-network.org" style="color:#fbbf24; text-decoration:none;">artifact-network.org</a></div>
+<div style="font-size:0.58em; color:#cbd5e1; text-align:center; margin:0.3em 0 0.6em; line-height:1.35;"><strong style="color:#fbbf24;">ART</strong>ificial <strong style="color:#fbbf24;">I</strong>ntelligence <strong style="color:#fbbf24;">F</strong>or <strong style="color:#fbbf24;">A</strong>ccelerators, user <strong style="color:#fbbf24;">C</strong>ommunities and associated <strong style="color:#fbbf24;">T</strong>echnologies</div>
+<div style="font-size:0.72em; color:#e2e8f0; line-height:1.65;">
+<strong style="color:#fbbf24;">Shares</strong> data · beam-time · models · training material<br>
+<strong style="color:#fbbf24;">Multi-project synergies</strong> —
 <a href="https://artifact-network.org/initiatives/TwinRISE_Deck.html#1" style="color:#67e8f9;">TwinRISE</a> ·
 <a href="https://www.irisproject.eu" style="color:#67e8f9;">IRIS</a> ·
 <a href="https://www.sciance.eu" style="color:#67e8f9;">SCIANCE</a> ·
 ARTIFACT Doctoral Networks
 </div>
-<div style="font-size:0.60em; color:#94a3b8; margin-top:0.5em; font-style:italic; border-top:1px solid rgba(148,163,184,0.2); padding-top:0.4em;">TwinRISE links AI across accelerators &amp; medical.</div>
+<div style="font-size:0.64em; color:#94a3b8; margin-top:0.55em; font-style:italic; border-top:1px solid rgba(251,191,36,0.25); padding-top:0.45em;">TwinRISE links AI across accelerators &amp; medical.</div>
+</div>
+
+<div style="font-size:0.40em; color:#64748b; margin-top:0.5em; line-height:1.45; text-align:center;">
+This work has received funding from the European Union's Horizon Europe research &amp; innovation programme — grant agreements No. 101275935 (iRIS), 101287548 (TwinRISE) &amp; 101293570 (SCIANCE) — and from national &amp; EU partner programmes.
+</div>
 :::
 
 </div>
@@ -3491,37 +3482,26 @@ ARTIFACT Doctoral Networks
 
 ::: notes
 RAISE: the full EU AI in Science strategy aims to double Horizon Europe AI funding to €3B/year, with RAISE as the flagship virtual institute. The €107M is the initial Horizon Europe pilot budget (WP26-27). GENESIS: the $293M is the DOE Request for Applications; an additional $320M was announced for AI infrastructure (American Science Cloud). RL4AA 2027 is not yet announced.
+
+Full funding acknowledgement (read out / on the printed version): This work has received funding from the European Union's Horizon Europe research and innovation programme under grant agreements No. 101275935 (iRIS), 101287548 (TwinRISE), 101293570 (SCIANCE), 101057511 (EURO-LABS), 101079773 (EuPRAXIA Preparatory Phase), 101004730 (I-FAST) and Marie Skłodowska-Curie 101086276 (EAJADE); from the Euratom Research and Training Programme under No. 101052200 (EUROfusion); from Spain's CDTI "Misiones" / NextGenerationEU under MIP-20221017 (DONES-FLUX), MIG-20221067 (NEURON-DONES), PLEC2024-011195 (OPTIMA-DONES) and ITC-20251204, and from MCIN/AEI under PID2021-123930OB-C22; from Italy's PNRR projects I-PHOQS (IR0000016), EuAPS (IR0000030) and THE (ECS00000017); from Xjenza Malta's FUSION R&I Programme (AICRYSCON); and from the French Development Agency / Expertise France (University of Nairobi mobility grant).
 :::
 
 ---
 
 ## Summary
 
-::: {style="font-size:0.74em; color:#94a3b8; margin-bottom:0.3em;"}
-AI is broader than deep learning. Today we built and demystified three methods — two neural, one classical (BO/GP) — on real beam-physics problems, end to end: **problem → method → result → runnable notebook.**
+::: {style="font-size:0.82em; color:#cbd5e1; margin:0.4em 0 0.8em;"}
+**AI is broader than deep learning.** We built three methods end to end — two neural, one classical (BO/GP) — on real beam-physics problems: **problem → method → result → runnable notebook.**
 :::
 
-::: {style="font-size:0.66em;"}
-| Use case | Problem | Method | Result |
-|---|---|---|---|
-| **RF fault detection** | rare faults, no labels | Autoencoder — unsupervised | ROC-AUC 1.000 *(synthetic data)* |
-| **Beam tuning** | slow, manual daily startup | Bayesian opt. + Cheetah | 13.2 → ~2.2 mm; advantage grows with dimension |
-| **Surrogate model** | physics codes too slow | MLP + uncertainty | R² ≈ 1.00, ~600× faster |
+::: {style="font-size:0.84em; line-height:1.75;"}
+- **Three use cases, end to end** — fault detection (AUC ≈ 1) · beam tuning (BO + Cheetah, advantage grows with dimension) · surrogate (R² ≈ 1, ~600× faster).
+- **Physics ↔ AI** — Hopfield, Boltzmann machines, the 2024 Nobel in Physics: we are natural practitioners, not outsiders.
+- **The model is rarely the bottleneck** — data quality, features and the pipeline decide whether it works.
+- **Deployment ≠ accuracy** — latency, drift, explainability and certification are the real blockers to the clinic.
 :::
 
-::: {style="display:flex; gap:0.7em; margin-top:0.55em;"}
-::: {.key-result style="flex:1; font-size:0.66em;"}
-**Physics ↔ AI** — Hopfield, Boltzmann machines, the 2024 Nobel in Physics. We are natural practitioners, not outsiders.
-:::
-::: {.key-result style="flex:1; font-size:0.66em;"}
-**The model is rarely the bottleneck** — data quality, features and the pipeline decide whether it works.
-:::
-::: {.key-result style="flex:1; font-size:0.66em;"}
-**Deployment ≠ accuracy** — latency, drift, explainability and certification are the real blockers to the clinic.
-:::
-:::
-
-::: {style="text-align:center; font-size:0.72em; color:#22d3ee; margin-top:0.55em;"}
+::: {style="text-align:center; font-size:0.72em; color:#22d3ee; margin-top:0.6em;"}
 All code open & runnable on Colab — `github.com/aghribi/cas2026-ai-medical-accelerators`
 :::
 
@@ -3538,12 +3518,12 @@ A real summary, three layers. (1) The one-line thesis at top: AI is broader than
 
 **Key papers — cited in this lecture**
 
-Duris et al., *PRL* **124**, 124801 (2020) — BO at LCLS<br>
-Roussel et al., *PRAB* **27**, 084801 (2024) — BO algorithms review<br>
-Tennant et al., *PRAB* **23**, 114601 (2020) — SRF fault detection<br>
-Kaiser et al., *PRAB* **27**, 054601 (2024) — Cheetah simulator<br>
-Ghribi et al., *EPN* **56**(1), 15 (2025) — KARA −30% energy<br>
-Hopfield, *PNAS* **79** (1982) — associative memory
+Ghribi et al., *EPN* **56**(1), 15 (2025)<br>
+Roussel et al., *PRAB* **27**, 084801 (2024)<br>
+Kaiser et al., *PRAB* **27**, 054601 (2024)<br>
+Duris et al., *PRL* **124**, 124801 (2020)<br>
+Tennant et al., *PRAB* **23**, 114601 (2020)<br>
+Hopfield, *PNAS* **79**, 2554 (1982)
 
 ::: {style="margin-top:0.6em;"}
 **Living review —** <a href="https://aghribi.github.io/acc-ml-living-review" style="color:#22d3ee;">aghribi.github.io/acc-ml-living-review</a>
